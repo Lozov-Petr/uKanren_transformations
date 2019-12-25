@@ -9,6 +9,7 @@ import TestFramework
 
 import List 
 import Num
+import Programs
 
 termOrderTest = do 
   putStrLn "termOrderTest\n"
@@ -28,6 +29,8 @@ isInductiveTest = do
   putStrLn "isInductiveTest\n"
   listFunctionsTest
   peanoFunctionsTest
+
+  assert "even" True (isInductive evn)
   
   where 
     listFunctionsTest = do 
@@ -56,6 +59,7 @@ isInductiveTest = do
     le = leo $ fresh ["x", "y", "z"] (call "leo" [V "x", V "y", V "z"])
     gt = gto $ fresh ["x", "y", "z"] (call "gto" [V "x", V "y", V "z"])
     
+    evn  = eveno $ fresh ["x"] (call "eveno" [V "x"])
 
 main = do
   termOrderTest

@@ -9,6 +9,7 @@ import Purification
 import Eval 
 import Data.Maybe
 import Data.List
+import Miscellaneous
 
 newtype IndWrap a = IndWrap { unwrap :: a }
  
@@ -26,6 +27,7 @@ instance Ord a => Ord (IndWrap (Term a)) where
 isInductive :: G X -> Bool 
 isInductive goal = 
   let (goal', defs) = takeOutLets goal in
+  trace ("After take out lets:\nGoal:" ++ show goal' ++ "\nDefs\n" ++ show (map fst3 defs)) $ 
   let gamma = updateDefsInGamma env0 defs in
   let (logicGoal, gamma', names) = preEval' gamma goal' in
   let (g', _) = oneStepUnfold (logicGoal) gamma' in 
