@@ -46,13 +46,15 @@ library:
   source-dirs: 
   - src/
   - test/resources
+  - fair/
 
 executables: 
   cpd: 
-    main: test/cpd/Main.hs
+    main: fair/Main.hs
     source-dir: 
     - src/
     - src/cpd
+    - fair/
     - test/
     dependencies: uKanren-transformation
 
