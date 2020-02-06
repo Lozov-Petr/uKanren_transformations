@@ -7,9 +7,75 @@ import Program.Bottles
 import Program.Bridge
 
 main = do
-  -- putStrLn $ show $ run 1 0 bottles bottlesUnit  -- get first answer ( 2460000, 15,  21208,   88883)
-  -- putStrLn $ show $ run 1 0 bottles bottlesInt   -- looooong run     (15660000, 18, 157219, 1149109)
-  -- putStrLn $ show $ run 1 0 bottles bottlesDisj  -- same with Unit   ( 2460000, 15,  21208,   88883)
-  -- putStrLn $ show $ run 1 0 game2Big bridgeUnit  -- out of memory    ( 3260000, 28,  38770,  180845)
-     putStrLn $ show $ run 1 0 game2Big bridgeInt   -- get first answer ( 3630000, 15,  18419,  172321)
-  -- putStrLn $ show $ run 1 0 game2Big bridgeDisj  -- looooong run     (27920000, 21,  23584, 2046769)
+
+  -- first answer
+  -- step:    2460000
+  -- high:         16
+  -- size:      88885
+  -- disj:      21208
+  -- conj:      23234
+  -- cnjA:       6310
+  -- maxD:          8
+  -- putStrLn $ show $ run 1 ["answer"] bottles () bottlesUnit
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step: 28100000
+  -- high: 20
+  -- size: 2495765
+  -- disj: 309593
+  -- conj: 938289
+  -- cnjA: 162853
+  -- maxD: 15
+  -- putStrLn $ show $ run 1 ["answer"] bottles (100 :: Int) bottlesInt
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step: 2460000
+  -- high: 15
+  -- size: 88883
+  -- disj: 21208
+  -- conj: 23233
+  -- cnjA: 6310
+  -- maxD: 8
+  -- putStrLn $ show $ run 1 ["answer"] bottles (D 10 10000) bottlesDisj
+
+  ----------------------------------------------------
+  ----------------------------------------------------
+  ----------------------------------------------------
+
+  -- OUT OF MEMORY
+  -- step: 8530000
+  -- high: 30
+  -- size: 460289
+  -- disj: 99876
+  -- conj: 130268
+  -- cnjA: 9
+  -- maxD: 48017
+  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big () bridgeUnit
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step: 3630000
+  -- high: 15
+  -- size: 172321
+  -- disj: 18419
+  -- conj: 67741
+  -- cnjA: 9756
+  -- maxD: 12
+  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big (100 :: Int) bridgeInt
+
+  ----------------------------------------------------
+
+  -- fitst answer
+  -- step: 2260000
+  -- high: 19
+  -- size: 103847
+  -- disj: 14841
+  -- conj: 37082
+  -- cnjA: 7389
+  -- maxD: 10
+  putStrLn $ show $ run 1 ["res", "answer"] game2Big (D 10 10000) bridgeDisj
