@@ -56,6 +56,9 @@ bottlesUnit = initialState bottlesCall
 bottlesInt :: Stream Int
 bottlesInt = initialState bottlesCall
 
+bottlesDisj :: Stream Disj
+bottlesDisj = initialState bottlesCall
+
 ---------------------------------------
 
 bridgeCall =
@@ -69,3 +72,6 @@ bridgeUnit = initialState bridgeCall
 
 bridgeInt :: Stream Int
 bridgeInt = initialState bridgeCall
+
+bridgeDisj :: Stream Disj
+bridgeDisj = initialState bridgeCall

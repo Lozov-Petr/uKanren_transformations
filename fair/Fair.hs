@@ -44,6 +44,17 @@ instance Labels Int where
   new       _   = 100
   predicate _ n = n == 0
   update    _ n = n - 1
+
+data Disj = D Int Int deriving Show
+
+disjs (Conj _ (D d _) _) = d
+disjs (Disj a b)         = 1 + disjs a + disjs b
+disjs _                  = 0
+
+instance Labels Disj where
+  new       s         = D (disjs s) 10000
+  predicate _ (D d n) = n == 0 || d >= 100
+  update    s (D _ n) = D (disjs s) (n - 1)
   
 ---------------------------------------
 
@@ -123,6 +134,16 @@ size (Conj a _ b) = 1 + size a + size b
 size (Disj a b)   = 1 + size a + size b
 size _            = 1
 
+disjCount :: GenStream a b -> Int
+disjCount (Conj a _ _) = disjCount a
+disjCount (Disj a b)   = 1 + disjCount a + disjCount b
+disjCount _            = 0
+
+disjsInConjs :: GenStream a b -> [Int]
+disjsInConjs (Conj a _ _) = [disjCount a]
+disjsInConjs (Disj a b)   = disjsInConjs a ++ disjsInConjs b
+disjsInConjs _            = []
+
 ---------------------------------------
 
 def2fun :: Def -> Fun
@@ -146,10 +167,10 @@ run n q = run' 0 n . map def2fun where
       (Nothing, Nothing) -> return ([], i)
       (Nothing, Just a ) -> return ([(getTerm a $ V q, i)], i)
       (Just s , Nothing) -> 
-        --(if mod i 10000 == 0 then traceShow (i, high s, size s) . trace "\n\n\n" else id) $ 
+        --(if mod i 10000 == 0 then traceShow (i, high s, size s, disjCount s, maximum (0 : disjsInConjs s)) . trace "\n\n\n" else id) $
         run' (i+1) n fs s
       (Just s , Just a ) -> 
-        --(if mod i 10000 == 0 then traceShow (i, high s, size s) . trace "\n\n\n" else id) $ 
+        --(if mod i 10000 == 0 then traceShow (i, high s, size s, disjCount s, maximum (0 : disjsInConjs s)) . trace "\n\n\n" else id) $
         run' (i+1) (n-1) fs s >>= \(xs, j) -> return $ ((getTerm a $ V q, i) : xs, j)
 
 
