@@ -12,24 +12,23 @@ import qualified Embed
 
 type Er a = Either String a
 
-type Goal  = G X
-type Env   = [(X, Ts)]
+type Goal  = G S
 type Subst = (S, [(S, Ts)])
 type Hole  = ()
 type Fun   = (Name, ([Name], G X))
 
 data GenStream subst label
-  = Goal Env Goal subst
+  = Goal Goal subst
   | Disj (GenStream subst label) (GenStream subst label)
   | Conj (GenStream subst label) label (GenStream Hole label)
 
 type HoleStream l = GenStream Hole l
 type Stream     l = GenStream Subst l
 
-type InitialStream l = Env -> Int -> Stream l
+type InitialStream l = Int -> Stream l
 
 instance (Show s, Show l) => Show (GenStream s l) where
-  show (Goal e g s) = printf "<%s, %s, %s>" (show e) (show g) $ show s
+  show (Goal g s) = printf "<%s, %s>" (show g) $ show s
   show (Disj p q)   = printf "(%s |+| %s)" (show p) $ show q
   show (Conj s l g) = printf "(%s |*|{%s} %s)" (show s) (show l) $ show g
 
@@ -71,38 +70,48 @@ data SignVarsP = SVP [Int] Int Int
 -- It desn't work
 instance Labels SignVars SignVarsP where
   new (SVP l n m) s = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
-    (_, _, a) = getLeftLeaf s
+    (_, a) = getLeftLeaf s
   keep _ l = l
   predicate _ s (SV v i j) = j /= 0 && (i /= 0 || any (\(i, t) -> Embed.isStrictInst t $ getTerm a $ V i) v) where
-    (_, _, a) = getLeftLeaf s
+    (_, a) = getLeftLeaf s
   update (SVP l n _) s (SV _ 0 m) = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
-    (_, _, a) = getLeftLeaf s
+    (_, a) = getLeftLeaf s
   update _ _ (SV l n m) = SV l (n-1) (m-1)
 
 ---------------------------------------
 
-toSemList :: Env -> [Tx] -> Er [Ts]
-toSemList e l = foldr combine (return []) l where
-  combine x l = toSem e x >>= \x -> l >>= \l -> return $ x : l
+toSemTs :: [(X, Ts)] -> [Tx] -> Er [Ts]
+toSemTs e l = foldr combine (return []) l where
+  combine x l = toSemT e x >>= \x -> l >>= \l -> return $ x : l
 
-toSem :: Env -> Tx -> Er Ts
-toSem e (V x) = case lookup x e of
+toSemT :: [(X, Ts)] -> Tx -> Er Ts
+toSemT e (V x) = case lookup x e of
     Nothing -> Left $ printf "Unexpected variable '%s'." x
     Just x  -> return x
-toSem e (C n a) = toSemList e a >>= return . (C n)
+toSemT e (C n a) = toSemTs e a >>= return . (C n)
 
+toSemG :: [(X, Ts)] -> Int -> G X -> Er (G S, Int)
+toSemG e i (t1 :=: t2)  = do t1' <- toSemT e t1
+                             t2' <- toSemT e t2
+                             return (t1' :=: t2', i)
+toSemG e i (g1 :/\: g2) = do (g1', j) <- toSemG e i g1
+                             (g2', k) <- toSemG e j g2
+                             return (g1' :/\: g2', k)
+toSemG e i (g1 :\/: g2) = do (g1', j) <- toSemG e i g1
+                             (g2', k) <- toSemG e j g2
+                             return (g1' :\/: g2', k)
+toSemG e i (Invoke n a) = do a' <- toSemTs e a
+                             return (Invoke n a', i)
+toSemG e i (Fresh n g)  = toSemG ((n, V i) : e) (i + 1) g
+toSemG e i _            = Left "Let-expressions aren't supported."
 
-unify :: Env -> Subst -> Tx -> Tx -> Er (Maybe Subst)
-unify e (n, s) t1 t2 =
-  do
-    t1 <- toSem e t1
-    t2 <- toSem e t2
-    return $ Eval.unify (Just s) t1 t2 >>= return . ((,) n)
+unify :: Subst -> Ts -> Ts -> Maybe Subst
+unify (n, s) t1 t2 = Eval.unify (Just s) t1 t2 >>= return . ((,) n)
 
 ---------------------------------------
 
 fillHole :: HoleStream l -> a -> Er (GenStream a l)
-fillHole (Goal e g _) a = return $ Goal e g a
+fillHole (Goal g _  ) a = return $ Goal g a
 fillHole (Conj s l g) a = fillHole s a >>= \s -> return $ Conj s l g
 fillHole _            _ = Left "Unexpected disjunction in stream with hole."
 
@@ -110,28 +119,28 @@ fillHole _            _ = Left "Unexpected disjunction in stream with hole."
 swapConjs :: Labels l p => p -> Stream l -> HoleStream l -> Er (Stream l)
 swapConjs p = swap p id where
   swap :: Labels l p => p -> (HoleStream l -> HoleStream l) -> Stream l -> HoleStream l -> Er (Stream l)
-  swap par conjs (Goal e g s) conj = fillHole conj s >>= \s -> return $ Conj s (new par s) $ conjs (Goal e g ())
+  swap par conjs (Goal g s)   conj = fillHole conj s >>= \s -> return $ Conj s (new par s) $ conjs (Goal g ())
   swap par conjs (Disj p q)   conj = swap par conjs p conj >>= \p -> swap par conjs q conj >>= \q -> return $ Disj p q
   swap par conjs (Conj s l g) conj = swap par (\s -> conjs $ Conj s (keep par l) g) s conj
 
 ---------------------------------------
 
 eval :: Labels l p => p -> [Fun] -> Stream l -> Er (Maybe (Stream l), Maybe Subst)
-eval par fs (Goal e (p :=: q) s)       = unify e s p q >>= return . (,) Nothing
-eval par fs (Goal e (p :\/: q) s)      = return (Just $ Disj (Goal e p s) $ Goal e q s, Nothing)
-eval par fs (Goal e (p :/\: g) s)      = let p' = Goal e p s in
-                                         return (Just $ Conj p' (new par p') $ Goal e g (), Nothing)
-eval par fs (Goal e (Fresh n g) (i,s)) = return (Just $ Goal ((n, V i) : e) g (i+1,s), Nothing)
-eval par fs (Goal e (Invoke n a) s)    =
+eval par fs (Goal (p :=: q) s)        = return (Nothing, unify s p q)
+eval par fs (Goal (p :\/: q) s)       = return (Just $ Disj (Goal p s) $ Goal q s, Nothing)
+eval par fs (Goal (p :/\: g) s)       = let p' = Goal p s in
+                                        return (Just $ Conj p' (new par p') $ Goal g (), Nothing)
+eval _   _  (Goal (Fresh _ _) _)      = Left "Unexpected fresh-expresseion."
+eval _   _  (Goal (Let _ _) _)        = Left "Let-expressions aren't supported."
+eval par fs (Goal (Invoke n a) (i,s)) =
   case lookup n fs of
     Nothing      -> Left $ printf "Call of undefined relation '%s'." n
     Just (ns, g) ->
       if length ns == length a
-        then toSemList e a >>= \a -> return $ (Just $ Goal (zip ns a ++ e) g s, Nothing)
+        then toSemG (zip ns a) i g >>= \(g,j) -> return $ (Just $ Goal g (j,s), Nothing)
         else Left $ printf
                "Unexpected count of relation's arguments (actual: %d, expected: %d)."
                (length a) (length ns)
-eval par fs (Goal e (Let (Def n a g) g') s) = Left "Let-expressions isn't supported."
 eval par fs (Conj s l g) =
   if predicate par s l
     then eval par fs s >>= \r ->
@@ -149,10 +158,10 @@ eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
 
 ---------------------------------------
 
-getLeftLeaf :: GenStream s l -> (Env, Goal, s)
+getLeftLeaf :: GenStream s l -> (Goal, s)
 getLeftLeaf (Disj a _  ) = getLeftLeaf a
 getLeftLeaf (Conj a _ _) = getLeftLeaf a
-getLeftLeaf (Goal a b c) = (a, b, c)
+getLeftLeaf (Goal g s) = (g, s)
 
 high :: GenStream a b -> Int
 high (Conj a _ _) = 1 + high a
@@ -191,8 +200,8 @@ printInfo step i s =
 def2fun :: Def -> Fun
 def2fun (Def n a g) = (n, (a, g))
 
-initialState :: G X -> InitialStream l
-initialState g e i = Goal e g (i, [])
+initialState :: Goal -> InitialStream l
+initialState g i = Goal g (i, [])
 
 getTerm :: Subst -> Ts -> Ts
 getTerm s (V x) =
@@ -201,15 +210,12 @@ getTerm s (V x) =
     Just t  -> getTerm s t
 getTerm s (C n a) = C n $ map (getTerm s) a
 
-prepareAnswer :: Subst -> [X] -> [(X, Ts)]
-prepareAnswer s x = map (\(i,x) -> (x, getTerm s $ V i)) $ zip [0..] x
+prepareAnswer :: Subst -> [S] -> [(S, Ts)]
+prepareAnswer s = map $ \i -> (i, getTerm s $ V i)
 
-
-run :: (Labels l p, Show l) => Int -> [X] -> [Def] -> p -> InitialStream l -> Er ([([(X, Ts)], Int)], Int)
-run n vars defs p gGen = run' p 0 n (map def2fun defs) (gGen env count) where
-  count = length vars
-  env   = zip vars $ map V [0..]
-  run' :: (Labels l p, Show l) => p -> Int -> Int -> [Fun] -> Stream l -> Er ([([(X, Ts)], Int)], Int)
+run :: (Labels l p, Show l) => Int -> [S] -> [Def] -> p -> InitialStream l -> Er ([([(S, Ts)], Int)], Int)
+run n vars defs p gGen = run' p 0 n (map def2fun defs) (gGen $ length vars) where
+  run' :: (Labels l p, Show l) => p -> Int -> Int -> [Fun] -> Stream l -> Er ([([(S, Ts)], Int)], Int)
   run' _ i 0 _  _ = return ([], i)
   run' p i n fs s = eval p fs s >>= \r ->
     case r of

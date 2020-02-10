@@ -16,7 +16,7 @@ main = do
   -- conj:      23234
   -- cnjA:       6310
   -- maxD:          8
-  -- putStrLn $ show $ run 1 ["answer"] bottles () bottlesUnit
+  -- putStrLn $ show $ run 1 [0] bottles () bottlesUnit
 
   ----------------------------------------------------
 
@@ -28,7 +28,7 @@ main = do
   -- conj: 938289
   -- cnjA: 162853
   -- maxD: 15
-  -- putStrLn $ show $ run 1 ["answer"] bottles (100 :: Int) bottlesInt
+  -- putStrLn $ show $ run 1 [0] bottles (100 :: Int) bottlesInt
 
   ----------------------------------------------------
 
@@ -40,7 +40,7 @@ main = do
   -- conj: 23233
   -- cnjA: 6310
   -- maxD: 8
-  -- putStrLn $ show $ run 1 ["answer"] bottles (D 10 10000) bottlesDisj
+  -- putStrLn $ show $ run 1 [0] bottles (D 10 10000) bottlesDisj
 
   ----------------------------------------------------
   ----------------------------------------------------
@@ -54,7 +54,7 @@ main = do
   -- conj: 130268
   -- cnjA: 9
   -- maxD: 48017
-  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big () bridgeUnit
+  -- putStrLn $ show $ run 1 [1, 0] game2Big () bridgeUnit
 
   ----------------------------------------------------
 
@@ -66,7 +66,7 @@ main = do
   -- conj: 67741
   -- cnjA: 9756
   -- maxD: 12
-  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big (100 :: Int) bridgeInt
+  -- putStrLn $ show $ run 1 [1, 0] game2Big (100 :: Int) bridgeInt
 
   ----------------------------------------------------
 
@@ -78,7 +78,7 @@ main = do
   -- conj: 37082
   -- cnjA: 7389
   -- maxD: 10
-  putStrLn $ show $ run 1 ["res", "answer"] game2Big (D 10 10000) bridgeDisj
+  putStrLn $ show $ run 1 [1, 0] game2Big (D 10 10000) bridgeDisj
 
   ----------------------------------------------------
-  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big (SVP [0, 1] 100 10000) bridgeVars
+  -- putStrLn $ show $ run 1 [1, 0] game2Big (SVP [0, 1] 100 10000) bridgeVars

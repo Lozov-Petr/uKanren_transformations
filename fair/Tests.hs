@@ -9,7 +9,7 @@ listAB_Def = [Def "list" ["e", "l"] $
               Invoke "list" [V "e", V "ls"])
              ]
 
-listAB_Call = Fresh "x" $ Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
+listAB_Call = Invoke "list" [C "A" [], V 0] &&& Invoke "list" [C "B" [], V 0]
 
 listAB_Unit :: InitialStream ()
 listAB_Unit = initialState listAB_Call
@@ -32,7 +32,7 @@ treeR = Def "treeR" ["t"] $
 
 tree_defs = [treeL, treeR]
 
-tree_call = Fresh "x" $ Invoke "treeL" [V "x"] &&& Invoke "treeR" [V "x"]
+tree_call = Invoke "treeL" [V 0] &&& Invoke "treeR" [V 0]
 
 tree_unit :: InitialStream ()
 tree_unit = initialState tree_call
@@ -46,9 +46,8 @@ int2nat 0 = C "o" []
 int2nat n = C "s" [int2nat $ n - 1]
 
 bottlesCall =
-  fresh ["c"] $
-   Invoke "capacities1" [V "c"] :/\:
-   Invoke "checkAnswer" [V "answer", V "c", int2nat 7, C "true" []]
+   Invoke "capacities1" [V 1] :/\:
+   Invoke "checkAnswer" [V 0, V 1, int2nat 7, C "true" []]
 
 bottlesUnit :: InitialStream ()
 bottlesUnit = initialState bottlesCall
@@ -62,8 +61,8 @@ bottlesDisj = initialState bottlesCall
 ---------------------------------------
 
 bridgeCall =
-    Invoke "result" [V "res"] &&&
-    Invoke "getAnswer" [V "answer", C "some" [V "res"]]
+    Invoke "result" [V 1] &&&
+    Invoke "getAnswer" [V 0, C "some" [V 1]]
 
 bridgeUnit :: InitialStream ()
 bridgeUnit = initialState bridgeCall
