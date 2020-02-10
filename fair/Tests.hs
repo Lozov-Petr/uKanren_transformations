@@ -73,3 +73,6 @@ bridgeInt  = initialState bridgeCall
 
 bridgeDisj :: InitialStream Disj
 bridgeDisj = initialState bridgeCall
+
+bridgeVars :: InitialStream SignVars
+bridgeVars = initialState bridgeCall

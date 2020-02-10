@@ -6,7 +6,8 @@ import Text.Printf
 import Debug.Trace
 
 import Syntax
-import qualified Eval as E
+import qualified Eval
+import qualified Embed
 ---------------------------------------
 
 type Er a = Either String a
@@ -41,15 +42,15 @@ class Labels l p where
   update    :: p -> Stream l -> l -> l
 
 instance Labels () () where
-  new       _ _   = ()
-  keep      _ _   = ()
-  predicate _ _ _ = False
-  update    _ _ _ = ()
+  new       () _    = ()
+  keep      ()   () = ()
+  predicate () _ () = True
+  update    () _ () = ()
 
 instance Labels Int Int where
   new       i _   = i
-  keep      _ n   = n
-  predicate _ _ n = n == 0
+  keep      _   n = n
+  predicate _ _ n = n /= 0
   update    _ _ n = n - 1
 
 data Disj = D Int Int deriving Show
@@ -61,8 +62,22 @@ disjs _                  = 0
 instance Labels Disj Disj where
   new       (D _ i) s         = D (disjs s) i
   keep      _         (D _ n) = D 0 n
-  predicate (D p _) _ (D d n) = n == 0 || d >= p
+  predicate (D p _) _ (D d n) = n /= 0 && d <= p
   update    _       s (D _ n) = D (disjs s) (n - 1)
+
+data SignVars  = SV [(Int, Ts)] Int Int deriving Show
+data SignVarsP = SVP [Int] Int Int
+
+-- It desn't work
+instance Labels SignVars SignVarsP where
+  new (SVP l n m) s = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
+    (_, _, a) = getLeftLeaf s
+  keep _ l = l
+  predicate _ s (SV v i j) = j /= 0 && (i /= 0 || any (\(i, t) -> Embed.isStrictInst t $ getTerm a $ V i) v) where
+    (_, _, a) = getLeftLeaf s
+  update (SVP l n _) s (SV _ 0 m) = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
+    (_, _, a) = getLeftLeaf s
+  update _ _ (SV l n m) = SV l (n-1) (m-1)
 
 ---------------------------------------
 
@@ -82,7 +97,7 @@ unify e (n, s) t1 t2 =
   do
     t1 <- toSem e t1
     t2 <- toSem e t2
-    return $ E.unify (Just s) t1 t2 >>= return . ((,) n)
+    return $ Eval.unify (Just s) t1 t2 >>= return . ((,) n)
 
 ---------------------------------------
 
@@ -117,13 +132,15 @@ eval par fs (Goal e (Invoke n a) s)    =
                "Unexpected count of relation's arguments (actual: %d, expected: %d)."
                (length a) (length ns)
 eval par fs (Goal e (Let (Def n a g) g') s) = Left "Let-expressions isn't supported."
-eval par fs (Conj s l g) | predicate par s l = swapConjs par s g >>= \s -> return (Just s, Nothing)
-eval par fs (Conj s l g) = eval par fs s >>= \r ->
-  case r of
-    (Nothing, Nothing) -> return r
-    (Nothing, Just a ) -> fillHole g a >>= \s -> return (Just s, Nothing)
-    (Just s , Nothing) -> return (Just $ Conj s (update par s l) g, Nothing)
-    (Just s , Just a ) -> fillHole g a >>= \s' -> return (Just $ Disj s' $ Conj s (update par s l) g, Nothing)
+eval par fs (Conj s l g) =
+  if predicate par s l
+    then eval par fs s >>= \r ->
+      case r of
+        (Nothing, Nothing) -> return r
+        (Nothing, Just a ) -> fillHole g a >>= \s -> return (Just s, Nothing)
+        (Just s , Nothing) -> return (Just $ Conj s (update par s l) g, Nothing)
+        (Just s , Just a ) -> fillHole g a >>= \s' -> return (Just $ Disj s' $ Conj s (update par s l) g, Nothing)
+    else swapConjs par s g >>= \s -> return (Just s, Nothing)
 eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
   case s of
     Nothing -> return (Just q, a)
@@ -131,6 +148,11 @@ eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
 
 
 ---------------------------------------
+
+getLeftLeaf :: GenStream s l -> (Env, Goal, s)
+getLeftLeaf (Disj a _  ) = getLeftLeaf a
+getLeftLeaf (Conj a _ _) = getLeftLeaf a
+getLeftLeaf (Goal a b c) = (a, b, c)
 
 high :: GenStream a b -> Int
 high (Conj a _ _) = 1 + high a

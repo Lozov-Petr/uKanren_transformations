@@ -79,3 +79,6 @@ main = do
   -- cnjA: 7389
   -- maxD: 10
   putStrLn $ show $ run 1 ["res", "answer"] game2Big (D 10 10000) bridgeDisj
+
+  ----------------------------------------------------
+  -- putStrLn $ show $ run 1 ["res", "answer"] game2Big (SVP [0, 1] 100 10000) bridgeVars
