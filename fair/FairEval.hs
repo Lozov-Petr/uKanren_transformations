@@ -130,9 +130,6 @@ printInfo step i s =
 def2fun :: Def -> Fun
 def2fun (Def n a g) = (n, (a, g))
 
-initialState :: Goal -> InitialStream l
-initialState g i = Goal g (i, [])
-
 getTerm :: Subst -> Ts -> Ts
 getTerm s (V x) =
   case lookup x $ snd s of
@@ -140,20 +137,45 @@ getTerm s (V x) =
     Just t  -> getTerm s t
 getTerm s (C n a) = C n $ map (getTerm s) a
 
-prepareAnswer :: Subst -> [S] -> [(S, Ts)]
-prepareAnswer s = map $ \i -> (i, getTerm s $ V i)
+prepareAnswer :: Subst -> [X] -> [(X, Ts)]
+prepareAnswer s x = map (\(x,i) -> (x, getTerm s $ V i)) $ zip x [0..]
 
-run :: (Labels l p, Show l) => Int -> [S] -> [Def] -> p -> InitialStream l -> Er ([([(S, Ts)], Int)], Int)
-run n vars defs p gGen = run' p 0 n (map def2fun defs) (gGen $ length vars) where
-  run' :: (Labels l p, Show l) => p -> Int -> Int -> [Fun] -> Stream l -> Er ([([(S, Ts)], Int)], Int)
-  run' _ i 0 _  _ = return ([], i)
-  run' p i n fs s = eval p fs s >>= \r ->
-    case r of
-      (Nothing, Nothing) -> return ([], i)
-      (Nothing, Just a ) -> return ([(prepareAnswer a vars, i)], i)
-      (Just s , Nothing) ->
-        printInfo 10000 i s $
-        run' p (i+1) n fs s
-      (Just s , Just a ) ->
-        printInfo 10000 i s $
-        run' p (i+1) (n-1) fs s >>= \(xs, j) -> return $ ((prepareAnswer a vars, i) : xs, j)
+data Answers a b = Nil b
+                 | a ::: Answers a b
+
+type RunAnswers = Answers ([(X, Ts)], Int) (Maybe String, Int)
+
+instance (Show a, Show b) => Show (Answers a b) where
+  show a = printf "answers {\n%s" $ show' a where
+    show' :: (Show a, Show b) => Answers a b -> String
+    show' (Nil b)    = printf "\nmessage: %s\n}\n" $ show b
+    show' (x ::: xs) = printf "\n%s\n%s" (show x) $ show' xs
+
+takeAnswers :: Int -> RunAnswers -> RunAnswers
+takeAnswers _ a@(Nil _)        = a 
+takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", 0)
+takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
+takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b 
+    
+run :: (Labels l p, Show l) => [X] -> [Def] -> p -> RunGoal X l -> RunAnswers
+run vars defs p g =
+  case toSemG' (zip vars $ map V [0..]) (length vars) g of
+    Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, 0)
+    Right (g, i) -> run' p 0 (map def2fun defs) $ goal g (i, [])
+  where
+  toSemG' :: [(X, Ts)] -> Int -> RunGoal X l -> Er (RunGoal S l, Int)
+  toSemG' e i (RG g) = toSemG e i g >>= \(g,i) -> return (RG g, i)
+  goal :: RunGoal S l -> Subst -> Stream l
+  goal (RG g) = Goal g
+  run' :: (Labels l p, Show l) => p -> Int -> [Fun] -> Stream l -> RunAnswers
+  run' p i fs s =
+    case eval p fs s of
+      Left msg                 -> Nil (Just msg, i)
+      Right (Nothing, Nothing) -> Nil (Nothing, i)
+      Right (Nothing, Just a ) -> (prepareAnswer a vars, i) ::: Nil (Nothing, i)
+      Right (Just s , Nothing) ->
+        -- printInfo 10000 i s $
+        run' p (i+1) fs s
+      Right (Just s , Just a ) ->
+        -- printInfo 10000 i s $
+        (prepareAnswer a vars, i) ::: run' p (i+1) fs s

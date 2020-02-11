@@ -3,7 +3,6 @@ module Tests where
 import Syntax
 
 import FairStream
-import FairEval
 import Labels
 
 listAB_Def = [Def "list" ["e", "l"] $
@@ -12,13 +11,15 @@ listAB_Def = [Def "list" ["e", "l"] $
               Invoke "list" [V "e", V "ls"])
              ]
 
-listAB_Call = Invoke "list" [C "A" [], V 0] &&& Invoke "list" [C "B" [], V 0]
+listAB_Call = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
 
-listAB_Unit :: InitialStream ()
-listAB_Unit = initialState listAB_Call
+listAB_Vars = ["x"]
 
-listAB_Int :: InitialStream Int
-listAB_Int = initialState listAB_Call
+listAB_Unit :: RunGoal X ()
+listAB_Unit = RG listAB_Call
+
+listAB_Int :: RunGoal X Int
+listAB_Int = RG listAB_Call
 
 ---------------------------------------
 
@@ -33,48 +34,54 @@ treeR = Def "treeR" ["t"] $
   Fresh "t'" (V "t" === C "Node" [C "Leaf" [], V "t'"] &&&
               Invoke "treeR" [V "t'"])
 
-tree_defs = [treeL, treeR]
+treeDefs = [treeL, treeR]
 
-tree_call = Invoke "treeL" [V 0] &&& Invoke "treeR" [V 0]
+treeCall = Invoke "treeL" [V "t"] &&& Invoke "treeR" [V "t"]
 
-tree_unit :: InitialStream ()
-tree_unit = initialState tree_call
+treeVars = ["t"]
 
-tree_int :: InitialStream Int
-tree_int = initialState tree_call
+treeUnit :: RunGoal X ()
+treeUnit = RG treeCall
+
+tree_int :: RunGoal X Int
+tree_int = RG treeCall
 
 ---------------------------------------
 
 int2nat 0 = C "o" []
 int2nat n = C "s" [int2nat $ n - 1]
 
-bottlesCall =
-   Invoke "capacities1" [V 1] :/\:
-   Invoke "checkAnswer" [V 0, V 1, int2nat 7, C "true" []]
+bottlesCall = Fresh "c" $
+   Invoke "capacities1" [V "c"] :/\:
+   Invoke "checkAnswer" [V "answer", V "c", int2nat 7, C "true" []]
 
-bottlesUnit :: InitialStream ()
-bottlesUnit = initialState bottlesCall
+bottlesVars = ["answer"]
 
-bottlesInt :: InitialStream Int
-bottlesInt = initialState bottlesCall
+bottlesUnit :: RunGoal X ()
+bottlesUnit = RG bottlesCall
 
-bottlesDisj :: InitialStream Disj
-bottlesDisj = initialState bottlesCall
+bottlesInt :: RunGoal X Int
+bottlesInt = RG bottlesCall
+
+bottlesDisj :: RunGoal X Disj
+bottlesDisj = RG bottlesCall
 
 ---------------------------------------
 
 bridgeCall =
-    Invoke "result" [V 1] &&&
-    Invoke "getAnswer" [V 0, C "some" [V 1]]
+    Invoke "result" [V "minutes"] &&&
+    Invoke "getAnswer" [V "answer", C "some" [V "minutes"]]
 
-bridgeUnit :: InitialStream ()
-bridgeUnit = initialState bridgeCall
+bridgeVars = ["minutes", "answer"]
 
-bridgeInt :: InitialStream Int
-bridgeInt  = initialState bridgeCall
+bridgeUnit :: RunGoal X ()
+bridgeUnit = RG bridgeCall
 
-bridgeDisj :: InitialStream Disj
-bridgeDisj = initialState bridgeCall
+bridgeInt :: RunGoal X Int
+bridgeInt  = RG bridgeCall
 
-bridgeVars :: InitialStream SignVars
-bridgeVars = initialState bridgeCall
+bridgeDisj :: RunGoal X Disj
+bridgeDisj = RG bridgeCall
+
+bridgeSignVars :: RunGoal X SignVars
+bridgeSignVars = RG bridgeCall

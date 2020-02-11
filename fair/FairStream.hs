@@ -21,7 +21,7 @@ data GenStream subst label
 type HoleStream l = GenStream Hole l
 type Stream     l = GenStream Subst l
 
-type InitialStream l = Int -> Stream l
+newtype RunGoal x l = RG (G x)
 
 instance (Show s, Show l) => Show (GenStream s l) where
   show (Goal g s) = printf "<%s, %s>" (show g) $ show s
