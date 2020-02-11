@@ -1,82 +1,12 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-
-module Fair where
+module FairEval where
 
 import Text.Printf
 import Debug.Trace
 
 import Syntax
 import qualified Eval
-import qualified Embed
----------------------------------------
 
-type Er a = Either String a
-
-type Goal  = G S
-type Subst = (S, [(S, Ts)])
-type Hole  = ()
-type Fun   = (Name, ([Name], G X))
-
-data GenStream subst label
-  = Goal Goal subst
-  | Disj (GenStream subst label) (GenStream subst label)
-  | Conj (GenStream subst label) label (GenStream Hole label)
-
-type HoleStream l = GenStream Hole l
-type Stream     l = GenStream Subst l
-
-type InitialStream l = Int -> Stream l
-
-instance (Show s, Show l) => Show (GenStream s l) where
-  show (Goal g s) = printf "<%s, %s>" (show g) $ show s
-  show (Disj p q)   = printf "(%s |+| %s)" (show p) $ show q
-  show (Conj s l g) = printf "(%s |*|{%s} %s)" (show s) (show l) $ show g
-
----------------------------------------
-
-class Labels l p where
-  new       :: p -> Stream l -> l
-  keep      :: p -> l -> l
-  predicate :: p -> Stream l -> l -> Bool
-  update    :: p -> Stream l -> l -> l
-
-instance Labels () () where
-  new       () _    = ()
-  keep      ()   () = ()
-  predicate () _ () = True
-  update    () _ () = ()
-
-instance Labels Int Int where
-  new       i _   = i
-  keep      _   n = n
-  predicate _ _ n = n /= 0
-  update    _ _ n = n - 1
-
-data Disj = D Int Int deriving Show
-
-disjs (Conj _ (D d _) _) = d
-disjs (Disj a b)         = 1 + disjs a + disjs b
-disjs _                  = 0
-
-instance Labels Disj Disj where
-  new       (D _ i) s         = D (disjs s) i
-  keep      _         (D _ n) = D 0 n
-  predicate (D p _) _ (D d n) = n /= 0 && d <= p
-  update    _       s (D _ n) = D (disjs s) (n - 1)
-
-data SignVars  = SV [(Int, Ts)] Int Int deriving Show
-data SignVarsP = SVP [Int] Int Int
-
--- It desn't work
-instance Labels SignVars SignVarsP where
-  new (SVP l n m) s = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
-    (_, a) = getLeftLeaf s
-  keep _ l = l
-  predicate _ s (SV v i j) = j /= 0 && (i /= 0 || any (\(i, t) -> Embed.isStrictInst t $ getTerm a $ V i) v) where
-    (_, a) = getLeftLeaf s
-  update (SVP l n _) s (SV _ 0 m) = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
-    (_, a) = getLeftLeaf s
-  update _ _ (SV l n m) = SV l (n-1) (m-1)
+import FairStream
 
 ---------------------------------------
 

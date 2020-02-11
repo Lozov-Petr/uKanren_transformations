@@ -1,6 +1,7 @@
 module Main where
 
-import Fair
+import FairEval
+import Labels
 import Tests
 
 import Program.Bottles

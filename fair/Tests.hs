@@ -1,7 +1,10 @@
 module Tests where
 
 import Syntax
-import Fair
+
+import FairStream
+import FairEval
+import Labels
 
 listAB_Def = [Def "list" ["e", "l"] $
   V "l" === C "nil" [] |||
