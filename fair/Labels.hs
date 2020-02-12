@@ -5,9 +5,11 @@ module Labels where
 import Syntax
 import qualified Embed
 
+import Util
 import FairStream
 import FairEval
 
+---------------------------------------
 
 instance Labels () () where
   new       () _    = ()
@@ -15,11 +17,15 @@ instance Labels () () where
   predicate () _ () = True
   update    () _ () = ()
 
+---------------------------------------
+
 instance Labels Int Int where
   new       i _   = i
   keep      _   n = n
   predicate _ _ n = n /= 0
   update    _ _ n = n - 1
+
+---------------------------------------
 
 data Disj = D Int Int deriving Show
 
@@ -32,6 +38,8 @@ instance Labels Disj Disj where
   keep      _         (D _ n) = D 0 n
   predicate (D p _) _ (D d n) = n /= 0 && d <= p
   update    _       s (D _ n) = D (disjs s) (n - 1)
+
+---------------------------------------
 
 data SignVars  = SV [(Int, Ts)] Int Int deriving Show
 data SignVarsP = SVP [Int] Int Int

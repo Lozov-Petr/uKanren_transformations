@@ -7,6 +7,7 @@ import Syntax
 import qualified Eval
 
 import FairStream
+import Util
 
 ---------------------------------------
 
@@ -85,39 +86,6 @@ eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
     Nothing -> return (Just q, a)
     Just s  -> return (Just $ Disj q s, a)
 
-
----------------------------------------
-
-getLeftLeaf :: GenStream s l -> (Goal, s)
-getLeftLeaf (Disj a _  ) = getLeftLeaf a
-getLeftLeaf (Conj a _ _) = getLeftLeaf a
-getLeftLeaf (Goal g s) = (g, s)
-
-high :: GenStream a b -> Int
-high (Conj a _ _) = 1 + high a
-high (Disj a _  ) = 1 + high a
-high _            = 0
-
-size :: GenStream a b -> Int
-size (Conj a _ b) = 1 + size a + size b
-size (Disj a b)   = 1 + size a + size b
-size _            = 1
-
-disjCount :: GenStream a b -> Int
-disjCount (Conj a _ _) = disjCount a
-disjCount (Disj a b)   = 1 + disjCount a + disjCount b
-disjCount _            = 0
-
-conjCount :: GenStream a b -> Int
-conjCount (Conj a _ b) = 1 + conjCount a + conjCount b
-conjCount (Disj a b)   = conjCount a + conjCount b
-conjCount _            = 0
-
-disjsInConjs :: GenStream a b -> [Int]
-disjsInConjs (Conj a _ _) = [disjCount a]
-disjsInConjs (Disj a b)   = disjsInConjs a ++ disjsInConjs b
-disjsInConjs _            = []
-
 ---------------------------------------
 
 printInfo :: Int -> Int -> Stream l -> a -> a
@@ -129,13 +97,6 @@ printInfo step i s =
 
 def2fun :: Def -> Fun
 def2fun (Def n a g) = (n, (a, g))
-
-getTerm :: Subst -> Ts -> Ts
-getTerm s (V x) =
-  case lookup x $ snd s of
-    Nothing -> V x
-    Just t  -> getTerm s t
-getTerm s (C n a) = C n $ map (getTerm s) a
 
 prepareAnswer :: Subst -> [X] -> [(X, Ts)]
 prepareAnswer s x = map (\(x,i) -> (x, getTerm s $ V i)) $ zip x [0..]
