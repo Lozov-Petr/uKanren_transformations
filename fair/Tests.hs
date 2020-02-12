@@ -5,21 +5,26 @@ import Syntax
 import FairStream
 import Labels
 
-listAB_Def = [Def "list" ["e", "l"] $
+---------------------------------------
+
+listAB_def = [Def "list" ["e", "l"] $
   V "l" === C "nil" [] |||
   Fresh "ls" (V "l" === C "cons" [V "e", V "ls"] &&&
               Invoke "list" [V "e", V "ls"])
              ]
 
-listAB_Call = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
+listAB_call = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
 
-listAB_Vars = ["x"]
+listAB_vars = ["x"]
 
-listAB_Unit :: RunGoal X ()
-listAB_Unit = RG listAB_Call
+listAB_unit :: RunGoal X ()
+listAB_unit = RG listAB_call
 
-listAB_Int :: RunGoal X Int
-listAB_Int = RG listAB_Call
+listAB_int :: RunGoal X Int
+listAB_int = RG listAB_call
+
+listAB_embed :: RunGoal X Streams
+listAB_embed = RG listAB_call
 
 ---------------------------------------
 
@@ -43,8 +48,11 @@ treeVars = ["t"]
 treeUnit :: RunGoal X ()
 treeUnit = RG treeCall
 
-tree_int :: RunGoal X Int
-tree_int = RG treeCall
+treeInt :: RunGoal X Int
+treeInt = RG treeCall
+
+treeEmbed :: RunGoal X Streams
+treeEmbed = RG treeCall
 
 ---------------------------------------
 
@@ -66,6 +74,9 @@ bottlesInt = RG bottlesCall
 bottlesDisj :: RunGoal X Disj
 bottlesDisj = RG bottlesCall
 
+bottlesEmbed :: RunGoal X Streams
+bottlesEmbed = RG bottlesCall
+
 ---------------------------------------
 
 bridgeCall =
@@ -85,3 +96,6 @@ bridgeDisj = RG bridgeCall
 
 bridgeSignVars :: RunGoal X SignVars
 bridgeSignVars = RG bridgeCall
+
+bridgeEmbed :: RunGoal X Streams
+bridgeEmbed = RG bridgeCall

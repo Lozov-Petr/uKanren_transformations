@@ -7,23 +7,24 @@ import qualified Embed
 
 import Util
 import FairStream
-import FairEval
 
 ---------------------------------------
 
 instance Labels () () where
-  new       () _    = ()
-  keep      ()   () = ()
+  new () _ = ()
+  keep () () = ()
   predicate () _ () = True
-  update    () _ () = ()
+  update () _ _ () = ()
+  size _ _ = 0
 
 ---------------------------------------
 
 instance Labels Int Int where
-  new       i _   = i
-  keep      _   n = n
+  new i _ = i
+  keep _ n = n
   predicate _ _ n = n /= 0
-  update    _ _ n = n - 1
+  update _ _ _ n = n - 1
+  size _ _ = 0
 
 ---------------------------------------
 
@@ -34,10 +35,11 @@ disjs (Disj a b)         = 1 + disjs a + disjs b
 disjs _                  = 0
 
 instance Labels Disj Disj where
-  new       (D _ i) s         = D (disjs s) i
-  keep      _         (D _ n) = D 0 n
+  new (D _ i) s = D (disjs s) i
+  keep _ (D _ n) = D 0 n
   predicate (D p _) _ (D d n) = n /= 0 && d <= p
-  update    _       s (D _ n) = D (disjs s) (n - 1)
+  update  _  _ s (D _ n) = D (disjs s) (n - 1)
+  size _ _ = 0
 
 ---------------------------------------
 
@@ -46,11 +48,23 @@ data SignVarsP = SVP [Int] Int Int
 
 -- It desn't work
 instance Labels SignVars SignVarsP where
-  new (SVP l n m) s = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
+  new (SVP l n m) s = SV (map (\v -> (v, substInT a $ V v)) l) n m where
     (_, a) = getLeftLeaf s
   keep _ l = l
-  predicate _ s (SV v i j) = j /= 0 && (i /= 0 || any (\(i, t) -> Embed.isStrictInst t $ getTerm a $ V i) v) where
+  predicate _ s (SV v i j) = j /= 0 && (i /= 0 || any (\(i, t) -> Embed.isStrictInst t $ substInT a $ V i) v) where
     (_, a) = getLeftLeaf s
-  update (SVP l n _) s (SV _ 0 m) = SV (map (\v -> (v, getTerm a $ V v)) l) n m where
+  update (SVP l n _) _ s (SV _ 0 m) = SV (map (\v -> (v, substInT a $ V v)) l) n m where
     (_, a) = getLeftLeaf s
-  update _ _ (SV l n m) = SV l (n-1) (m-1)
+  update _ _ _ (SV l n m) = SV l (n-1) (m-1)
+  size _ (SV l _ _) = length l
+
+---------------------------------------
+newtype Streams           = Streams [Stream Streams] deriving Show
+newtype StreamsComparator = SC (Stream Streams -> Stream Streams -> Bool)
+
+instance Labels Streams StreamsComparator where
+  new _ _ = Streams []
+  keep _ _ = Streams []
+  predicate (SC f) s (Streams ss) = not $ any (flip f s) ss
+  update _ s _ (Streams ss) = Streams $ s:ss
+  size _ (Streams ss) = length ss

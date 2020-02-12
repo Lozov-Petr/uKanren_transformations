@@ -8,6 +8,7 @@ import qualified Eval
 
 import FairStream
 import Util
+import Labels
 
 ---------------------------------------
 
@@ -78,8 +79,9 @@ eval par fs (Conj s l g) =
       case r of
         (Nothing, Nothing) -> return r
         (Nothing, Just a ) -> fillHole g a >>= \s -> return (Just s, Nothing)
-        (Just s , Nothing) -> return (Just $ Conj s (update par s l) g, Nothing)
-        (Just s , Just a ) -> fillHole g a >>= \s' -> return (Just $ Disj s' $ Conj s (update par s l) g, Nothing)
+        (Just s', Nothing) -> return (Just $ Conj s' (update par s s' l) g, Nothing)
+        (Just s', Just a ) -> fillHole g a >>= \s'' ->
+                              return (Just $ Disj s'' $ Conj s' (update par s s' l) g, Nothing)
     else swapConjs par s g >>= \s -> return (Just s, Nothing)
 eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
   case s of
@@ -88,18 +90,19 @@ eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
 
 ---------------------------------------
 
-printInfo :: Int -> Int -> Stream l -> a -> a
-printInfo step i s =
+printInfo :: Labels l p => Int -> Int -> p -> Stream l -> a -> a
+printInfo step i p s =
   if i `mod` step /= 0 then id else
     let dInC = disjsInConjs s in
-    trace $ printf "step: %10d\nhigh: %10d\nsize: %10d\ndisj: %10d\nconj: %10d\ncnjA: %10d\nmaxD: %10d\n\n"
-            i (high s) (size s) (disjCount s) (conjCount s) (length dInC) (maximum $ (-1):dInC)
+    trace $ printf "step: %10d\nhigh: %10d\nsize: %10d\ndisj: %10d\nconj: %10d\ncnjA: %10d\nmaxD: %10d\nmaxL: %10d\n\n"
+            i (high s) (sizeStream s) (disjCount s) (conjCount s)
+            (length dInC) (maximum $ (-1):dInC) (maxSizeLabels p s)
 
 def2fun :: Def -> Fun
 def2fun (Def n a g) = (n, (a, g))
 
 prepareAnswer :: Subst -> [X] -> [(X, Ts)]
-prepareAnswer s x = map (\(x,i) -> (x, getTerm s $ V i)) $ zip x [0..]
+prepareAnswer s x = map (\(x,i) -> (x, substInT s $ V i)) $ zip x [0..]
 
 data Answers a b = Nil b
                  | a ::: Answers a b
@@ -117,17 +120,20 @@ takeAnswers _ a@(Nil _)        = a
 takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", 0)
 takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
 takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b 
-    
-run :: (Labels l p, Show l) => [X] -> [Def] -> p -> RunGoal X l -> RunAnswers
-run vars defs p g =
-  case toSemG' (zip vars $ map V [0..]) (length vars) g of
-    Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, 0)
-    Right (g, i) -> run' p 0 (map def2fun defs) $ goal g (i, [])
-  where
+
+initStream :: RunGoal X l -> [X] -> Er (Stream l)
+initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> return $ goal g (i, []) where
   toSemG' :: [(X, Ts)] -> Int -> RunGoal X l -> Er (RunGoal S l, Int)
   toSemG' e i (RG g) = toSemG e i g >>= \(g,i) -> return (RG g, i)
   goal :: RunGoal S l -> Subst -> Stream l
   goal (RG g) = Goal g
+
+run :: (Labels l p, Show l) => [X] -> [Def] -> p -> RunGoal X l -> RunAnswers
+run vars defs p g =
+  case initStream g vars of
+    Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, 0)
+    Right s -> run' p 0 (map def2fun defs) s
+  where
   run' :: (Labels l p, Show l) => p -> Int -> [Fun] -> Stream l -> RunAnswers
   run' p i fs s =
     case eval p fs s of
@@ -135,8 +141,8 @@ run vars defs p g =
       Right (Nothing, Nothing) -> Nil (Nothing, i)
       Right (Nothing, Just a ) -> (prepareAnswer a vars, i) ::: Nil (Nothing, i)
       Right (Just s , Nothing) ->
-        -- printInfo 10000 i s $
+        printInfo 10000 i p s $
         run' p (i+1) fs s
       Right (Just s , Just a ) ->
-        -- printInfo 10000 i s $
+        printInfo 10000 i p s $
         (prepareAnswer a vars, i) ::: run' p (i+1) fs s

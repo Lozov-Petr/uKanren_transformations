@@ -2,11 +2,19 @@ module Main where
 
 import FairEval
 import Tests
+import Labels
+import Embedding
 
 import Program.Bottles
 import Program.Bridge
 
 main = do
+
+  -- putStrLn $ show $ run listAB_vars listAB_def (SC shallowestIgnoringEmbed) listAB_embed
+  -- putStrLn $ show $ run listAB_vars listAB_def (SC shallowestEmbed) listAB_embed
+  -- putStrLn $ show $ run treeVars treeDefs (SC shallowestIgnoringEmbed) treeEmbed
+  -- putStrLn $ show $ run treeVars treeDefs (SC shallowestEmbed) treeEmbed
+
 
   -- first answer
   -- step:    2460000
@@ -16,7 +24,7 @@ main = do
   -- conj:      23234
   -- cnjA:       6310
   -- maxD:          8
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles () bottlesUnit
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles () bottlesUnit
 
   ----------------------------------------------------
 
@@ -41,6 +49,9 @@ main = do
   -- cnjA: 6310
   -- maxD: 8
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (D 10 10000) bottlesDisj
+
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (SC shallowestIgnoringEmbed) bottlesEmbed
+  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (SC shallowestEmbed) bottlesEmbed
 
   ----------------------------------------------------
   ----------------------------------------------------
@@ -82,3 +93,6 @@ main = do
 
   ----------------------------------------------------
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SVP [0, 1] 100 10000) bridgeVars
+
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SC shallowestIgnoringEmbed) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SC shallowestEmbed) bridgeEmbed

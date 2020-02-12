@@ -6,6 +6,8 @@ import Text.Printf
 
 import Syntax
 
+---------------------------------------
+
 type Er a = Either String a
 
 type Goal  = G S
@@ -34,4 +36,5 @@ class Labels l p where
   new       :: p -> Stream l -> l
   keep      :: p -> l -> l
   predicate :: p -> Stream l -> l -> Bool
-  update    :: p -> Stream l -> l -> l
+  update    :: p -> Stream l -> Stream l -> l -> l
+  size      :: p -> l -> Int
