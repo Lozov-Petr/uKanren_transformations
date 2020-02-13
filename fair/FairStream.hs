@@ -30,6 +30,11 @@ instance (Show s, Show l) => Show (GenStream s l) where
   show (Disj p q)   = printf "(%s |+| %s)" (show p) $ show q
   show (Conj s l g) = printf "(%s |*|{%s} %s)" (show s) (show l) $ show g
 
+instance Functor (GenStream s) where
+  fmap f (Conj a l b) = Conj (fmap f a) (f l) (fmap f b)
+  fmap f (Disj a b)   = Disj (fmap f a) (fmap f b)
+  fmap f (Goal g s)   = Goal g s
+
 ---------------------------------------
 
 class Labels l p where

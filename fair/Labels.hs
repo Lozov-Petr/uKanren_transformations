@@ -10,17 +10,12 @@ import FairStream
 
 ---------------------------------------
 
-labelMap :: (l1 -> l2) -> GenStream s l1 -> GenStream s l2
-labelMap f (Conj a l b) = Conj (labelMap f a) (f l) (labelMap f b)
-labelMap f (Disj a b)   = Disj (labelMap f a) (labelMap f b)
-labelMap f (Goal g s)   = Goal g s
-
 instance (Labels l1 p1, Labels l2 p2) => Labels (l1, l2) (p1, p2) where
-  new (p1, p2) s = (new p1 $ labelMap fst s, new p2 $ labelMap snd s)
+  new (p1, p2) s = (new p1 $ fmap fst s, new p2 $ fmap snd s)
   keep (p1, p2) (l1, l2) = (keep p1 l1, keep p2 l2)
-  predicate (p1, p2) s (l1, l2) = predicate p1 (labelMap fst s) l1 && predicate p2 (labelMap snd s) l2
-  update (p1, p2) s1 s2 (l1, l2) = (update p1 (labelMap fst s1) (labelMap fst s2) l1,
-                                    update p2 (labelMap snd s1) (labelMap snd s2) l2)
+  predicate (p1, p2) s (l1, l2) = predicate p1 (fmap fst s) l1 && predicate p2 (fmap snd s) l2
+  update (p1, p2) s1 s2 (l1, l2) = (update p1 (fmap fst s1) (fmap fst s2) l1,
+                                    update p2 (fmap snd s1) (fmap snd s2) l2)
   size (p1, p2) (l1, l2) = size p1 l1 + size p2 l2
 
 ---------------------------------------
