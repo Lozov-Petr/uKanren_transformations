@@ -18,7 +18,7 @@ embedT a     b     = couple a b || diving a b where
 shallowEmbedG :: Goal -> Goal -> Bool
 shallowEmbedG a b = couple a b || diving a b where
   couple (_  :=:  _ ) (_   :=:  _  ) = True
-  couple (Invoke n _) (Invoke m _  ) = n == m 
+  couple (Invoke n _) (Invoke m _  ) = n == m
   couple (g1 :/\: g2) (g1' :/\: g2') = shallowEmbedG g1 g1' && shallowEmbedG g2 g2'
   couple (g1 :\/: g2) (g1' :\/: g2') = shallowEmbedG g1 g1' && shallowEmbedG g2 g2'
   couple _ _ = False
@@ -40,7 +40,7 @@ embedG a b = couple a b || diving a b where
 ---------------------------------------
 
 data FunName = Uni | Fun String deriving Eq
-  
+
 data AbstractFormula = Call FunName [Ts]
                      | AbstractFormula :&: AbstractFormula
                      | AbstractFormula :|: AbstractFormula deriving Eq

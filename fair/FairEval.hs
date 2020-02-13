@@ -136,10 +136,10 @@ instance (Show a, Show b) => Show (Answers a b) where
     show' (x ::: xs) = printf "\n%s\n%s" (show x) $ show' xs
 
 takeAnswers :: Int -> RunAnswers -> RunAnswers
-takeAnswers _ a@(Nil _)        = a 
+takeAnswers _ a@(Nil _)        = a
 takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", 0)
 takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
-takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b 
+takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b
 
 initStream :: RunGoal X l -> [X] -> Er (Stream l)
 initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> return $ goal g (i, []) where
