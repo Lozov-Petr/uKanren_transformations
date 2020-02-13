@@ -10,10 +10,15 @@ getLeftLeaf (Disj a _  ) = getLeftLeaf a
 getLeftLeaf (Conj a _ _) = getLeftLeaf a
 getLeftLeaf (Goal g s) = (g, s)
 
-high :: GenStream a b -> Int
-high (Conj a _ _) = 1 + high a
-high (Disj a _  ) = 1 + high a
-high _            = 0
+height :: GenStream a b -> Int
+height (Conj a _ b) = 1 + max (height a) (height b)
+height (Disj a b  ) = 1 + max (height a) (height b)
+height _            = 0
+
+path :: GenStream a b -> Int
+path (Conj a _ _) = 1 + path a
+path (Disj a _  ) = 1 + path a
+path _            = 0
 
 sizeStream :: GenStream a b -> Int
 sizeStream (Conj a _ b) = 1 + sizeStream a + sizeStream b

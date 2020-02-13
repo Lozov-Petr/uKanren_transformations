@@ -12,6 +12,22 @@ import Labels
 
 ---------------------------------------
 
+data Log = Unify
+         | DisjIntro
+         | ConjIntro
+         | InvokeStep
+         | ConjSwap
+         | ConjStop
+         | ConjStopAns
+         | ConjStep
+         | ConjStepAns
+         | DisjStop
+         | DisjStopAns
+         | DisjStep
+         | DisjStepAns deriving Eq
+
+---------------------------------------
+
 toSemTs :: [(X, Ts)] -> [Tx] -> Er [Ts]
 toSemTs e l = foldr combine (return []) l where
   combine x l = toSemT e x >>= \x -> l >>= \l -> return $ x : l
@@ -57,11 +73,11 @@ swapConjs p = swap p id where
 
 ---------------------------------------
 
-eval :: Labels l p => p -> [Fun] -> Stream l -> Er (Maybe (Stream l), Maybe Subst)
-eval par fs (Goal (p :=: q) s)        = return (Nothing, unify s p q)
-eval par fs (Goal (p :\/: q) s)       = return (Just $ Disj (Goal p s) $ Goal q s, Nothing)
+eval :: Labels l p => p -> [Fun] -> Stream l -> Er (Maybe (Stream l), Maybe Subst, [Log])
+eval par fs (Goal (p :=: q) s)        = return (Nothing, unify s p q, [Unify])
+eval par fs (Goal (p :\/: q) s)       = return (Just $ Disj (Goal p s) $ Goal q s, Nothing, [DisjIntro])
 eval par fs (Goal (p :/\: g) s)       = let p' = Goal p s in
-                                        return (Just $ Conj p' (new par p') $ Goal g (), Nothing)
+                                        return (Just $ Conj p' (new par p') $ Goal g (), Nothing, [ConjIntro])
 eval _   _  (Goal (Fresh _ _) _)      = Left "Unexpected fresh-expresseion."
 eval _   _  (Goal (Let _ _) _)        = Left "Let-expressions aren't supported."
 eval par fs (Goal (Invoke n a) (i,s)) =
@@ -69,7 +85,7 @@ eval par fs (Goal (Invoke n a) (i,s)) =
     Nothing      -> Left $ printf "Call of undefined relation '%s'." n
     Just (ns, g) ->
       if length ns == length a
-        then toSemG (zip ns a) i g >>= \(g,j) -> return $ (Just $ Goal g (j,s), Nothing)
+        then toSemG (zip ns a) i g >>= \(g,j) -> return $ (Just $ Goal g (j,s), Nothing, [InvokeStep])
         else Left $ printf
                "Unexpected count of relation's arguments (actual: %d, expected: %d)."
                (length a) (length ns)
@@ -77,26 +93,30 @@ eval par fs (Conj s l g) =
   if predicate par s l
     then eval par fs s >>= \r ->
       case r of
-        (Nothing, Nothing) -> return r
-        (Nothing, Just a ) -> fillHole g a >>= \s -> return (Just s, Nothing)
-        (Just s', Nothing) -> return (Just $ Conj s' (update par s s' l) g, Nothing)
-        (Just s', Just a ) -> fillHole g a >>= \s'' ->
-                              return (Just $ Disj s'' $ Conj s' (update par s s' l) g, Nothing)
-    else swapConjs par s g >>= \s -> return (Just s, Nothing)
-eval par fs (Disj p q) = eval par fs p >>= \(s, a) ->
-  case s of
-    Nothing -> return (Just q, a)
-    Just s  -> return (Just $ Disj q s, a)
+        (Nothing, Nothing, log) -> return (Nothing, Nothing, ConjStop:log)
+        (Nothing, Just a,  log) -> fillHole g a >>= \s -> return (Just s, Nothing, ConjStopAns:log)
+        (Just s', Nothing, log) -> return (Just $ Conj s' (update par s s' l) g, Nothing, ConjStep:log)
+        (Just s', Just a,  log) -> fillHole g a >>= \s'' ->
+                              return (Just $ Disj s'' $ Conj s' (update par s s' l) g, Nothing, ConjStepAns:log)
+    else swapConjs par s g >>= \s -> return (Just s, Nothing, [ConjSwap])
+eval par fs (Disj p q) = eval par fs p >>= \r ->
+  case r of
+    (Nothing, Nothing, l) -> return (Just q, Nothing, DisjStop:l)
+    (Nothing, Just a,  l) -> return (Just q, Just a, DisjStopAns:l)
+    (Just s,  Nothing, l) -> return (Just $ Disj q s, Nothing, DisjStep:l)
+    (Just s,  Just a,  l) -> return (Just $ Disj q s, Just a, DisjStepAns:l)
 
 ---------------------------------------
 
-printInfo :: Labels l p => Int -> Int -> p -> Stream l -> a -> a
-printInfo step i p s =
+printInfo :: Labels l p => Int -> Int -> Int -> p -> Stream l -> a -> a
+printInfo step i swaps p s =
   if i `mod` step /= 0 then id else
     let dInC = disjsInConjs s in
-    trace $ printf "step: %10d\nhigh: %10d\nsize: %10d\ndisj: %10d\nconj: %10d\ncnjA: %10d\nmaxD: %10d\nmaxL: %10d\n\n"
-            i (high s) (sizeStream s) (disjCount s) (conjCount s)
-            (length dInC) (maximum $ (-1):dInC) (maxSizeLabels p s)
+    trace $ printf
+      ("step  : %10d\npath  : %10d\nheight: %10d\nsize  : %10d\ndisjs : %10d\n" ++
+       "conjs : %10d\nactCnj: %10d\nd in c: %10d\nmaxLs : %10d\nswaps : %10d\n\n")
+      i (path s) (height s) (sizeStream s) (disjCount s) (conjCount s)
+      (length dInC) (maximum $ (-1):dInC) (maxSizeLabels p s) swaps
 
 def2fun :: Def -> Fun
 def2fun (Def n a g) = (n, (a, g))
@@ -132,17 +152,19 @@ run :: (Labels l p, Show l) => [X] -> [Def] -> p -> RunGoal X l -> RunAnswers
 run vars defs p g =
   case initStream g vars of
     Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, 0)
-    Right s -> run' p 0 (map def2fun defs) s
+    Right s -> run' p 0 0 (map def2fun defs) s
   where
-  run' :: (Labels l p, Show l) => p -> Int -> [Fun] -> Stream l -> RunAnswers
-  run' p i fs s =
+  run' :: (Labels l p, Show l) => p -> Int -> Int -> [Fun] -> Stream l -> RunAnswers
+  run' p i swaps fs s =
     case eval p fs s of
       Left msg                 -> Nil (Just msg, i)
-      Right (Nothing, Nothing) -> Nil (Nothing, i)
-      Right (Nothing, Just a ) -> (prepareAnswer a vars, i) ::: Nil (Nothing, i)
-      Right (Just s , Nothing) ->
-        printInfo 10000 i p s $
-        run' p (i+1) fs s
-      Right (Just s , Just a ) ->
-        printInfo 10000 i p s $
-        (prepareAnswer a vars, i) ::: run' p (i+1) fs s
+      Right (Nothing, Nothing, l) -> Nil (Nothing, i)
+      Right (Nothing, Just a,  l) -> (prepareAnswer a vars, i) ::: Nil (Nothing, i)
+      Right (Just s , Nothing, l) ->
+        let swaps' = if last l == ConjSwap then swaps + 1 else swaps in
+        printInfo 10000 i swaps' p s $
+        run' p (i+1) swaps' fs s
+      Right (Just s , Just a,  l) ->
+        let swaps' = if last l == ConjSwap then swaps + 1 else swaps in
+        printInfo 10000 i swaps' p s $
+        (prepareAnswer a vars, i) ::: run' p (i+1) swaps' fs s
