@@ -16,12 +16,14 @@ main = do
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowIgnoringEmbed eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 deepIgnoringEmbed eqAF) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringSubformula eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
 
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 deepIgnoringEmbed eqAF) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringSubformula eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
 
   ----------------------------------------------------
@@ -159,6 +161,19 @@ main = do
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 deepIgnoringEmbed eqAF) bridgeEmbed
 
   ----------------------------------------------------
+
+  -- first answer
+  -- step  :    4470000
+  -- path  :         21
+  -- height:         25
+  -- size  :     376563
+  -- disjs :      31817
+  -- conjs :     156464
+  -- actCnj:      25733
+  -- d in c:          2
+  -- maxLs :         11
+  -- swaps :     742304
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringSubformula eqAF) bridgeEmbed
 
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestIgnoringEmbed) bridgeEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestEmbed) bridgeEmbed

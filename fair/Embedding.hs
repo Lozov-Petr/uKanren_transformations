@@ -75,6 +75,17 @@ shallowestIgnoringEmbed a b = embed (streamToAF a) $ streamToAF b where
   diving x (a :|: b) = embed x a || embed x b
   diving _ _         = False
 
+shallowestIgnoringSubformula :: Stream l -> Stream l -> Bool
+shallowestIgnoringSubformula a b = subf (streamToAF a) $ streamToAF b where
+  subf a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b
+  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
+  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
+  couple _         _           = False
+  diving x (a :&: b) = subf x a || subf x b
+  diving x (a :|: b) = subf x a || subf x b
+  diving _ _         = False
+
 -- ignores only substitutions
 -- does not distinguish between syntactic and semantic operators
 shallowIgnoringEmbed :: Stream l -> Stream l -> Bool
