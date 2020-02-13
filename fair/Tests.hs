@@ -71,7 +71,7 @@ bottlesUnit = RG bottlesCall
 bottlesInt :: RunGoal X Int
 bottlesInt = RG bottlesCall
 
-bottlesDisj :: RunGoal X Disj
+bottlesDisj :: RunGoal X (Disj, Int)
 bottlesDisj = RG bottlesCall
 
 bottlesEmbed :: RunGoal X Streams
@@ -91,10 +91,10 @@ bridgeUnit = RG bridgeCall
 bridgeInt :: RunGoal X Int
 bridgeInt  = RG bridgeCall
 
-bridgeDisj :: RunGoal X Disj
+bridgeDisj :: RunGoal X (Disj, Int)
 bridgeDisj = RG bridgeCall
 
-bridgeSignVars :: RunGoal X SignVars
+bridgeSignVars :: RunGoal X (SignVars, Int)
 bridgeSignVars = RG bridgeCall
 
 bridgeEmbed :: RunGoal X Streams

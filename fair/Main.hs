@@ -67,7 +67,7 @@ main = do
   -- d in c:          9
   -- maxLs :          0
   -- swaps :          0
-  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (D 10 10000) bottlesDisj
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (D 10, 10000 :: Int) bottlesDisj
 
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc1 shallowestIgnoringEmbed) bottlesEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc2 shallowestIgnoringEmbed eqAF) bottlesEmbed
@@ -117,11 +117,12 @@ main = do
   -- d in c:         11
   -- maxLs :          0
   -- swaps :       1158
-  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (D 10 10000) bridgeDisj
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (D 10, 10000 :: Int) bridgeDisj
 
   ----------------------------------------------------
 
-  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SVP [0, 1] 100 10000) bridgeVars
+  -- Doesn't work
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SVP [0, 1] 100, 10000 :: Int) bridgeSignVars
 
   ----------------------------------------------------
   -- first answer
