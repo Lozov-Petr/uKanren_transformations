@@ -56,6 +56,9 @@ streamToAF (Goal g _)   = goalToAF g
 streamToAF (Disj a b)   = streamToAF a :|: streamToAF b
 streamToAF (Conj a _ b) = streamToAF a :&: streamToAF b
 
+streamToDeepAF :: Stream l -> AbstractFormula
+streamToDeepAF = streamToAF . substInS
+
 eqAF :: GenStream s l -> GenStream s l -> Bool
 eqAF a b = streamToAF a == streamToAF b
 
@@ -65,6 +68,31 @@ shallowestIgnoringEmbed :: Stream l -> Stream l -> Bool
 shallowestIgnoringEmbed a b = embed (streamToAF a) $ streamToAF b where
   embed a b = couple a b || diving a b
   couple (Call n a) (Call m b) = n == m && length a == length b
+  couple (a :&: b) (a' :&: b') = embed a a' && embed b b'
+  couple (a :|: b) (a' :|: b') = embed a a' && embed b b'
+  couple _         _           = False
+  diving x (a :&: b) = embed x a || embed x b
+  diving x (a :|: b) = embed x a || embed x b
+  diving _ _         = False
+
+-- ignores only substitutions
+-- does not distinguish between syntactic and semantic operators
+shallowIgnoringEmbed :: Stream l -> Stream l -> Bool
+shallowIgnoringEmbed a b = embed (streamToAF a) $ streamToAF b where
+  embed a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b && all (uncurry embedT) (zip a b)
+  couple (a :&: b) (a' :&: b') = embed a a' && embed b b'
+  couple (a :|: b) (a' :|: b') = embed a a' && embed b b'
+  couple _         _           = False
+  diving x (a :&: b) = embed x a || embed x b
+  diving x (a :|: b) = embed x a || embed x b
+  diving _ _         = False
+
+-- does not distinguish between syntactic and semantic operators
+deepIgnoringEmbed :: Stream l -> Stream l -> Bool
+deepIgnoringEmbed a b = embed (streamToDeepAF a) $ streamToDeepAF b where
+  embed a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b && all (uncurry embedT) (zip a b)
   couple (a :&: b) (a' :&: b') = embed a a' && embed b b'
   couple (a :|: b) (a' :|: b') = embed a a' && embed b b'
   couple _         _           = False
@@ -83,6 +111,7 @@ shallowestEmbed a b = couple a b || diving a b where
   diving x (Disj a b)   = shallowestEmbed x a || shallowestEmbed x b
   diving x (Conj a _ b) = shallowestEmbed x a || shallowestEmbed x b
   diving _ _            = False
+
 ---------------------------------------
 
 embedS :: Stream l -> Stream l -> Bool

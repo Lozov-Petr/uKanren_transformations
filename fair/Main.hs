@@ -14,8 +14,13 @@ main = do
 
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestIgnoringEmbed) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowIgnoringEmbed eqAF) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (sc2 deepIgnoringEmbed eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
+
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc2 shallowIgnoringEmbed eqAF) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc2 deepIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
 
@@ -131,6 +136,26 @@ main = do
   -- maxLs :         11
   -- swaps :    1056625
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringEmbed eqAF) bridgeEmbed
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    6260000
+  -- path  :         14
+  -- height:         27
+  -- size  :     637875
+  -- disjs :      53007
+  -- conjs :     265930
+  -- actCnj:      41209
+  -- d in c:          2
+  -- maxLs :         11
+  -- swaps :    1055534
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowIgnoringEmbed eqAF) bridgeEmbed
+
+  ----------------------------------------------------
+
+  -- !!! Really slow: deep embedding is quite expensive
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 deepIgnoringEmbed eqAF) bridgeEmbed
 
   ----------------------------------------------------
 
