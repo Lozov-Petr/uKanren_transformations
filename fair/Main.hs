@@ -12,10 +12,12 @@ import Program.Bridge
 
 main = do
 
-  -- putStrLn $ show $ run listAB_vars listAB_def (SC shallowestIgnoringEmbed) listAB_embed
-  -- putStrLn $ show $ run listAB_vars listAB_def (SC shallowestEmbed) listAB_embed
-  -- putStrLn $ show $ run treeVars treeDefs (SC shallowestIgnoringEmbed) treeEmbed
-  -- putStrLn $ show $ run treeVars treeDefs (SC shallowestEmbed) treeEmbed
+  putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestIgnoringEmbed) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
+  putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
 
   ----------------------------------------------------
 
@@ -62,8 +64,9 @@ main = do
   -- swaps :          0
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (D 10 10000) bottlesDisj
 
-  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (SC shallowestIgnoringEmbed) bottlesEmbed
-  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (SC shallowestEmbed) bottlesEmbed
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc1 shallowestIgnoringEmbed) bottlesEmbed
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc2 shallowestIgnoringEmbed eqAF) bottlesEmbed
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc1 shallowestEmbed) bottlesEmbed
 
   ----------------------------------------------------
   ----------------------------------------------------
@@ -98,7 +101,7 @@ main = do
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (100 :: Int) bridgeInt
 
   ----------------------------------------------------
-
+  -- first answer
   -- step  :    1420000
   -- path  :         16
   -- height:         24
@@ -112,7 +115,24 @@ main = do
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (D 10 10000) bridgeDisj
 
   ----------------------------------------------------
+
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SVP [0, 1] 100 10000) bridgeVars
 
-  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SC shallowestIgnoringEmbed) bridgeEmbed
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SC shallowestEmbed) bridgeEmbed
+  ----------------------------------------------------
+  -- first answer
+  -- step  :    6250000
+  -- path  :         21
+  -- height:         27
+  -- size  :     639561
+  -- disjs :      52941
+  -- conjs :     266839
+  -- actCnj:      42533
+  -- d in c:          2
+  -- maxLs :         11
+  -- swaps :    1056625
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringEmbed eqAF) bridgeEmbed
+
+  ----------------------------------------------------
+
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestIgnoringEmbed) bridgeEmbed
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestEmbed) bridgeEmbed

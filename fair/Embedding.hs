@@ -43,7 +43,7 @@ data FunName = Uni | Fun String deriving Eq
   
 data AbstractFormula = Call FunName [Ts]
                      | AbstractFormula :&: AbstractFormula
-                     | AbstractFormula :|: AbstractFormula
+                     | AbstractFormula :|: AbstractFormula deriving Eq
 
 goalToAF :: Goal -> AbstractFormula
 goalToAF (t1 :=: t2)  = Call Uni [t1, t2]
@@ -55,6 +55,9 @@ streamToAF :: GenStream s l -> AbstractFormula
 streamToAF (Goal g _)   = goalToAF g
 streamToAF (Disj a b)   = streamToAF a :|: streamToAF b
 streamToAF (Conj a _ b) = streamToAF a :&: streamToAF b
+
+eqAF :: GenStream s l -> GenStream s l -> Bool
+eqAF a b = streamToAF a == streamToAF b
 
 -- ignores terms and substitutions
 -- does not distinguish between syntactic and semantic operators

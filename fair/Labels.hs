@@ -59,12 +59,21 @@ instance Labels SignVars SignVarsP where
   size _ (SV l _ _) = length l
 
 ---------------------------------------
-newtype Streams           = Streams [Stream Streams] deriving Show
-newtype StreamsComparator = SC (Stream Streams -> Stream Streams -> Bool)
+
+newtype Streams = Streams [Stream Streams] deriving Show
+type Comparator = Stream Streams -> Stream Streams -> Bool
+data StreamsComparator = SC Comparator (Maybe Comparator)
+
+sc1 :: Comparator -> StreamsComparator
+sc1 = flip SC Nothing
+sc2 :: Comparator -> Comparator -> StreamsComparator
+sc2 f = SC f . Just
 
 instance Labels Streams StreamsComparator where
   new _ _ = Streams []
   keep _ _ = Streams []
-  predicate (SC f) s (Streams ss) = not $ any (flip f s) ss
-  update _ s _ (Streams ss) = Streams $ s:ss
+  predicate (SC f (Just g)) s (Streams ss@(x:y:_)) | g x y = not $ any (flip f s) ss
+  predicate (SC _ (Just g)) s (Streams (x:_)) | g s x = True
+  predicate (SC f _) s (Streams ss) = not $ any (flip f s) ss
+  update _ s _ (Streams xs) = Streams $ s:xs
   size _ (Streams ss) = length ss
