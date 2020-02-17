@@ -8,7 +8,6 @@ import qualified Eval
 
 import FairStream
 import Util
-import Labels
 
 ---------------------------------------
 
@@ -85,7 +84,9 @@ eval par fs (Goal (Invoke n a) (i,s)) =
     Nothing      -> Left $ printf "Call of undefined relation '%s'." n
     Just (ns, g) ->
       if length ns == length a
-        then toSemG (zip ns a) i g >>= \(g,j) -> return $ (Just $ Goal g (j,s), Nothing, [InvokeStep])
+        then case toSemG (zip ns a) i g of
+               Left msg -> Left $ printf "Error invoke '%s'. %s" n msg
+               Right (g,j) -> return $ (Just $ Goal g (j,s), Nothing, [InvokeStep])
         else Left $ printf
                "Unexpected count of relation's arguments (actual: %d, expected: %d)."
                (length a) (length ns)
