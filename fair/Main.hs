@@ -12,6 +12,7 @@ import Program.Bridge
 
 main = do
 
+  putStrLn $ show $ run listAB_vars listAB_def (I 5) listAB_inv
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestIgnoringEmbed) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowIgnoringEmbed eqAF) listAB_embed
@@ -19,6 +20,7 @@ main = do
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringSubformula eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
 
+  putStrLn $ show $ run treeVars treeDefs (I 5) treeInv
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowIgnoringEmbed eqAF) treeEmbed
@@ -56,6 +58,8 @@ main = do
   -- swaps :     198131
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (100 :: Int) bottlesInt
 
+  ----------------------------------------------------
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (I 50) bottlesInv
   ----------------------------------------------------
 
   -- first answer

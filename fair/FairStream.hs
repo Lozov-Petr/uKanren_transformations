@@ -8,6 +8,24 @@ import Syntax
 
 ---------------------------------------
 
+data Log = Unify
+         | DisjIntro
+         | ConjIntro
+         | InvokeStep
+         | ConjSwap
+         | ConjStop
+         | ConjStopAns
+         | ConjStep
+         | ConjStepAns
+         | DisjStop
+         | DisjStopAns
+         | DisjStep
+         | DisjStepAns deriving Eq
+
+type Logs = [Log]
+
+---------------------------------------
+
 type Er a = Either String a
 
 type Goal  = G S
@@ -41,5 +59,5 @@ class Labels l p where
   new       :: p -> Stream l -> l
   keep      :: p -> l -> l
   predicate :: p -> Stream l -> l -> Bool
-  update    :: p -> Stream l -> Stream l -> l -> l
+  update    :: p -> Stream l -> Stream l -> Logs -> l -> l
   size      :: p -> l -> Int

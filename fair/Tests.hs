@@ -28,6 +28,9 @@ listAB_unit = RG listAB_call
 listAB_int :: RunGoal X Int
 listAB_int = RG listAB_call
 
+listAB_inv :: RunGoal X Invokes
+listAB_inv = RG listAB_call
+
 listAB_embed :: RunGoal X Streams
 listAB_embed = RG listAB_call
 
@@ -56,6 +59,9 @@ treeUnit = RG treeCall
 treeInt :: RunGoal X Int
 treeInt = RG treeCall
 
+treeInv :: RunGoal X Invokes
+treeInv = RG treeCall
+
 treeEmbed :: RunGoal X Streams
 treeEmbed = RG treeCall
 
@@ -75,6 +81,9 @@ bottlesUnit = RG bottlesCall
 
 bottlesInt :: RunGoal X Int
 bottlesInt = RG bottlesCall
+
+bottlesInv :: RunGoal X Invokes
+bottlesInv = RG bottlesCall
 
 bottlesDisj :: RunGoal X (Disj, Int)
 bottlesDisj = RG bottlesCall
@@ -131,7 +140,6 @@ gcwEmbed = RG gcwCall
 
 hanoiDefs :: [Def]
 hanoiDefs = fst $ tree2defs hanoi
-
 
 pins :: Int -> Tx
 pins m = C "triple" [gen 0, C "nil" [], C "nil" []] where

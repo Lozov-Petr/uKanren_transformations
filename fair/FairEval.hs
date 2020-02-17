@@ -11,22 +11,6 @@ import Util
 
 ---------------------------------------
 
-data Log = Unify
-         | DisjIntro
-         | ConjIntro
-         | InvokeStep
-         | ConjSwap
-         | ConjStop
-         | ConjStopAns
-         | ConjStep
-         | ConjStepAns
-         | DisjStop
-         | DisjStopAns
-         | DisjStep
-         | DisjStepAns deriving Eq
-
----------------------------------------
-
 toSemTs :: [(X, Ts)] -> [Tx] -> Er [Ts]
 toSemTs e l = foldr combine (return []) l where
   combine x l = toSemT e x >>= \x -> l >>= \l -> return $ x : l
@@ -72,7 +56,7 @@ swapConjs p = swap p id where
 
 ---------------------------------------
 
-eval :: Labels l p => p -> [Fun] -> Stream l -> Er (Maybe (Stream l), Maybe Subst, [Log])
+eval :: Labels l p => p -> [Fun] -> Stream l -> Er (Maybe (Stream l), Maybe Subst, Logs)
 eval par fs (Goal (p :=: q) s)        = return (Nothing, unify s p q, [Unify])
 eval par fs (Goal (p :\/: q) s)       = return (Just $ Disj (Goal p s) $ Goal q s, Nothing, [DisjIntro])
 eval par fs (Goal (p :/\: g) s)       = let p' = Goal p s in
@@ -96,9 +80,9 @@ eval par fs (Conj s l g) =
       case r of
         (Nothing, Nothing, log) -> return (Nothing, Nothing, ConjStop:log)
         (Nothing, Just a,  log) -> fillHole g a >>= \s -> return (Just s, Nothing, ConjStopAns:log)
-        (Just s', Nothing, log) -> return (Just $ Conj s' (update par s s' l) g, Nothing, ConjStep:log)
+        (Just s', Nothing, log) -> return (Just $ Conj s' (update par s s' log l) g, Nothing, ConjStep:log)
         (Just s', Just a,  log) -> fillHole g a >>= \s'' ->
-                              return (Just $ Disj s'' $ Conj s' (update par s s' l) g, Nothing, ConjStepAns:log)
+                              return (Just $ Disj s'' $ Conj s' (update par s s' log l) g, Nothing, ConjStepAns:log)
     else swapConjs par s g >>= \s -> return (Just s, Nothing, [ConjSwap])
 eval par fs (Disj p q) = eval par fs p >>= \r ->
   case r of
