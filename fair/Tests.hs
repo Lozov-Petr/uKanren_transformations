@@ -4,6 +4,11 @@ import Syntax
 
 import FairStream
 import Labels
+import Util
+
+import Program.GCW
+import Program.Hanoi
+import Program.Scheme
 
 ---------------------------------------
 
@@ -99,3 +104,75 @@ bridgeSignVars = RG bridgeCall
 
 bridgeEmbed :: RunGoal X Streams
 bridgeEmbed = RG bridgeCall
+
+---------------------------------------
+
+gcwDefs :: [Def]
+gcwDefs = fst $ tree2defs gcw
+
+gcwCall :: G X
+gcwCall = Invoke "checkAnswer" [V "answer", C "true" []]
+
+gcwVars = ["answer"]
+
+gcwUnit :: RunGoal X ()
+gcwUnit = RG gcwCall
+
+gcwInt :: RunGoal X Int
+gcwInt  = RG gcwCall
+
+gcwDisj :: RunGoal X (Disj, Int)
+gcwDisj = RG gcwCall
+
+gcwEmbed :: RunGoal X Streams
+gcwEmbed = RG gcwCall
+
+---------------------------------------
+
+hanoiDefs :: [Def]
+hanoiDefs = fst $ tree2defs hanoi
+
+
+pins :: Int -> Tx
+pins m = C "triple" [gen 0, C "nil" [], C "nil" []] where
+  gen n = if n == m then C "nil" [] else C "%" [int2nat n, gen $ n + 1]
+
+
+hanoiCall :: G X
+hanoiCall = Invoke "check" [pins 3, V "answer", C "true" []]
+
+hanoiVars = ["answer"]
+
+hanoiUnit :: RunGoal X ()
+hanoiUnit = RG hanoiCall
+
+hanoiInt :: RunGoal X Int
+hanoiInt  = RG hanoiCall
+
+hanoiDisj :: RunGoal X (Disj, Int)
+hanoiDisj = RG hanoiCall
+
+hanoiEmbed :: RunGoal X Streams
+hanoiEmbed = RG hanoiCall
+
+---------------------------------------
+
+schemeDefs :: [Def]
+schemeDefs = fst $ tree2defs scheme
+
+schemeCall :: G X
+schemeCall = Invoke "eval" [V "quine", C "nil" [], C "val" [V "quine"]]
+
+schemeVars = ["quine"]
+
+schemeUnit :: RunGoal X ()
+schemeUnit = RG schemeCall
+
+schemeInt :: RunGoal X Int
+schemeInt  = RG schemeCall
+
+schemeDisj :: RunGoal X (Disj, Int)
+schemeDisj = RG schemeCall
+
+schemeEmbed :: RunGoal X Streams
+schemeEmbed = RG schemeCall

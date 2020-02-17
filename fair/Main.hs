@@ -177,3 +177,132 @@ main = do
 
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestIgnoringEmbed) bridgeEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestEmbed) bridgeEmbed
+
+  ----------------------------------------------------
+  ----------------------------------------------------
+  ----------------------------------------------------
+  -- 100 answers
+  -- step  :    1310000
+  -- path  :         15
+  -- height:         19
+  -- size  :      74483
+  -- disjs :      20821
+  -- conjs :      16420
+  -- actCnj:       9348
+  -- d in c:          5
+  -- maxLs :          0
+  -- swaps :          0
+  -- putStrLn $ show $ takeAnswers 100 $ run gcwVars gcwDefs () gcwUnit
+
+  ----------------------------------------------------
+
+  -- putStrLn $ show $ takeAnswers 100 $ run gcwVars gcwDefs (sc2 shallowestIgnoringSubformula eqAF) gcwEmbed
+
+  ----------------------------------------------------
+  ----------------------------------------------------
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :     270000
+  -- path  :         15
+  -- height:         19
+  -- size  :      25071
+  -- disjs :       6870
+  -- conjs :       5665
+  -- actCnj:       1584
+  -- d in c:         11
+  -- maxLs :          0
+  -- swaps :          0
+  -- putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs () hanoiUnit
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :     970000
+  -- path  :         17
+  -- height:         21
+  -- size  :     195089
+  -- disjs :      22367
+  -- conjs :      75177
+  -- actCnj:      18359
+  -- d in c:          2
+  -- maxLs :         14
+  -- swaps :      89731
+  -- putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (sc2 shallowestIgnoringSubformula eqAF) hanoiEmbed
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    1140000
+  -- path  :         16
+  -- height:         21
+  -- size  :     209051
+  -- disjs :      24850
+  -- conjs :      79675
+  -- actCnj:      20555
+  -- d in c:          2
+  -- maxLs :         14
+  -- swaps :     107356
+  -- putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (sc2 shallowIgnoringEmbed eqAF) hanoiEmbed
+
+  ----------------------------------------------------
+  ----------------------------------------------------
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :     360000
+  -- path  :          9
+  -- height:         37
+  -- size  :      63971
+  -- disjs :      17902
+  -- conjs :      14083
+  -- actCnj:        924
+  -- d in c:        418
+  -- maxLs :          0
+  -- swaps :          0
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs () schemeUnit
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :     960000
+  -- path  :         20
+  -- height:         26
+  -- size  :     711263
+  -- disjs :      82124
+  -- conjs :     273507
+  -- actCnj:      30204
+  -- d in c:         23
+  -- maxLs :          0
+  -- swaps :      10267
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (100 :: Int) schemeInt
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :     760000
+  -- path  :          9
+  -- height:         28
+  -- size  :     415621
+  -- disjs :      56611
+  -- conjs :     151199
+  -- actCnj:      21105
+  -- d in c:         11
+  -- maxLs :          0
+  -- swaps :       2597
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (D 10, 10000 :: Int) schemeDisj
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    3010000
+  -- path  :         23
+  -- height:         30
+  -- size  :    3947961
+  -- disjs :     202049
+  -- conjs :    1771931
+  -- actCnj:     166139
+  -- d in c:          2
+  -- maxLs :         18
+  -- swaps :     454372
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringSubformula eqAF) schemeEmbed

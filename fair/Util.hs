@@ -62,3 +62,21 @@ maxSizeLabels :: Labels l p => p -> GenStream a l -> Int
 maxSizeLabels p (Conj a l b) = maximum [size p l, maxSizeLabels p a, maxSizeLabels p b]
 maxSizeLabels p (Disj a b)   = max (maxSizeLabels p a) $ maxSizeLabels p b
 maxSizeLabels _ _            = 0
+
+tree2defs :: G X -> ([Def], G X)
+tree2defs (a :\/: b) =
+  let (ds,  a') = tree2defs a in
+  let (ds', b') = tree2defs b in
+  (ds ++ ds', a' :\/: b')
+tree2defs (a :/\: b) =
+  let (ds,  a') = tree2defs a in
+  let (ds', b') = tree2defs b in
+  (ds ++ ds', a' :/\: b')
+tree2defs (Fresh a g) =
+  let (ds, g') = tree2defs g in
+  (ds, Fresh a g')
+tree2defs (Let (Def n a b) r) =
+  let (ds,  b') = tree2defs b in
+  let (ds', r') = tree2defs r in
+  (Def n a b' : ds ++ ds', r')
+tree2defs a           = ([], a)
