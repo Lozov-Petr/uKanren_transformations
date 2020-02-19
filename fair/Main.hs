@@ -7,6 +7,7 @@ import Embedding
 
 import Program.Bottles
 import Program.Bridge
+import Program.Sudoku4x4
 
 ----------------------------------------------------
 
@@ -310,3 +311,39 @@ main = do
   -- maxLs :         18
   -- swaps :     454372
   -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringSubformula eqAF) schemeEmbed
+
+  ----------------------------------------------------
+  ----------------------------------------------------
+  ----------------------------------------------------
+
+  -- did not wait for an answer
+  -- step  :   22340000
+  -- path  :         22
+  -- height:         35
+  -- size  :     229253
+  -- disjs :      46670
+  -- conjs :      67956
+  -- actCnj:         21
+  -- d in c:       8013
+  -- maxLs :          0
+  -- swaps :          0
+  -- putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 () sudokuUnit
+
+  ----------------------------------------------------
+
+  -- did not wait for an answer
+  -- step  :    9090000
+  -- path  :         21
+  -- height:         28
+  -- size  :    1185209
+  -- disjs :      93105
+  -- conjs :     499499
+  -- actCnj:      32547
+  -- d in c:         23
+  -- maxLs :          0
+  -- swaps :     188944
+  --putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 (100 :: Int) sudokuInt
+
+  ----------------------------------------------------
+
+  -- putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 (D 10, 10000 :: Int) sudokuDisj
