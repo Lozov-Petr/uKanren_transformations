@@ -62,6 +62,8 @@ streamToDeepAF = streamToAF . substInS
 eqAF :: GenStream s l -> GenStream s l -> Bool
 eqAF a b = streamToAF a == streamToAF b
 
+---------------------------------------
+
 -- ignores terms and substitutions
 -- does not distinguish between syntactic and semantic operators
 shallowestIgnoringEmbed :: Stream l -> Stream l -> Bool
@@ -73,28 +75,6 @@ shallowestIgnoringEmbed a b = embed (streamToAF a) $ streamToAF b where
   couple _         _           = False
   diving x (a :&: b) = embed x a || embed x b
   diving x (a :|: b) = embed x a || embed x b
-  diving _ _         = False
-
-shallowestIgnoringSubformula :: Stream l -> Stream l -> Bool
-shallowestIgnoringSubformula a b = subf (streamToAF a) $ streamToAF b where
-  subf a b = couple a b || diving a b
-  couple (Call n a) (Call m b) = n == m && length a == length b
-  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
-  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
-  couple _         _           = False
-  diving x (a :&: b) = subf x a || subf x b
-  diving x (a :|: b) = subf x a || subf x b
-  diving _ _         = False
-
-shallowestIgnoringLeftSubformula :: Stream l -> Stream l -> Bool
-shallowestIgnoringLeftSubformula a b = subf (streamToAF a) $ streamToAF b where
-  subf a b = couple a b || diving a b
-  couple (Call n a) (Call m b) = n == m && length a == length b
-  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
-  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
-  couple _         _           = False
-  diving x (a :&: _) = subf x a
-  diving x (a :|: _) = subf x a
   diving _ _         = False
 
 -- ignores only substitutions
@@ -133,3 +113,39 @@ shallowestEmbed a b = couple a b || diving a b where
   diving x (Disj a b)   = shallowestEmbed x a || shallowestEmbed x b
   diving x (Conj a _ b) = shallowestEmbed x a || shallowestEmbed x b
   diving _ _            = False
+
+---------------------------------------
+
+shallowestIgnoringSubformula :: Stream l -> Stream l -> Bool
+shallowestIgnoringSubformula a b = subf (streamToAF a) $ streamToAF b where
+  subf a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b
+  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
+  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
+  couple _         _           = False
+  diving x (a :&: b) = subf x a || subf x b
+  diving x (a :|: b) = subf x a || subf x b
+  diving _ _         = False
+
+shallowestIgnoringLeftSubformula :: Stream l -> Stream l -> Bool
+shallowestIgnoringLeftSubformula a b = subf (streamToAF a) $ streamToAF b where
+  subf a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b
+  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
+  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
+  couple _         _           = False
+  diving x (a :&: _) = subf x a
+  diving x (a :|: _) = subf x a
+  diving _ _         = False
+
+cmpHeightsIgnoringLeftSubformula :: Stream l -> Stream l -> Bool
+cmpHeightsIgnoringLeftSubformula a b = subf (streamToDeepAF a) $ streamToDeepAF b where
+  subf a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b &&
+                                 maximum (0 : map heightT a) == maximum (0 : map heightT b)
+  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
+  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
+  couple _         _           = False
+  diving x (a :&: _) = subf x a
+  diving x (a :|: _) = subf x a
+  diving _ _         = False

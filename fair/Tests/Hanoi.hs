@@ -37,6 +37,9 @@ hanoiDisj = RG hanoiCall
 hanoiEmbed :: RunGoal X Streams
 hanoiEmbed = RG hanoiCall
 
+hanoiInvEmbed :: RunGoal X StreamsDict
+hanoiInvEmbed = RG hanoiCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -88,3 +91,36 @@ testShallowIgnoringEmbed =
 
 testShallowestIgnoringSubformula =
   putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (sc2 shallowestIgnoringSubformula eqAF) hanoiEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :     590000
+  -- path  :         14
+  -- height:         23
+  -- size  :      58553
+  -- disjs :      15794
+  -- conjs :      13482
+  -- actCnj:       3087
+  -- d in c:         17
+  -- maxLs :         26
+  -- swaps :        596
+testInvLeftSubformula =
+  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (cmpSD shallowestIgnoringSubformula) hanoiInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :     270000
+  -- path  :         15
+  -- height:         19
+  -- size  :      25071
+  -- disjs :       6870
+  -- conjs :       5665
+  -- actCnj:       1584
+  -- d in c:         11
+  -- maxLs :         28
+  -- swaps :          0
+
+testInvLeftSubformulaCmpHeights =
+  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (cmpSD cmpHeightsIgnoringLeftSubformula) hanoiInvEmbed

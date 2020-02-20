@@ -14,3 +14,12 @@ import qualified Tests.Trees     as Trees
 main = do
   ListAB.tests
   Trees.tests
+
+  -- Bridge.testInvLeftSubformula
+  -- Bridge.testInvLeftSubformulaCmpHeights
+
+  -- Hanoi.testInvLeftSubformula
+  -- Hanoi.testInvLeftSubformulaCmpHeights
+
+  -- Scheme.testInvLeftSubformula
+  -- Scheme.testInvLeftSubformulaCmpHeights

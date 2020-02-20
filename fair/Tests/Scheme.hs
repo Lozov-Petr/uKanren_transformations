@@ -136,5 +136,22 @@ testShallowestIgnoringLeftSubformula =
   -- maxLs :       1450
   -- swaps :      34631
 
-testInvEmbed =
+testInvLeftSubformula =
   putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD shallowestIgnoringLeftSubformula) schemeInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :     460000
+  -- path  :         19
+  -- height:         26
+  -- size  :     330525
+  -- disjs :      47550
+  -- conjs :     117712
+  -- actCnj:       9547
+  -- d in c:        814
+  -- maxLs :        704
+  -- swaps :       3859
+
+testInvLeftSubformulaCmpHeights =
+  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD cmpHeightsIgnoringLeftSubformula) schemeInvEmbed

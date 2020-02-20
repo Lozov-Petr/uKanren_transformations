@@ -32,6 +32,9 @@ bridgeSignVars = RG bridgeCall
 bridgeEmbed :: RunGoal X Streams
 bridgeEmbed = RG bridgeCall
 
+bridgeInvEmbed :: RunGoal X StreamsDict
+bridgeInvEmbed = RG bridgeCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -166,3 +169,36 @@ testShallowestIgnoringSubformula =
 
 testShallowestIgnoringLeftSubformula =
   putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringLeftSubformula eqAF) bridgeEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :   14990000
+  -- path  :         24
+  -- height:         32
+  -- size  :    2639769
+  -- disjs :     270283
+  -- conjs :    1049601
+  -- actCnj:      81624
+  -- d in c:       1089
+  -- maxLs :       3763
+  -- swaps :     336183
+
+testInvLeftSubformula =
+  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (cmpSD shallowestIgnoringLeftSubformula) bridgeInvEmbed
+
+----------------------------------------------------
+  -- first answer
+--   step  :   16230000
+--   path  :         26
+--   height:         31
+--   size  :    2427047
+--   disjs :     273148
+--   conjs :     940375
+--   actCnj:      61859
+--   d in c:       1307
+--   maxLs :       6131
+--   swaps :     110939
+
+testInvLeftSubformulaCmpHeights =
+  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (cmpSD cmpHeightsIgnoringLeftSubformula) bridgeInvEmbed

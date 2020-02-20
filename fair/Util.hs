@@ -15,6 +15,10 @@ height (Conj a _ b) = 1 + max (height a) (height b)
 height (Disj a b  ) = 1 + max (height a) (height b)
 height _            = 0
 
+heightT :: Term a -> Int
+heightT (C _ a@(_:_)) = 1 + maximum (map heightT a)
+heightT _             = 0
+
 path :: GenStream a b -> Int
 path (Conj a _ _) = 1 + path a
 path (Disj a _  ) = 1 + path a
