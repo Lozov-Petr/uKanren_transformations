@@ -70,7 +70,7 @@ eval par fs (Goal (Invoke n a) (i,s)) =
       if length ns == length a
         then case toSemG (zip ns a) i g of
                Left msg -> Left $ printf "Error invoke '%s'. %s" n msg
-               Right (g,j) -> return $ (Just $ Goal g (j,s), Nothing, [InvokeStep])
+               Right (g,j) -> return $ (Just $ Goal g (j,s), Nothing, [InvokeStep n])
         else Left $ printf
                "Unexpected count of relation's arguments (actual: %d, expected: %d)."
                (length a) (length ns)

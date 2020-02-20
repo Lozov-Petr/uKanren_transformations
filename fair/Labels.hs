@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
 
 module Labels where
 
@@ -38,18 +38,20 @@ instance Labels Int Int where
 
 ---------------------------------------
 
-data Invokes = I Int deriving Show
+newtype Invokes = I Int deriving Show
 
 instance Labels Invokes Invokes where
   new i _ = i
   keep _ i = i
   predicate _ _ (I i) = i /= 0
-  update _ _ _ l (I i) | last l == InvokeStep = I $ i - 1
-  update _ _ _ _ i = i
+  update _ _ _ l x@(I i) =
+    case last l of
+      InvokeStep _ -> I $ i - 1
+      _            -> x
   size _ _ = 0
 ---------------------------------------
 
-data Disj = D Int deriving Show
+newtype Disj = D Int deriving Show
 
 disjs (Conj _ (D d) _) = d
 disjs (Disj a b)       = 1 + disjs a + disjs b
@@ -82,15 +84,15 @@ instance Labels SignVars SignVarsP where
 ---------------------------------------
 
 newtype Streams = Streams [Stream Streams] deriving Show
-type Comparator = Stream Streams -> Stream Streams -> Bool
-data StreamsComparator = SC Comparator (Maybe Comparator)
+type Comp a = Stream a -> Stream a -> Bool
+data Comparator a = SC (Comp a) (Maybe (Comp a))
 
-sc1 :: Comparator -> StreamsComparator
+sc1 :: Comp Streams -> Comparator Streams
 sc1 = flip SC Nothing
-sc2 :: Comparator -> Comparator -> StreamsComparator
+sc2 :: Comp Streams -> Comp Streams -> Comparator Streams
 sc2 f = SC f . Just
 
-instance Labels Streams StreamsComparator where
+instance Labels Streams (Comparator Streams) where
   new _ _ = Streams []
   keep _ _ = Streams []
   predicate (SC f (Just g)) s (Streams ss@(x:y:_)) | g x y = not $ any (flip f s) ss
@@ -98,3 +100,23 @@ instance Labels Streams StreamsComparator where
   predicate (SC f _) s (Streams ss) = not $ any (flip f s) ss
   update _ s _ _ (Streams xs) = Streams $ s:xs
   size _ (Streams ss) = length ss
+
+---------------------------------------
+
+newtype StreamsDict = SD [(Name, Stream StreamsDict)] deriving Show
+
+cmpSD :: Comp StreamsDict -> Comp StreamsDict
+cmpSD = id
+
+instance Labels StreamsDict (Comp StreamsDict) where
+  new _ _ = SD []
+  keep _ _ = SD []
+  predicate c s (SD l) =
+    case getLeftLeaf s of
+      (Invoke n _, _) -> not $ any (flip c s) $ map snd $ filter ((n==) . fst) l
+      _               -> True
+  update _ s _ logs l@(SD xs) =
+    case last logs of
+      InvokeStep n -> SD $ (n, s) : xs
+      _            -> l
+  size _ (SD xs) = length xs

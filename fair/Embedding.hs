@@ -86,6 +86,17 @@ shallowestIgnoringSubformula a b = subf (streamToAF a) $ streamToAF b where
   diving x (a :|: b) = subf x a || subf x b
   diving _ _         = False
 
+shallowestIgnoringLeftSubformula :: Stream l -> Stream l -> Bool
+shallowestIgnoringLeftSubformula a b = subf (streamToAF a) $ streamToAF b where
+  subf a b = couple a b || diving a b
+  couple (Call n a) (Call m b) = n == m && length a == length b
+  couple (a :&: b) (a' :&: b') = couple a a' && couple b b'
+  couple (a :|: b) (a' :|: b') = couple a a' && couple b b'
+  couple _         _           = False
+  diving x (a :&: _) = subf x a
+  diving x (a :|: _) = subf x a
+  diving _ _         = False
+
 -- ignores only substitutions
 -- does not distinguish between syntactic and semantic operators
 shallowIgnoringEmbed :: Stream l -> Stream l -> Bool
@@ -122,21 +133,3 @@ shallowestEmbed a b = couple a b || diving a b where
   diving x (Disj a b)   = shallowestEmbed x a || shallowestEmbed x b
   diving x (Conj a _ b) = shallowestEmbed x a || shallowestEmbed x b
   diving _ _            = False
-
----------------------------------------
-
-embedS :: Stream l -> Stream l -> Bool
-embedS a b = couple a b || diving a b where
-  couple (Goal g s) (Goal g' s')         = embedG (substInG s g) $ substInG s' g'
-  couple (Disj g1 g2)   (Disj g1' g2')   = embedS g1 g1' && embedS g2 g2'
-  couple (Conj g1 _ g2) (Conj g1' _ g2') = embedS g1 g1' && embedHS g2 g2'
-  couple _ _ = False
-  diving g (Disj g1 g2)  = embedS g g1 || embedS g g2
-  diving g (Conj g1 _ _) = embedS g g1
-  diving _ _             = False
-  embedHS a b = coupleH a b || divingH a b
-  coupleH (Goal g ()) (Goal g' ()) = embedG g g'
-  coupleH (Conj g1 _ g2) (Conj g1' _ g2') = embedHS g1 g1' && embedHS g2 g2'
-  coupleH _ _ = False
-  divingH g (Conj g1 _ g2) = embedHS g g1 || embedHS g g2
-  divingH _ _             = False

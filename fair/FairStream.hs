@@ -11,7 +11,7 @@ import Syntax
 data Log = Unify
          | DisjIntro
          | ConjIntro
-         | InvokeStep
+         | InvokeStep Name
          | ConjSwap
          | ConjStop
          | ConjStopAns

@@ -13,6 +13,7 @@ import Program.Sudoku4x4
 
 main = do
 
+  putStrLn "Conj lists:"
   putStrLn $ show $ run listAB_vars listAB_def (I 5) listAB_inv
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestIgnoringEmbed) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
@@ -20,7 +21,9 @@ main = do
   putStrLn $ show $ run listAB_vars listAB_def (sc2 deepIgnoringEmbed eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringSubformula eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
+  putStrLn $ show $ run listAB_vars listAB_def (cmpSD shallowestIgnoringLeftSubformula) listAB_invEmbed
 
+  putStrLn "Conj trees:"
   putStrLn $ show $ run treeVars treeDefs (I 5) treeInv
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
@@ -28,6 +31,7 @@ main = do
   putStrLn $ show $ run treeVars treeDefs (sc2 deepIgnoringEmbed eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringSubformula eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
+  putStrLn $ show $ run treeVars treeDefs (cmpSD shallowestIgnoringLeftSubformula) treeInvEmbed
 
   ----------------------------------------------------
 
@@ -79,6 +83,19 @@ main = do
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc1 shallowestIgnoringEmbed) bottlesEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc2 shallowestIgnoringEmbed eqAF) bottlesEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc1 shallowestEmbed) bottlesEmbed
+
+  -- did not wait for an answer
+  -- step  :   19110000
+  -- path  :         17
+  -- height:         31
+  -- size  :    2324083
+  -- disjs :     306058
+  -- conjs :     855983
+  -- actCnj:      92056
+  -- d in c:       1238
+  -- maxLs :       6841
+  -- swaps :     599778
+  -- putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (cmpSD shallowestIgnoringLeftSubformula) bottlesInvEmbed
 
   ----------------------------------------------------
   ----------------------------------------------------
@@ -179,6 +196,21 @@ main = do
   -- maxLs :         11
   -- swaps :     742304
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringSubformula eqAF) bridgeEmbed
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    5650000
+  -- path  :         18
+  -- height:         26
+  -- size  :     541041
+  -- disjs :      43938
+  -- conjs :     226582
+  -- actCnj:      36154
+  -- d in c:          2
+  -- maxLs :         11
+  -- swaps :     798299
+  -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringLeftSubformula eqAF) bridgeEmbed
 
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestIgnoringEmbed) bridgeEmbed
   -- putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc1 shallowestEmbed) bridgeEmbed
@@ -311,6 +343,36 @@ main = do
   -- maxLs :         18
   -- swaps :     454372
   -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringSubformula eqAF) schemeEmbed
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    1600000
+  -- path  :         19
+  -- height:         28
+  -- size  :    1719163
+  -- disjs :     122219
+  -- conjs :     737362
+  -- actCnj:      98101
+  -- d in c:          2
+  -- maxLs :         13
+  -- swaps :     151162
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringLeftSubformula eqAF) schemeEmbed
+
+  ----------------------------------------------------
+
+  -- first answer
+  -- step  :    2480000
+  -- path  :         20
+  -- height:         27
+  -- size  :    2026917
+  -- disjs :     250059
+  -- conjs :     763399
+  -- actCnj:      49286
+  -- d in c:       1584
+  -- maxLs :       1450
+  -- swaps :      34631
+  -- putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD shallowestIgnoringLeftSubformula) schemeInvEmbed
 
   ----------------------------------------------------
   ----------------------------------------------------

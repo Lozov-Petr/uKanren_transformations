@@ -35,6 +35,9 @@ listAB_inv = RG listAB_call
 listAB_embed :: RunGoal X Streams
 listAB_embed = RG listAB_call
 
+listAB_invEmbed :: RunGoal X StreamsDict
+listAB_invEmbed = RG listAB_call
+
 ---------------------------------------
 
 treeL = Def "treeL" ["t"] $
@@ -66,6 +69,9 @@ treeInv = RG treeCall
 treeEmbed :: RunGoal X Streams
 treeEmbed = RG treeCall
 
+treeInvEmbed :: RunGoal X StreamsDict
+treeInvEmbed = RG treeCall
+
 ---------------------------------------
 
 int2nat 0 = C "o" []
@@ -91,6 +97,9 @@ bottlesDisj = RG bottlesCall
 
 bottlesEmbed :: RunGoal X Streams
 bottlesEmbed = RG bottlesCall
+
+bottlesInvEmbed :: RunGoal X StreamsDict
+bottlesInvEmbed = RG bottlesCall
 
 ---------------------------------------
 
@@ -185,6 +194,9 @@ schemeDisj = RG schemeCall
 
 schemeEmbed :: RunGoal X Streams
 schemeEmbed = RG schemeCall
+
+schemeInvEmbed :: RunGoal X StreamsDict
+schemeInvEmbed = RG schemeCall
 
 ---------------------------------------
 
