@@ -80,3 +80,8 @@ tree2defs (Let (Def n a b) r) =
   let (ds', r') = tree2defs r in
   (Def n a b' : ds ++ ds', r')
 tree2defs a           = ([], a)
+
+---------------------------------------
+
+int2nat 0 = C "o" []
+int2nat n = C "s" [int2nat $ n - 1]
