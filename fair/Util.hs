@@ -3,6 +3,8 @@ module Util where
 import Syntax
 import FairStream
 
+import qualified Eval
+
 ---------------------------------------
 
 getLeftLeaf :: GenStream s l -> (Goal, s)
@@ -46,7 +48,7 @@ disjsInConjs _            = []
 
 substInT :: Subst -> Ts -> Ts
 substInT s (V x) =
-  case lookup x $ snd s of
+  case Eval.sLookup x $ snd s of
     Nothing -> V x
     Just t  -> substInT s t
 substInT s (C n a) = C n $ map (substInT s) a

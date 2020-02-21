@@ -127,7 +127,7 @@ takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
 takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b
 
 initStream :: RunGoal X l -> [X] -> Er (Stream l)
-initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> return $ goal g (i, []) where
+initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> return $ goal g (i, Eval.sEmpty) where
   toSemG' :: [(X, Ts)] -> Int -> RunGoal X l -> Er (RunGoal S l, Int)
   toSemG' e i (RG g) = toSemG e i g >>= \(g,i) -> return (RG g, i)
   goal :: RunGoal S l -> Subst -> Stream l

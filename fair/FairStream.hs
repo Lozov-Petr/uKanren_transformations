@@ -5,6 +5,7 @@ module FairStream where
 import Text.Printf
 
 import Syntax
+import qualified Eval
 
 ---------------------------------------
 
@@ -29,7 +30,7 @@ type Logs = [Log]
 type Er a = Either String a
 
 type Goal  = G S
-type Subst = (S, [(S, Ts)])
+type Subst = (S, Eval.MapSigma)
 type Hole  = ()
 type Fun   = (Name, ([Name], G X))
 

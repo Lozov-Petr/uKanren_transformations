@@ -26,4 +26,4 @@ main = do
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
 
-  -- Reverso.testUnit1 50
+  -- Reverso.testUnit1 100
