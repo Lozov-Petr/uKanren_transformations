@@ -20,29 +20,29 @@ treeR = Def "treeR" ["t"] $
   Fresh "t'" (V "t" === C "Node" [C "Leaf" [], V "t'"] &&&
               Invoke "treeR" [V "t'"])
 
-treeDefs = [treeL, treeR]
+defs = [treeL, treeR]
 
-treeCall = Invoke "treeL" [V "t"] &&& Invoke "treeR" [V "t"]
+goal = Invoke "treeL" [V "t"] &&& Invoke "treeR" [V "t"]
 
-treeVars = ["t"]
+vars = ["t"]
 
-treeUnit :: RunGoal X ()
-treeUnit = RG treeCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-treeInt :: RunGoal X Int
-treeInt = RG treeCall
+goalInt :: RunGoal X Int
+goalInt = RG goal
 
-treeInv :: RunGoal X Invokes
-treeInv = RG treeCall
+goalInv :: RunGoal X Invokes
+goalInv = RG goal
 
-treeEmbed :: RunGoal X Streams
-treeEmbed = RG treeCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-treeInvEmbed :: RunGoal X StreamsDict
-treeInvEmbed = RG treeCall
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
-treeInvs :: RunGoal X InvokesDict
-treeInvs = RG treeCall
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -50,12 +50,12 @@ treeInvs = RG treeCall
 
 tests = do
   putStrLn "Conj trees:"
-  putStrLn $ show $ run treeVars treeDefs (I 5) treeInv
-  putStrLn $ show $ run treeVars treeDefs (sc1 shallowestIgnoringEmbed) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringEmbed eqAF) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc2 shallowIgnoringEmbed eqAF) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc2 deepIgnoringEmbed eqAF) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringSubformula eqAF) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
-  putStrLn $ show $ run treeVars treeDefs (cmpSD shallowestIgnoringLeftSubformula) treeInvEmbed
-  putStrLn $ show $ run treeVars treeDefs () treeInvs
+  putStrLn $ show $ run vars defs (I 5) goalInv
+  putStrLn $ show $ run vars defs (sc1 shallowestIgnoringEmbed) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowestIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 deepIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc1 shallowestEmbed) goalEmbed
+  putStrLn $ show $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
+  putStrLn $ show $ run vars defs () goalInvs

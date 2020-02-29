@@ -9,33 +9,34 @@ import Embedding
 
 ----------------------------------------------------
 
-listAB_def = [Def "list" ["e", "l"] $
+defs :: [Def]
+defs = [Def "list" ["e", "l"] $
   V "l" === C "nil" [] |||
   Fresh "ls" (V "l" === C "cons" [V "e", V "ls"] &&&
               Invoke "list" [V "e", V "ls"])
              ]
 
-listAB_call = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
+goal = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
 
-listAB_vars = ["x"]
+vars = ["x"]
 
-listAB_unit :: RunGoal X ()
-listAB_unit = RG listAB_call
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-listAB_int :: RunGoal X Int
-listAB_int = RG listAB_call
+goalInt :: RunGoal X Int
+goalInt = RG goal
 
-listAB_inv :: RunGoal X Invokes
-listAB_inv = RG listAB_call
+goalInv :: RunGoal X Invokes
+goalInv = RG goal
 
-listAB_embed :: RunGoal X Streams
-listAB_embed = RG listAB_call
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-listAB_invEmbed :: RunGoal X StreamsDict
-listAB_invEmbed = RG listAB_call
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
-listAB_invs :: RunGoal X InvokesDict
-listAB_invs = RG listAB_call
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -43,12 +44,12 @@ listAB_invs = RG listAB_call
 
 tests = do
   putStrLn "Conj lists:"
-  putStrLn $ show $ run listAB_vars listAB_def (I 5) listAB_inv
-  putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestIgnoringEmbed) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringEmbed eqAF) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowIgnoringEmbed eqAF) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (sc2 deepIgnoringEmbed eqAF) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringSubformula eqAF) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
-  putStrLn $ show $ run listAB_vars listAB_def (cmpSD shallowestIgnoringLeftSubformula) listAB_invEmbed
-  putStrLn $ show $ run listAB_vars listAB_def () listAB_invs
+  putStrLn $ show $ run vars defs (I 5) goalInv
+  putStrLn $ show $ run vars defs (sc1 shallowestIgnoringEmbed) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowestIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 deepIgnoringEmbed eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
+  putStrLn $ show $ run vars defs (sc1 shallowestEmbed) goalEmbed
+  putStrLn $ show $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
+  putStrLn $ show $ run vars defs () goalInvs

@@ -29,55 +29,55 @@ genList :: Int -> Tx
 genList 0 = nil
 genList n = C (show $ n - 1) [] % genList (n - 1)
 
-call1 :: Int -> G X
-call1 n = call "reverso" [genList n, V "answer"]
+goal1 :: Int -> G X
+goal1 n = call "reverso" [genList n, V "answer"]
 
-call2 :: Int -> G X
-call2 n = call "reverso" [V "answer", genList n]
+goal2 :: Int -> G X
+goal2 n = call "reverso" [V "answer", genList n]
 
 vars = ["answer"]
 
-call1Unit :: Int -> RunGoal X ()
-call1Unit = RG . call1
+goal1Unit :: Int -> RunGoal X ()
+goal1Unit = RG . goal1
 
-call2Unit :: Int -> RunGoal X ()
-call2Unit = RG . call2
+goal2Unit :: Int -> RunGoal X ()
+goal2Unit = RG . goal2
 
-call1Int :: Int -> RunGoal X Int
-call1Int  = RG . call1
+goal1Int :: Int -> RunGoal X Int
+goal1Int  = RG . goal1
 
-call2Int :: Int -> RunGoal X Int
-call2Int  = RG . call2
+goal2Int :: Int -> RunGoal X Int
+goal2Int  = RG . goal2
 
-call1Disj :: Int -> RunGoal X (Disj, Int)
-call1Disj = RG . call1
+goal1Disj :: Int -> RunGoal X (Disj, Int)
+goal1Disj = RG . goal1
 
-call2Disj :: Int -> RunGoal X (Disj, Int)
-call2Disj = RG . call2
+goal2Disj :: Int -> RunGoal X (Disj, Int)
+goal2Disj = RG . goal2
 
-call1Inv :: Int -> RunGoal X Invokes
-call1Inv  = RG . call1
+goal1Inv :: Int -> RunGoal X Invokes
+goal1Inv  = RG . goal1
 
-call2Inv :: Int -> RunGoal X Invokes
-call2Inv  = RG . call2
+goal2Inv :: Int -> RunGoal X Invokes
+goal2Inv  = RG . goal2
 
-call1Embed :: Int -> RunGoal X Streams
-call1Embed = RG . call1
+goal1Embed :: Int -> RunGoal X Streams
+goal1Embed = RG . goal1
 
-call2Embed :: Int -> RunGoal X Streams
-call2Embed = RG . call2
+goal2Embed :: Int -> RunGoal X Streams
+goal2Embed = RG . goal2
 
-call1InvEmbed :: Int -> RunGoal X StreamsDict
-call1InvEmbed = RG . call1
+goal1InvEmbed :: Int -> RunGoal X StreamsDict
+goal1InvEmbed = RG . goal1
 
-call2InvEmbed :: Int -> RunGoal X StreamsDict
-call2InvEmbed = RG . call2
+goal2InvEmbed :: Int -> RunGoal X StreamsDict
+goal2InvEmbed = RG . goal2
 
-call1Invs :: Int -> RunGoal X InvokesDict
-call1Invs = RG . call1
+goal1Invs :: Int -> RunGoal X InvokesDict
+goal1Invs = RG . goal1
 
-call2Invs :: Int -> RunGoal X InvokesDict
-call2Invs = RG . call2
+goal2Invs :: Int -> RunGoal X InvokesDict
+goal2Invs = RG . goal2
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -96,7 +96,7 @@ call2Invs = RG . call2
   -- swaps :          0
 
 testUnit1_1 =
-  putStrLn . show . run vars defs1 () . call1Unit
+  putStrLn . show . run vars defs1 () . goal1Unit
 
 ----------------------------------------------------
 
@@ -113,7 +113,7 @@ testUnit1_1 =
   -- swaps :          0
 
 testUnit1_2 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 () . call2Unit
+  putStrLn . show . takeAnswers 1 . run vars defs1 () . goal2Unit
 
 ----------------------------------------------------
 
@@ -130,7 +130,7 @@ testUnit1_2 =
   -- swaps :          0
 
 testUnit2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 () . call1Unit
+  putStrLn . show . takeAnswers 1 . run vars defs2 () . goal1Unit
 
 ----------------------------------------------------
 
@@ -147,7 +147,7 @@ testUnit2_1 =
   -- swaps :          0
 
 testUnit2_2 =
-  putStrLn . show . run vars defs2 () . call2Unit
+  putStrLn . show . run vars defs2 () . goal2Unit
 
 ----------------------------------------------------
 
@@ -164,7 +164,7 @@ testUnit2_2 =
   -- swaps :      72779
 
 testInt1_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 (100 :: Int) . call1Int
+  putStrLn . show . takeAnswers 1 . run vars defs1 (100 :: Int) . goal1Int
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -182,7 +182,7 @@ testInt1_1 =
   -- swaps :      31822
 
 testInt1_2 =
-  putStrLn . show . run vars defs1 (100 :: Int) . call2Int
+  putStrLn . show . run vars defs1 (100 :: Int) . goal2Int
 
 ----------------------------------------------------
 
@@ -199,7 +199,7 @@ testInt1_2 =
   -- swaps :      59359
 
 testInt2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 (100 :: Int) . call1Int
+  putStrLn . show . takeAnswers 1 . run vars defs2 (100 :: Int) . goal1Int
 
 ----------------------------------------------------
 
@@ -216,7 +216,7 @@ testInt2_1 =
   -- swaps :       1911
 
 testInt2_2 =
-  putStrLn . show . run vars defs2 (100 :: Int) . call2Int
+  putStrLn . show . run vars defs2 (100 :: Int) . goal2Int
 
 ----------------------------------------------------
 
@@ -233,7 +233,7 @@ testInt2_2 =
   -- swaps :       3822
 
 testDisj1_1 =
-  putStrLn . show . run vars defs1 (D 10, 10000 :: Int) . call1Disj
+  putStrLn . show . run vars defs1 (D 10, 10000 :: Int) . goal1Disj
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -251,7 +251,7 @@ testDisj1_1 =
   -- swaps :       1061
 
 testDisj1_2 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 (D 10, 10000 :: Int) . call2Disj
+  putStrLn . show . takeAnswers 1 . run vars defs1 (D 10, 10000 :: Int) . goal2Disj
 
 ----------------------------------------------------
 
@@ -268,7 +268,7 @@ testDisj1_2 =
   -- swaps :          0
 
 testDisj2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 (D 10, 10000 :: Int) . call1Disj
+  putStrLn . show . takeAnswers 1 . run vars defs2 (D 10, 10000 :: Int) . goal1Disj
 
 
 ----------------------------------------------------
@@ -286,7 +286,7 @@ testDisj2_1 =
   -- swaps :          0
 
 testDisj2_2 =
-  putStrLn . show . run vars defs2 (D 10, 10000 :: Int) . call2Disj
+  putStrLn . show . run vars defs2 (D 10, 10000 :: Int) . goal2Disj
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -304,7 +304,7 @@ testDisj2_2 =
   -- swaps :      71795
 
 testInv1_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 (I 5) . call1Inv
+  putStrLn . show . takeAnswers 1 . run vars defs1 (I 5) . goal1Inv
 
 ----------------------------------------------------
 
@@ -321,7 +321,7 @@ testInv1_1 =
   -- swaps :       4393
 
 testInv1_2 =
-  putStrLn . show . run vars defs1 (I 5) . call2Inv
+  putStrLn . show . run vars defs1 (I 5) . goal2Inv
 
 ----------------------------------------------------
 
@@ -338,7 +338,7 @@ testInv1_2 =
   -- swaps :      66508
 
 testInv2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 (I 5) . call1Inv
+  putStrLn . show . takeAnswers 1 . run vars defs2 (I 5) . goal1Inv
 
 ----------------------------------------------------
 
@@ -355,7 +355,7 @@ testInv2_1 =
 -- swaps :       2013
 
 testInv2_2 =
-  putStrLn . show . run vars defs2 (I 5) . call1Inv
+  putStrLn . show . run vars defs2 (I 5) . goal1Inv
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -373,22 +373,22 @@ testInv2_2 =
   -- swaps :       1645
 
 testInvLeftSubformulaCmpHeights1_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 (cmpSD cmpHeightsIgnoringLeftSubformula) . call1InvEmbed
+  putStrLn . show . takeAnswers 1 . run vars defs1 (cmpSD cmpHeightsIgnoringLeftSubformula) . goal1InvEmbed
 
   ----------------------------------------------------
 
 testInvLeftSubformulaCmpHeights1_2 =
-  putStrLn . show . takeAnswers 1 . run vars defs1 (cmpSD cmpHeightsIgnoringLeftSubformula) . call2InvEmbed
+  putStrLn . show . takeAnswers 1 . run vars defs1 (cmpSD cmpHeightsIgnoringLeftSubformula) . goal2InvEmbed
 
 ----------------------------------------------------
 
 testInvLeftSubformulaCmpHeights2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 (cmpSD cmpHeightsIgnoringLeftSubformula) . call1InvEmbed
+  putStrLn . show . takeAnswers 1 . run vars defs2 (cmpSD cmpHeightsIgnoringLeftSubformula) . goal1InvEmbed
 
 ----------------------------------------------------
 
 testInvLeftSubformulaCmpHeights2_2 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 (cmpSD cmpHeightsIgnoringLeftSubformula) . call2InvEmbed
+  putStrLn . show . takeAnswers 1 . run vars defs2 (cmpSD cmpHeightsIgnoringLeftSubformula) . goal2InvEmbed
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -406,7 +406,7 @@ testInvLeftSubformulaCmpHeights2_2 =
   -- swaps :          0
 
 testSubinvoke1_1 =
-  putStrLn . show . run vars defs1 () . call1Invs
+  putStrLn . show . run vars defs1 () . goal1Invs
 
 ----------------------------------------------------
 
@@ -423,7 +423,7 @@ testSubinvoke1_1 =
   -- swaps :         62
 
 testSubinvoke1_2 =
-  putStrLn . show . run vars defs1 () . call2Invs
+  putStrLn . show . run vars defs1 () . goal2Invs
 
 ----------------------------------------------------
 
@@ -452,7 +452,7 @@ testSubinvoke1_2 =
   -- swaps :       7162
 
 testSubinvoke2_1 =
-  putStrLn . show . takeAnswers 1 .  run vars defs2 () . call1Invs
+  putStrLn . show . takeAnswers 1 .  run vars defs2 () . goal1Invs
 
 ----------------------------------------------------
 
@@ -469,4 +469,4 @@ testSubinvoke2_1 =
   -- swaps :          0
 
 testSubinvoke2_2 =
-  putStrLn . show . run vars defs2 () . call2Invs
+  putStrLn . show . run vars defs2 () . goal2Invs

@@ -11,32 +11,35 @@ import Program.Bridge
 
 ----------------------------------------------------
 
-bridgeCall =
+defs :: [Def]
+defs = game2Big
+
+goal =
     Invoke "result" [V "minutes"] &&&
     Invoke "getAnswer" [V "answer", C "some" [V "minutes"]]
 
-bridgeVars = ["minutes", "answer"]
+vars = ["minutes", "answer"]
 
-bridgeUnit :: RunGoal X ()
-bridgeUnit = RG bridgeCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-bridgeInt :: RunGoal X Int
-bridgeInt  = RG bridgeCall
+goalInt :: RunGoal X Int
+goalInt  = RG goal
 
-bridgeDisj :: RunGoal X (Disj, Int)
-bridgeDisj = RG bridgeCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
 
-bridgeSignVars :: RunGoal X (SignVars, Int)
-bridgeSignVars = RG bridgeCall
+goalSignVars :: RunGoal X (SignVars, Int)
+goalSignVars = RG goal
 
-bridgeEmbed :: RunGoal X Streams
-bridgeEmbed = RG bridgeCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-bridgeInvEmbed :: RunGoal X StreamsDict
-bridgeInvEmbed = RG bridgeCall
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
-bridgeInvs :: RunGoal X InvokesDict
-bridgeInvs = RG bridgeCall
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -55,7 +58,7 @@ bridgeInvs = RG bridgeCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big () bridgeUnit
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
@@ -72,7 +75,7 @@ testUnit =
   -- swaps :      31813
 
 testInt100 =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (100 :: Int) bridgeInt
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (100 :: Int) goalInt
 
 ----------------------------------------------------
 
@@ -89,14 +92,14 @@ testInt100 =
   -- swaps :       1158
 
 testDisj10 =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (D 10, 10000 :: Int) bridgeDisj
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (D 10, 10000 :: Int) goalDisj
 
 ----------------------------------------------------
 
   -- It doesn't work
 
 testSignVars =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (SVP [0, 1] 100, 10000 :: Int) bridgeSignVars
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (SVP [0, 1] 100, 10000 :: Int) goalSignVars
 
 ----------------------------------------------------
 
@@ -113,7 +116,7 @@ testSignVars =
   -- swaps :    1056625
 
 testShallowestIgnoringEmbed =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringEmbed eqAF) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringEmbed eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -130,14 +133,14 @@ testShallowestIgnoringEmbed =
   -- swaps :    1055534
 
 testShallowIngoringEmbed =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowIgnoringEmbed eqAF) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowIgnoringEmbed eqAF) goalEmbed
 
 ----------------------------------------------------
 
   -- !!! Really slow: deep embedding is quite expensive
 
 testDeepIgnoringEmbed =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 deepIgnoringEmbed eqAF) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 deepIgnoringEmbed eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -154,7 +157,7 @@ testDeepIgnoringEmbed =
   -- swaps :     742304
 
 testShallowestIgnoringSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringSubformula eqAF) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -171,7 +174,7 @@ testShallowestIgnoringSubformula =
   -- swaps :     798299
 
 testShallowestIgnoringLeftSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (sc2 shallowestIgnoringLeftSubformula eqAF) bridgeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringLeftSubformula eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -188,7 +191,7 @@ testShallowestIgnoringLeftSubformula =
   -- swaps :     336183
 
 testInvLeftSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (cmpSD shallowestIgnoringLeftSubformula) bridgeInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
 
 ----------------------------------------------------
   -- first answer
@@ -204,7 +207,7 @@ testInvLeftSubformula =
 --   swaps :     110939
 
 testInvLeftSubformulaCmpHeights =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (cmpSD cmpHeightsIgnoringLeftSubformula) bridgeInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD cmpHeightsIgnoringLeftSubformula) goalInvEmbed
 
 ----------------------------------------------------
 
@@ -221,4 +224,4 @@ testInvLeftSubformulaCmpHeights =
   -- swaps :      11882
 
 testInvsSubinvoke =
-  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big () bridgeInvs
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs

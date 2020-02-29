@@ -12,25 +12,25 @@ import Program.GCW
 
 ---------------------------------------
 
-gcwDefs :: [Def]
-gcwDefs = fst $ tree2defs gcw
+defs :: [Def]
+defs = fst $ tree2defs gcw
 
-gcwCall :: G X
-gcwCall = Invoke "checkAnswer" [V "answer", C "true" []]
+goal :: G X
+goal = Invoke "checkAnswer" [V "answer", C "true" []]
 
-gcwVars = ["answer"]
+vars = ["answer"]
 
-gcwUnit :: RunGoal X ()
-gcwUnit = RG gcwCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-gcwInt :: RunGoal X Int
-gcwInt  = RG gcwCall
+goalInt :: RunGoal X Int
+goalInt  = RG goal
 
-gcwDisj :: RunGoal X (Disj, Int)
-gcwDisj = RG gcwCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
 
-gcwEmbed :: RunGoal X Streams
-gcwEmbed = RG gcwCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -49,9 +49,9 @@ gcwEmbed = RG gcwCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 100 $ run gcwVars gcwDefs () gcwUnit
+  putStrLn $ show $ takeAnswers 100 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
 testShallowesIgnoringSubformula =
-  putStrLn $ show $ takeAnswers 100 $ run gcwVars gcwDefs (sc2 shallowestIgnoringSubformula eqAF) gcwEmbed
+  putStrLn $ show $ takeAnswers 100 $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed

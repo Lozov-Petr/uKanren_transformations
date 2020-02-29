@@ -17,22 +17,25 @@ sudokuExample q =
                     V "v31", V "v32", n2,      V "v34",
                     V "v41", n3,      V "v43", V "v44"]
 
-sudokuCall :: G X
-sudokuCall = sudokuExample "sudoku" :/\: Invoke "check_sudoku" [V "sudoku", C "true" []]
+defs :: [Def]
+defs = sudoku4x4
 
-sudokuVars = ["sudoku"]
+goal :: G X
+goal = sudokuExample "goal" :/\: Invoke "check_sudoku" [V "goal", C "true" []]
 
-sudokuUnit :: RunGoal X ()
-sudokuUnit = RG sudokuCall
+vars = ["goal"]
 
-sudokuInt :: RunGoal X Int
-sudokuInt  = RG sudokuCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-sudokuDisj :: RunGoal X (Disj, Int)
-sudokuDisj = RG sudokuCall
+goalInt :: RunGoal X Int
+goalInt  = RG goal
 
-sudokuEmbed :: RunGoal X Streams
-sudokuEmbed = RG sudokuCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
+
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -51,7 +54,7 @@ sudokuEmbed = RG sudokuCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 () sudokuUnit
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
@@ -68,9 +71,9 @@ testUnit =
   -- swaps :     188944
 
 testInt100 =
-  putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 (100 :: Int) sudokuInt
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (100 :: Int) goalInt
 
   ----------------------------------------------------
 
 testDisj10 =
-  putStrLn $ show $ takeAnswers 1 $ run sudokuVars sudoku4x4 (D 10, 10000 :: Int) sudokuDisj
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (D 10, 10000 :: Int) goalDisj

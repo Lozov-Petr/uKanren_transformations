@@ -12,33 +12,33 @@ import Program.Hanoi
 
 ---------------------------------------
 
-hanoiDefs :: [Def]
-hanoiDefs = fst $ tree2defs hanoi
+defs :: [Def]
+defs = fst $ tree2defs hanoi
 
 pins :: Int -> Tx
 pins m = C "triple" [gen 0, C "nil" [], C "nil" []] where
   gen n = if n == m then C "nil" [] else C "%" [int2nat n, gen $ n + 1]
 
 
-hanoiCall :: G X
-hanoiCall = Invoke "check" [pins 3, V "answer", C "true" []]
+goal :: G X
+goal = Invoke "check" [pins 3, V "answer", C "true" []]
 
-hanoiVars = ["answer"]
+vars = ["answer"]
 
-hanoiUnit :: RunGoal X ()
-hanoiUnit = RG hanoiCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-hanoiInt :: RunGoal X Int
-hanoiInt  = RG hanoiCall
+goalInt :: RunGoal X Int
+goalInt  = RG goal
 
-hanoiDisj :: RunGoal X (Disj, Int)
-hanoiDisj = RG hanoiCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
 
-hanoiEmbed :: RunGoal X Streams
-hanoiEmbed = RG hanoiCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-hanoiInvEmbed :: RunGoal X StreamsDict
-hanoiInvEmbed = RG hanoiCall
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -57,7 +57,7 @@ hanoiInvEmbed = RG hanoiCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs () hanoiUnit
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
@@ -73,7 +73,7 @@ testUnit =
   -- maxLs :         14
   -- swaps :     107356
 testShallowIgnoringEmbed =
-  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (sc2 shallowIgnoringEmbed eqAF) hanoiEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowIgnoringEmbed eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -90,7 +90,7 @@ testShallowIgnoringEmbed =
   -- swaps :      89731
 
 testShallowestIgnoringSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (sc2 shallowestIgnoringSubformula eqAF) hanoiEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -106,7 +106,7 @@ testShallowestIgnoringSubformula =
   -- maxLs :         26
   -- swaps :        596
 testInvLeftSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (cmpSD shallowestIgnoringSubformula) hanoiInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD shallowestIgnoringSubformula) goalInvEmbed
 
 ----------------------------------------------------
 
@@ -123,4 +123,4 @@ testInvLeftSubformula =
   -- swaps :          0
 
 testInvLeftSubformulaCmpHeights =
-  putStrLn $ show $ takeAnswers 1 $ run hanoiVars hanoiDefs (cmpSD cmpHeightsIgnoringLeftSubformula) hanoiInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD cmpHeightsIgnoringLeftSubformula) goalInvEmbed

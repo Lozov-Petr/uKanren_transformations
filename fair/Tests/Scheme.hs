@@ -12,31 +12,31 @@ import Program.Scheme
 
 ---------------------------------------
 
-schemeDefs :: [Def]
-schemeDefs = fst $ tree2defs scheme
+defs :: [Def]
+defs = fst $ tree2defs scheme
 
-schemeCall :: G X
-schemeCall = Invoke "eval" [V "quine", C "nil" [], C "val" [V "quine"]]
+goal :: G X
+goal = Invoke "eval" [V "quine", C "nil" [], C "val" [V "quine"]]
 
-schemeVars = ["quine"]
+vars = ["quine"]
 
-schemeUnit :: RunGoal X ()
-schemeUnit = RG schemeCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-schemeInt :: RunGoal X Int
-schemeInt  = RG schemeCall
+goalInt :: RunGoal X Int
+goalInt  = RG goal
 
-schemeDisj :: RunGoal X (Disj, Int)
-schemeDisj = RG schemeCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
 
-schemeEmbed :: RunGoal X Streams
-schemeEmbed = RG schemeCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-schemeInvEmbed :: RunGoal X StreamsDict
-schemeInvEmbed = RG schemeCall
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
-schemeInvs :: RunGoal X InvokesDict
-schemeInvs = RG schemeCall
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -55,7 +55,7 @@ schemeInvs = RG schemeCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs () schemeUnit
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
@@ -72,7 +72,7 @@ testUnit =
   -- swaps :      10267
 
 testInt100 =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (100 :: Int) schemeInt
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (100 :: Int) goalInt
 
 ----------------------------------------------------
 
@@ -89,7 +89,7 @@ testInt100 =
   -- swaps :       2597
 
 testDisj10 =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (D 10, 10000 :: Int) schemeDisj
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (D 10, 10000 :: Int) goalDisj
 
 ----------------------------------------------------
 
@@ -106,7 +106,7 @@ testDisj10 =
   -- swaps :     454372
 
 testShallowestIgnoringSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringSubformula eqAF) schemeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -123,7 +123,7 @@ testShallowestIgnoringSubformula =
   -- swaps :     151162
 
 testShallowestIgnoringLeftSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (sc2 shallowestIgnoringLeftSubformula eqAF) schemeEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringLeftSubformula eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -140,7 +140,7 @@ testShallowestIgnoringLeftSubformula =
   -- swaps :      34631
 
 testInvLeftSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD shallowestIgnoringLeftSubformula) schemeInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
 
 ----------------------------------------------------
 
@@ -157,7 +157,7 @@ testInvLeftSubformula =
   -- swaps :       3859
 
 testInvLeftSubformulaCmpHeights =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD cmpHeightsIgnoringLeftSubformula) schemeInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD cmpHeightsIgnoringLeftSubformula) goalInvEmbed
 
 ----------------------------------------------------
 
@@ -174,4 +174,4 @@ testInvLeftSubformulaCmpHeights =
   -- swaps :      31179
 
 testInvsSubinvoke =
-  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs () schemeInvs
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs

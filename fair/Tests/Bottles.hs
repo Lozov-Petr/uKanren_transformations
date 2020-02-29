@@ -12,32 +12,35 @@ import Program.Bottles
 
 ----------------------------------------------------
 
-bottlesCall = Fresh "c" $
+defs :: [Def]
+defs = bottles
+
+goal = Fresh "c" $
    Invoke "capacities1" [V "c"] :/\:
    Invoke "checkAnswer" [V "answer", V "c", int2nat 7, C "true" []]
 
-bottlesVars = ["answer"]
+vars = ["answer"]
 
-bottlesUnit :: RunGoal X ()
-bottlesUnit = RG bottlesCall
+goalUnit :: RunGoal X ()
+goalUnit = RG goal
 
-bottlesInt :: RunGoal X Int
-bottlesInt = RG bottlesCall
+goalInt :: RunGoal X Int
+goalInt = RG goal
 
-bottlesInv :: RunGoal X Invokes
-bottlesInv = RG bottlesCall
+goalInv :: RunGoal X Invokes
+goalInv = RG goal
 
-bottlesDisj :: RunGoal X (Disj, Int)
-bottlesDisj = RG bottlesCall
+goalDisj :: RunGoal X (Disj, Int)
+goalDisj = RG goal
 
-bottlesEmbed :: RunGoal X Streams
-bottlesEmbed = RG bottlesCall
+goalEmbed :: RunGoal X Streams
+goalEmbed = RG goal
 
-bottlesInvEmbed :: RunGoal X StreamsDict
-bottlesInvEmbed = RG bottlesCall
+goalInvEmbed :: RunGoal X StreamsDict
+goalInvEmbed = RG goal
 
-bottlesInvs :: RunGoal X InvokesDict
-bottlesInvs = RG bottlesCall
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
 
 ----------------------------------------------------
 ----------------------------------------------------
@@ -56,7 +59,7 @@ bottlesInvs = RG bottlesCall
   -- swaps :          0
 
 testUnit =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles () bottlesUnit
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalUnit
 
 ----------------------------------------------------
 
@@ -73,12 +76,12 @@ testUnit =
   -- swaps :     198131
 
 testInt100 =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (100 :: Int) bottlesInt
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (100 :: Int) goalInt
 
 ----------------------------------------------------
 
 testInvoke50 =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (I 50) bottlesInv
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (I 50) goalInv
 
 ----------------------------------------------------
 
@@ -95,12 +98,12 @@ testInvoke50 =
   -- swaps :          0
 
 testDisj10 =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (D 10, 10000 :: Int) bottlesDisj
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (D 10, 10000 :: Int) goalDisj
 
 ----------------------------------------------------
 
 testShallowestIgnoringEmbed =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (sc2 shallowestIgnoringEmbed eqAF) bottlesEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (sc2 shallowestIgnoringEmbed eqAF) goalEmbed
 
 ----------------------------------------------------
 
@@ -117,7 +120,7 @@ testShallowestIgnoringEmbed =
   -- swaps :     599778
 
 testInvokeSubformula =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (cmpSD shallowestIgnoringLeftSubformula) bottlesInvEmbed
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
 
 ----------------------------------------------------
 
@@ -134,4 +137,4 @@ testInvokeSubformula =
   -- swaps :      32551
 
 testInvsSubinvoke =
-  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles () bottlesInvs
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs
