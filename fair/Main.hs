@@ -26,4 +26,23 @@ main = do
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
 
-  -- Reverso.testUnit1 100
+  -- Reverso.testUnit1_1 100
+  -- Reverso.testUnit1_2 100
+  -- Reverso.testUnit2_1 100
+  -- Reverso.testUnit2_2 100
+  -- Reverso.testInt1_1 100
+  -- Reverso.testInt1_2 100
+  -- Reverso.testInt2_1 100
+  -- Reverso.testInt2_2 100
+  -- Reverso.testDisj1_1 100
+  -- Reverso.testDisj1_2 100
+  -- Reverso.testDisj2_1 100
+  -- Reverso.testDisj2_2 100
+  -- Reverso.testInv1_1 100
+  -- Reverso.testInv1_2 100
+  -- Reverso.testInv2_1 100
+  -- Reverso.testInv2_2 100
+  -- Reverso.testInvLeftSubformulaCmpHeights1_1 100
+  -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
+  -- Reverso.testInvLeftSubformulaCmpHeights2_1 100
+  -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
