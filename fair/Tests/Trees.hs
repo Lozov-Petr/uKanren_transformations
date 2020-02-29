@@ -41,6 +41,9 @@ treeEmbed = RG treeCall
 treeInvEmbed :: RunGoal X StreamsDict
 treeInvEmbed = RG treeCall
 
+treeInvs :: RunGoal X InvokesDict
+treeInvs = RG treeCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -55,3 +58,4 @@ tests = do
   putStrLn $ show $ run treeVars treeDefs (sc2 shallowestIgnoringSubformula eqAF) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (sc1 shallowestEmbed) treeEmbed
   putStrLn $ show $ run treeVars treeDefs (cmpSD shallowestIgnoringLeftSubformula) treeInvEmbed
+  putStrLn $ show $ run treeVars treeDefs () treeInvs

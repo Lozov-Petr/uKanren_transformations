@@ -36,6 +36,9 @@ bottlesEmbed = RG bottlesCall
 bottlesInvEmbed :: RunGoal X StreamsDict
 bottlesInvEmbed = RG bottlesCall
 
+bottlesInvs :: RunGoal X InvokesDict
+bottlesInvs = RG bottlesCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -115,3 +118,20 @@ testShallowestIgnoringEmbed =
 
 testInvokeSubformula =
   putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles (cmpSD shallowestIgnoringLeftSubformula) bottlesInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :    4300000
+  -- path  :         15
+  -- height:         24
+  -- size  :     319749
+  -- disjs :      49650
+  -- conjs :     110224
+  -- actCnj:      23235
+  -- d in c:          9
+  -- maxLs :         22
+  -- swaps :      32551
+
+testInvsSubinvoke =
+  putStrLn $ show $ takeAnswers 1 $ run bottlesVars bottles () bottlesInvs

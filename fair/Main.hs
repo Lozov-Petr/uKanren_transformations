@@ -16,15 +16,19 @@ main = do
   ListAB.tests
   Trees.tests
 
+  -- Bottles.testInvsSubinvoke
+
   -- Bridge.testDisj10
   -- Bridge.testInvLeftSubformula
   -- Bridge.testInvLeftSubformulaCmpHeights
+  -- Bridge.testInvsSubinvoke
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
+  -- Scheme.testInvsSubinvoke
 
   -- Reverso.testUnit1_1 100
   -- Reverso.testUnit1_2 100
@@ -46,3 +50,7 @@ main = do
   -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
   -- Reverso.testInvLeftSubformulaCmpHeights2_1 100
   -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
+  -- Reverso.testSubinvoke1_1 100
+  -- Reverso.testSubinvoke1_2 100
+  -- Reverso.testSubinvoke2_1 100
+  -- Reverso.testSubinvoke2_2 100

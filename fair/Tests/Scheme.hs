@@ -35,6 +35,9 @@ schemeEmbed = RG schemeCall
 schemeInvEmbed :: RunGoal X StreamsDict
 schemeInvEmbed = RG schemeCall
 
+schemeInvs :: RunGoal X InvokesDict
+schemeInvs = RG schemeCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -155,3 +158,20 @@ testInvLeftSubformula =
 
 testInvLeftSubformulaCmpHeights =
   putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs (cmpSD cmpHeightsIgnoringLeftSubformula) schemeInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :     940000
+  -- path  :         21
+  -- height:         25
+  -- size  :     748135
+  -- disjs :      79469
+  -- conjs :     294598
+  -- actCnj:      37188
+  -- d in c:         17
+  -- maxLs :         23
+  -- swaps :      31179
+
+testInvsSubinvoke =
+  putStrLn $ show $ takeAnswers 1 $ run schemeVars schemeDefs () schemeInvs

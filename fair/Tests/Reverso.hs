@@ -73,6 +73,12 @@ call1InvEmbed = RG . call1
 call2InvEmbed :: Int -> RunGoal X StreamsDict
 call2InvEmbed = RG . call2
 
+call1Invs :: Int -> RunGoal X InvokesDict
+call1Invs = RG . call1
+
+call2Invs :: Int -> RunGoal X InvokesDict
+call2Invs = RG . call2
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -383,3 +389,84 @@ testInvLeftSubformulaCmpHeights2_1 =
 
 testInvLeftSubformulaCmpHeights2_2 =
   putStrLn . show . takeAnswers 1 . run vars defs2 (cmpSD cmpHeightsIgnoringLeftSubformula) . call2InvEmbed
+
+----------------------------------------------------
+----------------------------------------------------
+
+-- all answers, length: 100
+  -- step  :      40000
+  -- path  :          1
+  -- height:          1
+  -- size  :          3
+  -- disjs :          0
+  -- conjs :          1
+  -- actCnj:          1
+  -- d in c:          0
+  -- maxLs :       5024
+  -- swaps :          0
+
+testSubinvoke1_1 =
+  putStrLn . show . run vars defs1 () . call1Invs
+
+----------------------------------------------------
+
+  -- all answers, length: 100
+  -- step  :      40000
+  -- path  :          3
+  -- height:          3
+  -- size  :         11
+  -- disjs :          1
+  -- conjs :          4
+  -- actCnj:          1
+  -- d in c:          1
+  -- maxLs :          3
+  -- swaps :         62
+
+testSubinvoke1_2 =
+  putStrLn . show . run vars defs1 () . call2Invs
+
+----------------------------------------------------
+
+  -- did not wait for all answers
+  -- step  :   13720000
+  -- path  :          5
+  -- height:         17
+  -- size  :        167
+  -- disjs :         24
+  -- conjs :         59
+  -- actCnj:         15
+  -- d in c:          1
+  -- maxLs :        132
+  -- swaps :      30686
+
+  -- first answer, length: 100
+  -- step  :    1660000
+  -- path  :          5
+  -- height:         18
+  -- size  :        149
+  -- disjs :         17
+  -- conjs :         57
+  -- actCnj:         12
+  -- d in c:          1
+  -- maxLs :         69
+  -- swaps :       7162
+
+testSubinvoke2_1 =
+  putStrLn . show . takeAnswers 1 .  run vars defs2 () . call1Invs
+
+----------------------------------------------------
+
+-- all answers, length: 100
+  -- step  :      40000
+  -- path  :          3
+  -- height:          3
+  -- size  :          7
+  -- disjs :          1
+  -- conjs :          2
+  -- actCnj:          1
+  -- d in c:          1
+  -- maxLs :         18
+  -- swaps :          0
+
+testSubinvoke2_2 =
+  putStrLn . show . run vars defs2 () . call2Invs

@@ -35,6 +35,9 @@ bridgeEmbed = RG bridgeCall
 bridgeInvEmbed :: RunGoal X StreamsDict
 bridgeInvEmbed = RG bridgeCall
 
+bridgeInvs :: RunGoal X InvokesDict
+bridgeInvs = RG bridgeCall
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -202,3 +205,20 @@ testInvLeftSubformula =
 
 testInvLeftSubformulaCmpHeights =
   putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big (cmpSD cmpHeightsIgnoringLeftSubformula) bridgeInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :    1240000
+  -- path  :         11
+  -- height:         24
+  -- size  :     136489
+  -- disjs :      16685
+  -- conjs :      51559
+  -- actCnj:       7432
+  -- d in c:         15
+  -- maxLs :         20
+  -- swaps :      11882
+
+testInvsSubinvoke =
+  putStrLn $ show $ takeAnswers 1 $ run bridgeVars game2Big () bridgeInvs

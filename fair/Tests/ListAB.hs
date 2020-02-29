@@ -34,6 +34,9 @@ listAB_embed = RG listAB_call
 listAB_invEmbed :: RunGoal X StreamsDict
 listAB_invEmbed = RG listAB_call
 
+listAB_invs :: RunGoal X InvokesDict
+listAB_invs = RG listAB_call
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -48,3 +51,4 @@ tests = do
   putStrLn $ show $ run listAB_vars listAB_def (sc2 shallowestIgnoringSubformula eqAF) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (sc1 shallowestEmbed) listAB_embed
   putStrLn $ show $ run listAB_vars listAB_def (cmpSD shallowestIgnoringLeftSubformula) listAB_invEmbed
+  putStrLn $ show $ run listAB_vars listAB_def () listAB_invs
