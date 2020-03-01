@@ -144,17 +144,17 @@ testInvsSubinvoke =
 
 ----------------------------------------------------
 
-  -- did not wait for an answer
-  -- step  :   25010000
-  -- path  :         18
-  -- height:         29
-  -- size  :    1469969
-  -- disjs :     234174
-  -- conjs :     500810
-  -- actCnj:      75208
-  -- d in c:         17
+  -- first answer
+  -- step  :    2080000
+  -- path  :         15
+  -- height:         22
+  -- size  :      96111
+  -- disjs :      22250
+  -- conjs :      25805
+  -- actCnj:       6397
+  -- d in c:          9
   -- maxLs :          0
-  -- swaps :     452296
+  -- swaps :          0
 
 testDefsApprox =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs

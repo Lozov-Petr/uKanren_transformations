@@ -156,7 +156,7 @@ instance Labels DefsLabel DefsApprox where
     case getLeftLeaf s of
       (Invoke n a, subst) ->
         case lookup n l of
-          Just ts -> not $ all isJust $ map (\t -> foldl (\s (t1,t2) -> s >>= \s -> unify s t1 t2) (Just subst) $ zip a t) ts
+          Just ts -> length ts < 2 || not (all isJust $ map (\t -> foldl (\s (t1,t2) -> s >>= \s -> unify s t1 t2) (Just subst) $ zip a t) ts)
           Nothing -> error "Undefined definition."
       _ -> True
   update _ _ _ logs x =

@@ -31,6 +31,7 @@ main = do
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
   -- Scheme.testInvsSubinvoke
+  -- Scheme.testDefsApprox
 
   -- Reverso.testUnit1_1 100
   -- Reverso.testUnit1_2 100
