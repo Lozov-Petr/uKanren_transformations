@@ -44,6 +44,10 @@ goalInvEmbed = RG goal
 goalInvs :: RunGoal X InvokesDict
 goalInvs = RG goal
 
+goalDefs :: RunGoal X DefsLabel
+goalDefs = RG goal
+
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -59,3 +63,4 @@ tests = do
   putStrLn $ show $ run vars defs (sc1 shallowestEmbed) goalEmbed
   putStrLn $ show $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
   putStrLn $ show $ run vars defs () goalInvs
+  putStrLn $ show $ run vars defs (toDA defs) goalDefs

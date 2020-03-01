@@ -42,6 +42,9 @@ goalInvEmbed = RG goal
 goalInvs :: RunGoal X InvokesDict
 goalInvs = RG goal
 
+goalDefs :: RunGoal X DefsLabel
+goalDefs = RG goal
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -138,3 +141,20 @@ testInvokeSubformula =
 
 testInvsSubinvoke =
   putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs
+
+----------------------------------------------------
+
+  -- did not wait for an answer
+  -- step  :   25010000
+  -- path  :         18
+  -- height:         29
+  -- size  :    1469969
+  -- disjs :     234174
+  -- conjs :     500810
+  -- actCnj:      75208
+  -- d in c:         17
+  -- maxLs :          0
+  -- swaps :     452296
+
+testDefsApprox =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs

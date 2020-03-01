@@ -36,9 +36,6 @@ toSemG e i (Invoke n a) = do a' <- toSemTs e a
 toSemG e i (Fresh n g)  = toSemG ((n, V i) : e) (i + 1) g
 toSemG e i _            = Left "Let-expressions aren't supported."
 
-unify :: Subst -> Ts -> Ts -> Maybe Subst
-unify (n, s) t1 t2 = Eval.unify (Just s) t1 t2 >>= return . ((,) n)
-
 ---------------------------------------
 
 fillHole :: HoleStream l -> a -> Er (GenStream a l)

@@ -2,11 +2,14 @@
 
 module Labels where
 
+import Data.Maybe
+
 import Syntax
 import qualified Embed
 
 import Util
 import FairStream
+import DefsAnalysis
 
 ---------------------------------------
 
@@ -137,3 +140,27 @@ instance Labels InvokesDict () where
       (Invoke n a, subst) -> ID $ (n, map (substInT subst) a) : xs
       _                   -> l
   size () (ID xs) = length xs
+
+---------------------------------------
+
+newtype DefsApprox = DA [(Name, [[Ts]])]
+newtype DefsLabel = DL Bool deriving Show
+
+toDA :: [Def] -> DefsApprox
+toDA = DA . map def2approx
+
+instance Labels DefsLabel DefsApprox where
+  new _ _ = DL True
+  keep _ x = x
+  predicate (DA l) s (DL x) = x ||
+    case getLeftLeaf s of
+      (Invoke n a, subst) ->
+        case lookup n l of
+          Just ts -> not $ all isJust $ map (\t -> foldl (\s (t1,t2) -> s >>= \s -> unify s t1 t2) (Just subst) $ zip a t) ts
+          Nothing -> error "Undefined definition."
+      _ -> True
+  update _ _ _ logs x =
+    case last logs of
+      InvokeStep _ -> DL False
+      _            -> x
+  size _ _ = 0

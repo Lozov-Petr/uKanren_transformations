@@ -79,6 +79,12 @@ goal1Invs = RG . goal1
 goal2Invs :: Int -> RunGoal X InvokesDict
 goal2Invs = RG . goal2
 
+goal1Defs :: Int -> RunGoal X DefsLabel
+goal1Defs = RG . goal1
+
+goal2Defs :: Int -> RunGoal X DefsLabel
+goal2Defs = RG . goal2
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -342,17 +348,17 @@ testInv2_1 =
 
 ----------------------------------------------------
 
--- all answers, length: 100
--- step  :      50000
--- path  :          3
--- height:          3
--- size  :         11
--- disjs :          2
--- conjs :          3
--- actCnj:          2
--- d in c:          1
--- maxLs :          0
--- swaps :       2013
+  -- all answers, length: 100
+  -- step  :      50000
+  -- path  :          3
+  -- height:          3
+  -- size  :         11
+  -- disjs :          2
+  -- conjs :          3
+  -- actCnj:          2
+  -- d in c:          1
+  -- maxLs :          0
+  -- swaps :       2013
 
 testInv2_2 =
   putStrLn . show . run vars defs2 (I 5) . goal1Inv
@@ -393,7 +399,7 @@ testInvLeftSubformulaCmpHeights2_2 =
 ----------------------------------------------------
 ----------------------------------------------------
 
--- all answers, length: 100
+  -- all answers, length: 100
   -- step  :      40000
   -- path  :          1
   -- height:          1
@@ -452,11 +458,11 @@ testSubinvoke1_2 =
   -- swaps :       7162
 
 testSubinvoke2_1 =
-  putStrLn . show . takeAnswers 1 .  run vars defs2 () . goal1Invs
+  putStrLn . show . takeAnswers 1 . run vars defs2 () . goal1Invs
 
 ----------------------------------------------------
 
--- all answers, length: 100
+  -- all answers, length: 100
   -- step  :      40000
   -- path  :          3
   -- height:          3
@@ -470,3 +476,84 @@ testSubinvoke2_1 =
 
 testSubinvoke2_2 =
   putStrLn . show . run vars defs2 () . goal2Invs
+
+----------------------------------------------------
+----------------------------------------------------
+
+  -- all answers, length: 100
+  -- step  :      40000
+  -- path  :          1
+  -- height:          1
+  -- size  :          3
+  -- disjs :          0
+  -- conjs :          1
+  -- actCnj:          1
+  -- d in c:          0
+  -- maxLs :          0
+  -- swaps :          0
+
+testDefsApprox1_1 =
+  putStrLn . show . run vars defs1 (toDA defs1) . goal1Defs
+
+----------------------------------------------------
+
+  -- all answers, length: 100
+  -- step  :      50000
+  -- path  :          1
+  -- height:          2
+  -- size  :          5
+  -- disjs :          0
+  -- conjs :          2
+  -- actCnj:          1
+  -- d in c:          0
+  -- maxLs :          0
+  -- swaps :        259
+
+testDefsApprox1_2 =
+  putStrLn . show . run vars defs1 (toDA defs1) . goal2Defs
+
+----------------------------------------------------
+
+  -- did not wait for all answers
+  -- step  :   14750000
+  -- path  :          4
+  -- height:         17
+  -- size  :        115
+  -- disjs :         20
+  -- conjs :         37
+  -- actCnj:         14
+  -- d in c:          1
+  -- maxLs :          0
+  -- swaps :      35487
+
+  -- first answer, length: 100
+  -- step  :    1590000
+  -- path  :          3
+  -- height:         14
+  -- size  :        101
+  -- disjs :         18
+  -- conjs :         32
+  -- actCnj:         14
+  -- d in c:          1
+  -- maxLs :          0
+  -- swaps :       9996
+
+testDefsApprox2_1 =
+  putStrLn . show . takeAnswers 1 . run vars defs2 (toDA defs2) . goal1Defs
+
+----------------------------------------------------
+
+  -- all answers, length: 100
+  -- step  :      40000
+  -- path  :          3
+  -- height:          3
+  -- size  :          7
+  -- disjs :          0
+  -- conjs :          3
+  -- actCnj:          1
+  -- d in c:          0
+  -- maxLs :          0
+  -- swaps :        123
+
+testDefsApprox2_2 =
+  putStrLn . show . run vars defs2 (toDA defs2) . goal2Defs

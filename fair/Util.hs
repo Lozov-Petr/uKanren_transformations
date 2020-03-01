@@ -7,6 +7,11 @@ import qualified Eval
 
 ---------------------------------------
 
+unify :: Subst -> Ts -> Ts -> Maybe Subst
+unify (n, s) t1 t2 = Eval.unify (Just s) t1 t2 >>= return . ((,) n)
+
+---------------------------------------
+
 getLeftLeaf :: GenStream s l -> (Goal, s)
 getLeftLeaf (Disj a _  ) = getLeftLeaf a
 getLeftLeaf (Conj a _ _) = getLeftLeaf a

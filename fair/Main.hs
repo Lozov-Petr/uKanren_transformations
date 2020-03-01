@@ -17,11 +17,13 @@ main = do
   Trees.tests
 
   -- Bottles.testInvsSubinvoke
+  -- Bottles.testDefsApprox
 
   -- Bridge.testDisj10
   -- Bridge.testInvLeftSubformula
   -- Bridge.testInvLeftSubformulaCmpHeights
   -- Bridge.testInvsSubinvoke
+  -- Bridge.testDefsApprox
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
@@ -54,3 +56,7 @@ main = do
   -- Reverso.testSubinvoke1_2 100
   -- Reverso.testSubinvoke2_1 100
   -- Reverso.testSubinvoke2_2 100
+  -- Reverso.testDefsApprox1_1 100
+  -- Reverso.testDefsApprox1_2 100
+  -- Reverso.testDefsApprox2_1 100
+  -- Reverso.testDefsApprox2_2 100
