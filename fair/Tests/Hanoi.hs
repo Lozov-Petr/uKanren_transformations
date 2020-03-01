@@ -40,6 +40,12 @@ goalEmbed = RG goal
 goalInvEmbed :: RunGoal X StreamsDict
 goalInvEmbed = RG goal
 
+goalInvs :: RunGoal X InvokesDict
+goalInvs = RG goal
+
+goalDefs :: RunGoal X DefsLabel
+goalDefs = RG goal
+
 ----------------------------------------------------
 ----------------------------------------------------
 ----------------------------------------------------
@@ -124,3 +130,37 @@ testInvLeftSubformula =
 
 testInvLeftSubformulaCmpHeights =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (cmpSD cmpHeightsIgnoringLeftSubformula) goalInvEmbed
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :    1830000
+  -- path  :         16
+  -- height:         23
+  -- size  :     382975
+  -- disjs :      58835
+  -- conjs :     132652
+  -- actCnj:      31023
+  -- d in c:         12
+  -- maxLs :          8
+  -- swaps :       5832
+
+testInvsSubinvoke =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :     270000
+  -- path  :         15
+  -- height:         19
+  -- size  :      25071
+  -- disjs :       6870
+  -- conjs :       5665
+  -- actCnj:       1584
+  -- d in c:         11
+  -- maxLs :         28
+  -- swaps :          0
+
+testDefsApprox =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs

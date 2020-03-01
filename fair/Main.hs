@@ -27,6 +27,9 @@ main = do
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
+  -- Hanoi.testInvsSubinvoke
+  -- Hanoi.testDefsApprox
+
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
