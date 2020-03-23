@@ -17,7 +17,8 @@ main = do
   ListAB.tests
   Trees.tests
 
-  -- Bottles.testInvsSubinvoke
+  -- Bottles.testInvsSubinvoke_NonStrict
+  -- Bottles.testInvsSubinvoke_Strict
   -- Bottles.testDefsApprox
 
   -- Bridge.testUnit
@@ -25,20 +26,23 @@ main = do
   -- Bridge.testDisj10
   -- Bridge.testInvLeftSubformula
   -- Bridge.testInvLeftSubformulaCmpHeights
-  -- Bridge.testInvsSubinvoke
-  -- Bridge.testInvsSubinvoke'
+  -- Bridge.testInvsSubinvoke_NonStrict
+  -- Bridge.testInvsSubinvoke'_NonStrict
+  -- Bridge.testInvsSubinvoke_Strict
+  -- Bridge.testInvsSubinvoke'_Strict
   -- Bridge.testDefsApprox
   -- Bridge.testDefsApprox'
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
-  -- Hanoi.testInvsSubinvoke
+  -- Hanoi.testInvsSubinvoke_NonStrict
+  -- Hanoi.testInvsSubinvoke_Strict
   -- Hanoi.testDefsApprox
-
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
-  -- Scheme.testInvsSubinvoke
+  -- Scheme.testInvsSubinvoke_NonStrict
+  -- Scheme.testInvsSubinvoke_Strict
   -- Scheme.testDefsApprox
 
   -- Reverso.testUnit1_1 100
@@ -61,10 +65,14 @@ main = do
   -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
   -- Reverso.testInvLeftSubformulaCmpHeights2_1 100
   -- Reverso.testInvLeftSubformulaCmpHeights1_2 100
-  -- Reverso.testSubinvoke1_1 100
-  -- Reverso.testSubinvoke1_2 100
-  -- Reverso.testSubinvoke2_1 100
-  -- Reverso.testSubinvoke2_2 100
+  -- Reverso.testSubinvoke1_1_NonStritct 100
+  -- Reverso.testSubinvoke1_2_NonStritct 100
+  -- Reverso.testSubinvoke2_1_NonStritct 100
+  -- Reverso.testSubinvoke2_2_NonStritct 100
+  -- Reverso.testSubinvoke1_1_Stritct 100
+  -- Reverso.testSubinvoke1_2_Stritct 100
+  -- Reverso.testSubinvoke2_1_Stritct 100
+  -- Reverso.testSubinvoke2_2_Stritct 100
   -- Reverso.testDefsApprox1_1 100
   -- Reverso.testDefsApprox1_2 100
   -- Reverso.testDefsApprox2_1 100

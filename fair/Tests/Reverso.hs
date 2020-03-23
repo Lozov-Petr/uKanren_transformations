@@ -411,8 +411,8 @@ testInvLeftSubformulaCmpHeights2_2 =
   -- maxLs :       5024
   -- swaps :          0
 
-testSubinvoke1_1 =
-  putStrLn . show . run vars defs1 () . goal1Invs
+testSubinvoke1_1_NonStritct =
+  putStrLn . show . run vars defs1 NonStrict . goal1Invs
 
 ----------------------------------------------------
 
@@ -428,8 +428,8 @@ testSubinvoke1_1 =
   -- maxLs :          3
   -- swaps :         62
 
-testSubinvoke1_2 =
-  putStrLn . show . run vars defs1 () . goal2Invs
+testSubinvoke1_2_NonStritct =
+  putStrLn . show . run vars defs1 NonStrict . goal2Invs
 
 ----------------------------------------------------
 
@@ -457,8 +457,8 @@ testSubinvoke1_2 =
   -- maxLs :         69
   -- swaps :       7162
 
-testSubinvoke2_1 =
-  putStrLn . show . takeAnswers 1 . run vars defs2 () . goal1Invs
+testSubinvoke2_1_NonStritct =
+  putStrLn . show . takeAnswers 1 . run vars defs2 NonStrict . goal1Invs
 
 ----------------------------------------------------
 
@@ -474,8 +474,29 @@ testSubinvoke2_1 =
   -- maxLs :         18
   -- swaps :          0
 
-testSubinvoke2_2 =
-  putStrLn . show . run vars defs2 () . goal2Invs
+testSubinvoke2_2_NonStritct =
+  putStrLn . show . run vars defs2 NonStrict . goal2Invs
+
+----------------------------------------------------
+----------------------------------------------------
+
+testSubinvoke1_1_Stritct =
+  putStrLn . show . run vars defs1 Strict . goal1Invs
+
+----------------------------------------------------
+
+testSubinvoke1_2_Stritct =
+  putStrLn . show . run vars defs1 Strict . goal2Invs
+
+----------------------------------------------------
+
+testSubinvoke2_1_Stritct =
+  putStrLn . show . run vars defs2 Strict . goal1Invs
+
+----------------------------------------------------
+
+testSubinvoke2_2_Stritct =
+  putStrLn . show . run vars defs2 Strict . goal2Invs
 
 ----------------------------------------------------
 ----------------------------------------------------

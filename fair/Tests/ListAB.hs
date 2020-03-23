@@ -55,5 +55,6 @@ tests = do
   putStrLn $ show $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
   putStrLn $ show $ run vars defs (sc1 shallowestEmbed) goalEmbed
   putStrLn $ show $ run vars defs (cmpSD shallowestIgnoringLeftSubformula) goalInvEmbed
-  putStrLn $ show $ run vars defs () goalInvs
+  putStrLn $ show $ run vars defs Strict goalInvs
+  putStrLn $ show $ run vars defs NonStrict goalInvs
   putStrLn $ show $ run vars defs (toDA defs) goalDefs

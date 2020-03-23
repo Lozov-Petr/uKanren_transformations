@@ -127,19 +127,24 @@ instance Labels StreamsDict (Comp StreamsDict) where
 ---------------------------------------
 
 newtype InvokesDict = ID [(Name, [Ts])] deriving Show
+data InvokesType = Strict | NonStrict
 
-instance Labels InvokesDict () where
-  new () _  = ID []
-  keep () s = s
-  predicate () s (ID l) =
+instance Labels InvokesDict InvokesType where
+  new _ _  = ID []
+  keep _ s = s
+  predicate _ s (ID l) =
     case getLeftLeaf s of
       (Invoke n a, subst) -> not $ any (\(m, b) -> n == m && all (uncurry Embed.isInst) (zip b $ map (substInT subst) a)) l
       _                   -> True
-  update () s _ _ l@(ID xs) =
+  update Strict s _ _ l@(ID xs) =
+    case s of
+      (Goal (Invoke n a) subst) -> ID $ (n, map (substInT subst) a) : xs
+      _                         -> l
+  update NonStrict s _ _ l@(ID xs) =
     case getLeftLeaf s of
       (Invoke n a, subst) -> ID $ (n, map (substInT subst) a) : xs
       _                   -> l
-  size () (ID xs) = length xs
+  size _ (ID xs) = length xs
 
 ---------------------------------------
 

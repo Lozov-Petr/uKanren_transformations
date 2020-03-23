@@ -176,8 +176,13 @@ testInvLeftSubformulaCmpHeights =
   -- maxLs :         23
   -- swaps :      31179
 
-testInvsSubinvoke =
-  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs
+testInvsSubinvoke_NonStrict =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs NonStrict goalInvs
+
+----------------------------------------------------
+
+testInvsSubinvoke_Strict =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs Strict goalInvs
 
 ----------------------------------------------------
 

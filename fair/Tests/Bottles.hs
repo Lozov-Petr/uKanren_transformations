@@ -139,8 +139,25 @@ testInvokeSubformula =
   -- maxLs :         22
   -- swaps :      32551
 
-testInvsSubinvoke =
-  putStrLn $ show $ takeAnswers 1 $ run vars defs () goalInvs
+testInvsSubinvoke_NonStrict =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs NonStrict goalInvs
+
+----------------------------------------------------
+
+  -- first answer
+  -- step  :    2080000
+  -- path  :         15
+  -- height:         22
+  -- size  :      96111
+  -- disjs :      22250
+  -- conjs :      25805
+  -- actCnj:       6397
+  -- d in c:          9
+  -- maxLs :          9
+  -- swaps :          0
+
+testInvsSubinvoke_Strict =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs Strict goalInvs
 
 ----------------------------------------------------
 
