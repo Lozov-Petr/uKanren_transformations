@@ -58,3 +58,22 @@ sortoDef =
     )
   where 
     [x, y, s, xs, xs'] = map V ["x", "y", "s", "xs", "xs'"]
+
+sorto' :: [Def]
+sorto' = sorto'Def : smallesto
+
+sorto'Def :: Def
+sorto'Def =
+    (Def "sorto" ["x", "y"]
+      (
+        x === nil &&& y === nil |||
+        fresh ["s", "xs", "xs'"]
+          (
+            y === s % xs' &&&
+            call "smallesto" [x, s, xs] &&&
+            call "sorto" [xs, xs']
+          )
+      )
+    )
+  where
+    [x, y, s, xs, xs'] = map V ["x", "y", "s", "xs", "xs'"]
