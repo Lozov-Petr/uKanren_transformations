@@ -370,7 +370,42 @@ getAnswer'Def =
          (V "q3" === C "none" []))))))
     )
 
-getAnswer :: [Def] 
+getAnswer''Def :: Def
+getAnswer''Def =
+    Def "getAnswer'" ["answer", "state", "q3"] (
+      (fresh ["x", "xs"] (
+         (V "answer" === C "%" [V "x", V "xs"]) &&&
+         (fresh ["q5"] (
+            (call "checkStep" [V "state", V "x", V "q5"]) &&&
+            (((V "q5" === C "true" []) &&&
+            (fresh ["q7"] (
+            (((V "q7" === C "none" []) &&&
+            (V "q3" === C "none" [])) |||
+            (fresh ["t1"] (
+               (V "q7" === C "some" [V "t1"]) &&&
+               (fresh ["q9"] (
+                  (V "q3" === C "some" [V "q9"]) &&&
+                  (fresh ["q11"] (
+                     (call "getTime" [V "x", V "q11"]) &&&
+                     (call "add" [V "q11", V "t1", V "q9"])))))))) &&&
+               (fresh ["q13"] (
+                  (call "step" [V "state", V "x", V "q13"]) &&&
+                  (call "getAnswer'" [V "xs", V "q13", V "q7"])))
+               ))) |||
+            ((V "q5" === C "false" []) &&&
+            (V "q3" === C "none" []))))))) |||
+      ((V "answer" === C "nil" []) &&&
+      (fresh ["q17"] (
+         (fresh ["q20"] (
+            (call "finish" [V "q20"]) &&&
+            (call "eqForState" [V "state", V "q20", V "q17"]))) &&&
+         (((V "q17" === C "true" []) &&&
+         (V "q3" === C "some" [C "o" []])) |||
+         ((V "q17" === C "false" []) &&&
+         (V "q3" === C "none" []))))))
+    )
+
+getAnswer :: [Def]
 getAnswer = getAnswerDef : start ++ getAnswer'
 
 getAnswerDef :: Def 
@@ -410,4 +445,26 @@ game2Big =
   , finishDef 
   , getAnswer'Def
   , resultDef 
+  ]
+
+game2Big' :: [Def]
+game2Big' =
+  [ greaterDef
+  , grForPersonDef
+  , maxDef
+  , addDef
+  , eqForBoolDef
+  , eqForStateDef
+  , checkPersonDef
+  , checkStepDef
+  , moveLightDef
+  , movePersonDef
+  , stepDef
+  , timesDef
+  , getTimeDef
+  , getAnswerDef
+  , startDef
+  , finishDef
+  , getAnswer''Def
+  , resultDef
   ]
