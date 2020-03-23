@@ -9,6 +9,7 @@ import qualified Tests.Trees     as Trees
 -- import qualified Tests.Scheme    as Scheme
 -- import qualified Tests.Sudoku4x4 as Sudoku4x4
 -- import qualified Tests.Reverso   as Reverso
+-- import qualified Tests.Sorto     as Sorto
 
 ----------------------------------------------------
 
@@ -19,11 +20,15 @@ main = do
   -- Bottles.testInvsSubinvoke
   -- Bottles.testDefsApprox
 
+  -- Bridge.testUnit
+  -- Bridge.testUnit'
   -- Bridge.testDisj10
   -- Bridge.testInvLeftSubformula
   -- Bridge.testInvLeftSubformulaCmpHeights
   -- Bridge.testInvsSubinvoke
+  -- Bridge.testInvsSubinvoke'
   -- Bridge.testDefsApprox
+  -- Bridge.testDefsApprox'
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
@@ -64,3 +69,8 @@ main = do
   -- Reverso.testDefsApprox1_2 100
   -- Reverso.testDefsApprox2_1 100
   -- Reverso.testDefsApprox2_2 100
+
+  -- Sorto.testUnit1 30
+  -- Sorto.testUnit2 30
+  -- Sorto.testDefsApprox1 30
+  -- Sorto.testDefsApprox2 30

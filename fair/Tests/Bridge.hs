@@ -14,6 +14,9 @@ import Program.Bridge
 defs :: [Def]
 defs = game2Big
 
+defs' :: [Def]
+defs' = game2Big'
+
 goal =
     Invoke "result" [V "minutes"] &&&
     Invoke "getAnswer" [V "answer", C "some" [V "minutes"]]
@@ -65,6 +68,15 @@ testUnit =
 
 ----------------------------------------------------
 
+  -- steps: 3743291
+  -- swaps: 0
+  -- time:  26.647
+
+testUnit' =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' () goalUnit
+
+----------------------------------------------------
+
   -- first answer
   -- step  :    4070000
   -- path  :         17
@@ -79,6 +91,9 @@ testUnit =
 
 testInt100 =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (100 :: Int) goalInt
+
+testInt100' =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' (100 :: Int) goalInt
 
 ----------------------------------------------------
 
@@ -214,6 +229,11 @@ testInvLeftSubformulaCmpHeights =
 
 ----------------------------------------------------
 
+testInvLeftSubformulaCmpHeights' =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' (cmpSD cmpHeightsIgnoringLeftSubformula) goalInvEmbed
+
+----------------------------------------------------
+
   -- first answer
   -- step  :    1240000
   -- path  :         11
@@ -231,6 +251,11 @@ testInvsSubinvoke =
 
 ----------------------------------------------------
 
+testInvsSubinvoke' =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' () goalInvs
+
+----------------------------------------------------
+
   -- first answer
   -- step  :    1410000
   -- path  :         20
@@ -245,3 +270,8 @@ testInvsSubinvoke =
 
 testDefsApprox =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs
+
+----------------------------------------------------
+
+testDefsApprox' =
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' (toDA defs) goalDefs
