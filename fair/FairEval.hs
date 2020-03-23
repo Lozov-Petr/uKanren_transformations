@@ -90,8 +90,8 @@ eval par fs (Disj p q) = eval par fs p >>= \r ->
 
 ---------------------------------------
 
-printInfo :: Labels l p => Int -> Int -> Int -> p -> Stream l -> a -> a
-printInfo step i swaps p s =
+printInfo :: Labels l p => Int -> Info -> p -> Stream l -> a -> a
+printInfo step (i, swaps) p s =
   if i `mod` step /= 0 then id else
     let dInC = disjsInConjs s in
     trace $ printf
@@ -109,7 +109,11 @@ prepareAnswer s x = map (\(x,i) -> (x, substInT s $ V i)) $ zip x [0..]
 data Answers a b = Nil b
                  | a ::: Answers a b
 
-type RunAnswers = Answers ([(X, Ts)], Int) (Maybe String, Int)
+type Info = (Int, Int)
+
+info0 = (0, 0)
+
+type RunAnswers = Answers ([(X, Ts)], Info) (Maybe String, Info)
 
 instance (Show a, Show b) => Show (Answers a b) where
   show a = printf "answers {\n%s" $ show' a where
@@ -119,7 +123,7 @@ instance (Show a, Show b) => Show (Answers a b) where
 
 takeAnswers :: Int -> RunAnswers -> RunAnswers
 takeAnswers _ a@(Nil _)        = a
-takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", 0)
+takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", info0)
 takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
 takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b
 
@@ -133,20 +137,20 @@ initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> retur
 run :: (Labels l p, Show l) => [X] -> [Def] -> p -> RunGoal X l -> RunAnswers
 run vars defs p g =
   case initStream g vars of
-    Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, 0)
-    Right s -> run' p 0 0 (map def2fun defs) s
+    Left msg     -> Nil (Just $ "Error in initial goal. " ++ msg, info0)
+    Right s -> run' p info0 (map def2fun defs) s
   where
-  run' :: (Labels l p, Show l) => p -> Int -> Int -> [Fun] -> Stream l -> RunAnswers
-  run' p i swaps fs s =
+  run' :: (Labels l p, Show l) => p -> Info -> [Fun] -> Stream l -> RunAnswers
+  run' p info@(i, swaps) fs s =
     case eval p fs s of
-      Left msg                 -> Nil (Just msg, i)
-      Right (Nothing, Nothing, l) -> Nil (Nothing, i)
-      Right (Nothing, Just a,  l) -> (prepareAnswer a vars, i) ::: Nil (Nothing, i)
+      Left msg                    -> Nil (Just msg, info)
+      Right (Nothing, Nothing, l) -> Nil (Nothing, info)
+      Right (Nothing, Just a,  l) -> (prepareAnswer a vars, info) ::: Nil (Nothing, info)
       Right (Just s , Nothing, l) ->
         let swaps' = if last l == ConjSwap then swaps + 1 else swaps in
-        printInfo 10000 i swaps' p s $
-        run' p (i+1) swaps' fs s
-      Right (Just s , Just a,  l) ->
+        printInfo 10000 (i, swaps') p s $
+        run' p (i + 1, swaps') fs s
+      Right (Just s , Just a, l) ->
         let swaps' = if last l == ConjSwap then swaps + 1 else swaps in
-        printInfo 10000 i swaps' p s $
-        (prepareAnswer a vars, i) ::: run' p (i+1) swaps' fs s
+        printInfo 10000 (i, swaps') p s $
+        (prepareAnswer a vars, info) ::: run' p (i+1, swaps') fs s
