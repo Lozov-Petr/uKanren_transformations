@@ -9,6 +9,8 @@ import Embedding
 
 import Program.Bridge
 
+import qualified Unfolding as U
+
 ----------------------------------------------------
 
 defs :: [Def]
@@ -299,4 +301,32 @@ testDefsApprox =
 ----------------------------------------------------
 
 testDefsApprox' =
-  putStrLn $ show $ takeAnswers 1 $ run vars defs' (toDA defs) goalDefs
+  putStrLn $ show $ takeAnswers 1 $ run vars defs' (toDA defs') goalDefs
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+  -- 166505
+testUnfoldSimpl =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleSep vars defs goal
+
+  -- 21689
+testUnfoldSimpl' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleSep vars defs' goal
+
+  -- did not wait for an answer
+testUnfoldDefsRating =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.defsRatingSep defs) vars defs goal
+
+  -- did not wait for an answer
+testUnfoldDefsRating' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.defsRatingSep defs) vars defs' goal
+
+  -- 160729
+testUnfoldFirstGoodCall =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal
+
+  -- 129377
+testUnfoldFirstGoodCall' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs' goal

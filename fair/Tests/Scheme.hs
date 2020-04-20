@@ -10,6 +10,8 @@ import Util
 
 import Program.Scheme
 
+import qualified Unfolding as U
+
 ---------------------------------------
 
 defs :: [Def]
@@ -200,3 +202,19 @@ testInvsSubinvoke_Strict =
 
 testDefsApprox =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+  -- 62246
+testUnfoldSimpl =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleSep vars defs goal
+
+  -- did not wait for an answer
+testUnfoldDefsRating =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.defsRatingSep defs) vars defs goal
+
+  -- did not wait for an answer
+testUnfoldFirstGoodCall =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal

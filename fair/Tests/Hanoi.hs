@@ -10,6 +10,8 @@ import Util
 
 import Program.Hanoi
 
+import qualified Unfolding as U
+
 ---------------------------------------
 
 defs :: [Def]
@@ -169,3 +171,19 @@ testInvsSubinvoke_Strict =
 
 testDefsApprox =
   putStrLn $ show $ takeAnswers 1 $ run vars defs (toDA defs) goalDefs
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+  -- 82328
+testUnfoldSimpl =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleSep vars defs goal
+
+  -- 19534
+testUnfoldDefsRating =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.defsRatingSep defs) vars defs goal
+
+  -- 46217
+testUnfoldFirstGoodCall =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal

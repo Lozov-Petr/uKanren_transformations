@@ -20,6 +20,9 @@ main = do
   -- Bottles.testInvsSubinvoke_NonStrict
   -- Bottles.testInvsSubinvoke_Strict
   -- Bottles.testDefsApprox
+  -- Bottles.testUnfoldSimpl
+  -- Bottles.testUnfoldDefsRating
+  -- Bottles.testUnfoldFirstGoodCall
 
   -- Bridge.testUnit
   -- Bridge.testUnit'
@@ -32,18 +35,35 @@ main = do
   -- Bridge.testInvsSubinvoke'_Strict
   -- Bridge.testDefsApprox
   -- Bridge.testDefsApprox'
+  -- Bridge.testUnfoldSimpl
+  -- Bridge.testUnfoldSimpl'
+  -- Bridge.testUnfoldDefsRating
+  -- Bridge.testUnfoldDefsRating'
+  -- Bridge.testUnfoldFirstGoodCall
+  -- Bridge.testUnfoldFirstGoodCall'
+
+  -- GCW.testUnit
+  -- GCW.testUnfoldSimpl
+  -- GCW.testUnfoldDefsRating
+  -- GCW.testUnfoldFirstGoodCall
 
   -- Hanoi.testInvLeftSubformula
   -- Hanoi.testInvLeftSubformulaCmpHeights
   -- Hanoi.testInvsSubinvoke_NonStrict
   -- Hanoi.testInvsSubinvoke_Strict
   -- Hanoi.testDefsApprox
+  -- Hanoi.testUnfoldSimpl
+  -- Hanoi.testUnfoldDefsRating
+  -- Hanoi.testUnfoldFirstGoodCall
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
   -- Scheme.testInvsSubinvoke_NonStrict
   -- Scheme.testInvsSubinvoke_Strict
   -- Scheme.testDefsApprox
+  -- Scheme.testUnfoldSimpl
+  -- Scheme.testUnfoldDefsRating
+  -- Scheme.testUnfoldFirstGoodCall
 
   -- Reverso.testUnit1_1 100
   -- Reverso.testUnit1_2 100
@@ -77,6 +97,14 @@ main = do
   -- Reverso.testDefsApprox1_2 100
   -- Reverso.testDefsApprox2_1 100
   -- Reverso.testDefsApprox2_2 100
+  -- Reverso.testUnfoldSimpl1_1 30
+  -- Reverso.testUnfoldSimpl1_2 30
+  -- Reverso.testUnfoldSimpl2_1 30
+  -- Reverso.testUnfoldSimpl2_2 30
+  -- Reverso.testUnfoldDefsRating1_1 30
+  -- Reverso.testUnfoldDefsRating1_2 30
+  -- Reverso.testUnfoldDefsRating2_1 30
+  -- Reverso.testUnfoldDefsRating2_2 30
 
   -- Sorto.testUnit1 30
   -- Sorto.testUnit2 30

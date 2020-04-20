@@ -9,6 +9,8 @@ import Embedding
 
 import Program.List
 
+import qualified Unfolding as U
+
 ----------------------------------------------------
 
 def2 :: Def
@@ -578,3 +580,31 @@ testDefsApprox2_1 =
 
 testDefsApprox2_2 =
   putStrLn . show . run vars defs2 (toDA defs2) . goal2Defs
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+testUnfoldSimpl1_1 =
+  putStrLn . show . U.run U.simpleSep vars defs1  . goal1
+
+testUnfoldSimpl1_2 =
+  putStrLn . show . U.takeAnswers 1 . U.run U.simpleSep vars defs1  . goal2
+
+testUnfoldSimpl2_1 =
+  putStrLn . show . U.takeAnswers 1 . U.run U.simpleSep vars defs2  . goal1
+
+testUnfoldSimpl2_2 =
+  putStrLn . show . U.run U.simpleSep vars defs2  . goal2
+
+testUnfoldDefsRating1_1 =
+  putStrLn . show . U.run (U.defsRatingSep defs1) vars defs1  . goal1
+
+testUnfoldDefsRating1_2 =
+  putStrLn . show . U.takeAnswers 1 . U.run (U.defsRatingSep defs1) vars defs1  . goal2
+
+testUnfoldDefsRating2_1 =
+  putStrLn . show . U.run (U.defsRatingSep defs2) vars defs2  . goal1
+
+testUnfoldDefsRating2_2 =
+  putStrLn . show . U.run (U.defsRatingSep defs2) vars defs2  . goal2

@@ -7,6 +7,8 @@ import FairStream
 import Labels
 import Embedding
 
+import qualified Unfolding as U
+
 ----------------------------------------------------
 
 defs :: [Def]
@@ -58,3 +60,4 @@ tests = do
   putStrLn $ show $ run vars defs Strict goalInvs
   putStrLn $ show $ run vars defs NonStrict goalInvs
   putStrLn $ show $ run vars defs (toDA defs) goalDefs
+  putStrLn $ show $ U.run (U.defsRatingSep defs) vars defs goal

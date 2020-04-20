@@ -10,6 +10,8 @@ import Util
 
 import Program.GCW
 
+import qualified Unfolding as U
+
 ---------------------------------------
 
 defs :: [Def]
@@ -55,3 +57,16 @@ testUnit =
 
 testShallowesIgnoringSubformula =
   putStrLn $ show $ takeAnswers 100 $ run vars defs (sc2 shallowestIgnoringSubformula eqAF) goalEmbed
+
+----------------------------------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+testUnfoldSimpl =
+  putStrLn $ show $ U.takeAnswers 100 $ U.run U.simpleSep vars defs goal
+
+testUnfoldDefsRating =
+  putStrLn $ show $ U.takeAnswers 100 $ U.run (U.defsRatingSep defs) vars defs goal
+
+testUnfoldFirstGoodCall =
+  putStrLn $ show $ U.takeAnswers 100 $ U.run (U.firstGoodCallSep defs) vars defs goal
