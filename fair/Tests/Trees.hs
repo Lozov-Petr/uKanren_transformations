@@ -26,6 +26,8 @@ defs = [treeL, treeR]
 
 goal = Invoke "treeL" [V "t"] &&& Invoke "treeR" [V "t"]
 
+esVars = [("treeL", [0]), ("treeR", [0])]
+
 vars = ["t"]
 
 goalUnit :: RunGoal X ()
@@ -68,3 +70,4 @@ tests = do
   putStrLn $ show $ run vars defs Strict goalInvs
   putStrLn $ show $ run vars defs (toDA defs) goalDefs
   putStrLn $ show $ U.run (U.defsRatingSep defs) vars defs goal
+  putStrLn $ show $ U.run (U.hasEssentialArgsSep esVars) vars defs goal

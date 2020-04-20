@@ -18,6 +18,8 @@ defs = [Def "list" ["e", "l"] $
               Invoke "list" [V "e", V "ls"])
              ]
 
+esVars = [("list", [1])]
+
 goal = Invoke "list" [C "A" [], V "x"] &&& Invoke "list" [C "B" [], V "x"]
 
 vars = ["x"]
@@ -61,3 +63,4 @@ tests = do
   putStrLn $ show $ run vars defs NonStrict goalInvs
   putStrLn $ show $ run vars defs (toDA defs) goalDefs
   putStrLn $ show $ U.run (U.defsRatingSep defs) vars defs goal
+  putStrLn $ show $ U.run (U.hasEssentialArgsSep esVars) vars defs goal

@@ -21,6 +21,16 @@ goal = Fresh "c" $
    Invoke "capacities1" [V "c"] :/\:
    Invoke "checkAnswer" [V "answer", V "c", int2nat 7, C "true" []]
 
+esVars = [("capacities1",  []    ), ("checkAnswer",   []    ),
+          ("checkAnswer'", [1]   ), ("isFinishState", []    ),
+          ("checkStep",    []    ), ("|=|",           [0, 1]),
+          ("get_capacity", []    ), ("doStep",        []    ),
+          ("fst'",         []    ), ("snd'",          []    ),
+          ("createState",  []    ), ("anotherBottle", []    ),
+          ("add",          [0, 2]), ("greater",       [0, 1]),
+          ("sub",          [1, 2])
+         ]
+
 vars = ["answer"]
 
 goalUnit :: RunGoal X ()
@@ -193,3 +203,11 @@ testUnfoldDefsRating =
   -- 237557
 testUnfoldFirstGoodCall =
   putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal
+
+  -- 237557
+testUnfoldEssentialArgs =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+
+  -- 237557
+testUnfoldingFairConj =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs goal

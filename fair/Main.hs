@@ -23,6 +23,8 @@ main = do
   -- Bottles.testUnfoldSimpl
   -- Bottles.testUnfoldDefsRating
   -- Bottles.testUnfoldFirstGoodCall
+  -- Bottles.testUnfoldEssentialArgs
+  -- Bottles.testUnfoldingFairConj
 
   -- Bridge.testUnit
   -- Bridge.testUnit'
@@ -41,6 +43,10 @@ main = do
   -- Bridge.testUnfoldDefsRating'
   -- Bridge.testUnfoldFirstGoodCall
   -- Bridge.testUnfoldFirstGoodCall'
+  -- Bridge.testUnfoldEssentialArgs
+  -- Bridge.testUnfoldEssentialArgs'
+  -- Bridge.testUnfoldingFairConj
+  -- Bridge.testUnfoldingFairConj'
 
   -- GCW.testUnit
   -- GCW.testUnfoldSimpl
@@ -55,6 +61,8 @@ main = do
   -- Hanoi.testUnfoldSimpl
   -- Hanoi.testUnfoldDefsRating
   -- Hanoi.testUnfoldFirstGoodCall
+  -- Hanoi.testUnfoldEssentialArgs
+  -- Hanoi.testUnfoldingFairConj
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
@@ -64,6 +72,8 @@ main = do
   -- Scheme.testUnfoldSimpl
   -- Scheme.testUnfoldDefsRating
   -- Scheme.testUnfoldFirstGoodCall
+  -- Scheme.testUnfoldEssentialArgs
+  -- Scheme.testUnfoldingFairConj
 
   -- Reverso.testUnit1_1 100
   -- Reverso.testUnit1_2 100

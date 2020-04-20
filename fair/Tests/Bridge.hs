@@ -23,6 +23,17 @@ goal =
     Invoke "result" [V "minutes"] &&&
     Invoke "getAnswer" [V "answer", C "some" [V "minutes"]]
 
+esVars = [("result",     []), ("getAnswer",   []    ),
+          ("start",      []), ("getAnswer'",  [0]   ),
+          ("checkStep",  []), ("checkPerson", []    ),
+          ("eqForBool",  []), ("step",        []    ),
+          ("movePerson", []), ("moveLight",   []    ),
+          ("getTime",    []), ("grForPerson", []    ),
+          ("times",      []), ("add",         [0, 2]),
+          ("max",        []), ("greater",     [0, 1]),
+          ("finish",     []), ("eqForState",  []    )
+         ]
+
 vars = ["minutes", "answer"]
 
 goalUnit :: RunGoal X ()
@@ -330,3 +341,19 @@ testUnfoldFirstGoodCall =
   -- 129377
 testUnfoldFirstGoodCall' =
   putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs' goal
+
+  -- 23179
+testUnfoldEssentialArgs =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+
+  -- 21689
+testUnfoldEssentialArgs' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs' goal
+
+  -- 48335
+testUnfoldingFairConj =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs goal
+
+  -- 20589
+testUnfoldingFairConj' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs' goal

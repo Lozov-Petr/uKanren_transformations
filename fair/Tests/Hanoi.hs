@@ -21,9 +21,14 @@ pins :: Int -> Tx
 pins m = C "triple" [gen 0, C "nil" [], C "nil" []] where
   gen n = if n == m then C "nil" [] else C "%" [int2nat n, gen $ n + 1]
 
-
 goal :: G X
 goal = Invoke "check" [pins 3, V "answer", C "true" []]
+
+esVars = [("check",      [1]   ), ("get",   []),
+          ("one_step",   []    ), ("isNil", []),
+          ("notEqStick", []    ), ("set",   []),
+          ("less",       [0, 1])
+         ]
 
 vars = ["answer"]
 
@@ -187,3 +192,11 @@ testUnfoldDefsRating =
   -- 46217
 testUnfoldFirstGoodCall =
   putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal
+
+  -- 82328
+testUnfoldEssentialArgs =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+
+  -- 82328
+testUnfoldingFairConj =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs goal

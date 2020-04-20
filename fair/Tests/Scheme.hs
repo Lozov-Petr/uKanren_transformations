@@ -20,6 +20,13 @@ defs = fst $ tree2defs scheme
 goal :: G X
 goal = Invoke "eval" [V "quine", C "nil" [], C "val" [V "quine"]]
 
+esVars = [("eval",           [0]), ("lookup",        [1]   ),
+          ("lambda_handler", [] ), ("quote_handler", []    ),
+          ("list_handler",   [] ), ("not_in_env",    [1]   ),
+          ("map_eval_val",   [0]), ("eval_val",      []    ),
+          ("eq_id",          [] ), ("eq_var",        [0, 1])
+         ]
+
 vars = ["quine"]
 
 goalUnit :: RunGoal X ()
@@ -218,3 +225,11 @@ testUnfoldDefsRating =
   -- did not wait for an answer
 testUnfoldFirstGoodCall =
   putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal
+
+  -- 28070
+testUnfoldEssentialArgs =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+
+  -- 26022
+testUnfoldingFairConj =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs goal
