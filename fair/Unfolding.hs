@@ -1,32 +1,34 @@
 module Unfolding where
 
 import Text.Printf  (printf)
-import Data.Maybe   (mapMaybe, fromMaybe)
+import Data.Maybe   (mapMaybe)
 import Data.List    (find)
--- import Debug.Trace  (trace)
 
 import Syntax
 
-import Eval         (sEmpty)
+import Eval         (sEmpty, walk)
 import FairEval     (Answers((:::), Nil), toSemG, takeAns, def2fun, prepareAnswer)
 import FairStream   (Fun, Subst, Er)
 import Util         (unify, substInT)
-import DefsAnalysis (def2approx)
+import DefsAnalysis (Approx, def2approx)
 
 ----------------------------------------------------
 
 type Call  = (Name, [Ts])
 
-data Stream = Disj Stream Stream
-            | Conj Subst [Call]
+type Conj  = (Call, Bool)
 
-type Separator = Subst -> [Call] -> Int
+data Stream = Disj Stream Stream
+            | Conj Subst [Conj]
+
+type Separator = Subst -> [Conj] -> Maybe Int
+type Predicate = Subst -> Conj -> Bool
 
 ----------------------------------------------------
 
 instance Show Stream where
   show (Disj a b) = printf "%s\n\n%s" (show a) $ show b
-  show (Conj s c) = foldr (\(n,a) acc -> printf "%s(%s)\n%s" n (showArgs s a) acc) "" c where
+  show (Conj s c) = foldr (\((n,a), b) acc -> printf "%s(%s) [%s]\n%s" n (showArgs s a) (show b) acc) "" c where
     showArgs s []     = ""
     showArgs s [a]    = show $ substInT s a
     showArgs s (a:as) = printf "%s, %s" (show $ substInT s a) $ showArgs s as
@@ -40,7 +42,12 @@ step sep fs (Disj a b) =
     Right (Nothing, x) -> Right (Just b         , x)
     Right (Just c , x) -> Right (Just $ Disj b c, x)
 step sep fs (Conj s cs) =
-  let (cs1, c : cs2) = splitAt (sep s cs) cs in
+  let (cs1, c : cs2) = case sep s cs of
+                         Just i  -> splitAt i cs
+                         Nothing ->
+                           case span ((True ==) . snd) cs of
+                             (_, []) -> ([], map (\(c, _) -> (c, False)) cs)
+                             r       -> r in
   case unfold fs s c of
     Left e                                -> Left e
     Right Nothing                         -> Right (Nothing, [])
@@ -57,12 +64,12 @@ splitAnswers (Disj a b) =
 splitAnswers (Conj a []) = (Nothing, [a])
 splitAnswers s           = (Just s, [])
 
-attachConjs :: [Call] -> [Call] -> Stream -> Stream
+attachConjs :: [Conj] -> [Conj] -> Stream -> Stream
 attachConjs cs1 cs2 (Disj a b)  = Disj (attachConjs cs1 cs2 a) $ attachConjs cs1 cs2 b
 attachConjs cs1 cs2 (Conj s cs) = Conj s $ cs1 ++ cs ++ cs2
 
-unfold :: [Fun] -> Subst -> Call -> Er (Maybe Stream)
-unfold fs (i, s) (n, a) =
+unfold :: [Fun] -> Subst -> Conj -> Er (Maybe Stream)
+unfold fs (i, s) ((n, a), b) =
   case lookup n fs of
     Nothing -> Left $ printf "Undefined relation '%s'." n
     Just (x, g) | length x == length a ->
@@ -81,7 +88,7 @@ goalToStream s g = g2s (Conj s []) g where
   g2s :: Stream -> G S -> Maybe Stream
   g2s (Disj a b)  g            = disjCmb (g2s a g) $ g2s b g
   g2s (Conj s cs) (t1 :=: t2)  = unify s t1 t2 >>= \s -> return $ Conj s cs
-  g2s (Conj s cs) (Invoke n a) = return $ Conj s $ cs ++ [(n, a)]
+  g2s (Conj s cs) (Invoke n a) = return $ Conj s $ cs ++ [((n, a), True)]
   g2s s           (g1 :/\: g2) = g2s s g1 >>= \s -> g2s s g2
   g2s s           (g1 :\/: g2) = disjCmb (g2s s g1) $ g2s s g2
 
@@ -134,17 +141,17 @@ run1 sep vars defs g =
 ----------------------------------------------------
 
 simpleSep :: Separator
-simpleSep _ _ = 0
+simpleSep _ _ = Just 0
 
 defsRatingSep :: [Def] -> Separator
-defsRatingSep ds s cs = indexOfMin 0 0 1 $ map getIndex cs where
+defsRatingSep ds s cs = Just $ indexOfMin 0 0 1 $ map getIndex cs where
   aps = map def2approx ds
   indexOfMin :: Int -> Int -> Double -> [Double] -> Int
   indexOfMin _ j _ []             = j
   indexOfMin i j a (x:xs) | x < a = indexOfMin (i+1) i x xs
   indexOfMin i j a (x:xs)         = indexOfMin (i+1) j a xs
-  getIndex :: Call -> Double
-  getIndex (n, a) =
+  getIndex :: Conj -> Double
+  getIndex ((n, a), _) =
     case lookup n aps of
       Nothing    -> error $ printf "Undefined relation:'%s'." n
       Just cases ->
@@ -152,14 +159,37 @@ defsRatingSep ds s cs = indexOfMin 0 0 1 $ map getIndex cs where
         let l2 = length $ mapMaybe (\c -> foldl (\acc (t,u) -> acc >>= \s -> unify s t u) (Just s) $ zip a c) cases in
         fromIntegral l2 / fromIntegral l1
 
+sepByPred :: Predicate -> Separator
+sepByPred pred subst cs = fmap fst $ find (pred subst . snd) $ zip [0..] cs
+
+combinePreds :: Predicate -> Predicate -> Predicate
+combinePreds p1 p2 s c = p1 s c && p2 s c
+
+isGoodCall :: [Approx] -> Predicate
+isGoodCall aps s ((n, a), _) =
+  case lookup n aps of
+    Nothing    -> error $ printf "Undefined relation:'%s'." n
+    Just cases ->
+      let l1 = length cases in
+      let l2 = length $ mapMaybe (\c -> foldl (\acc (t,u) -> acc >>= \s -> unify s t u) (Just s) $ zip a c) cases in
+      l1 <= 1 || l1 > l2
+
+hasEssentialArgs :: [(Name, [Int])] -> Predicate
+hasEssentialArgs eArgs s ((n, a), _) =
+  case lookup n eArgs of
+    Nothing   -> error $ printf "Undefined relation:'%s'." n
+    Just args -> null args || any (isNotFree . (a !!)) args where
+      isNotFree :: Ts -> Bool
+      isNotFree t =
+        case walk t $ snd s of
+          V _ -> False
+          _   -> True
+
 firstGoodCallSep :: [Def] -> Separator
-firstGoodCallSep ds s cs = fromMaybe 0 $ fmap fst $ find (isGood . snd) $ zip [0..] cs where
-  aps = map def2approx ds
-  isGood :: Call -> Bool
-  isGood (n, a) =
-    case lookup n aps of
-      Nothing    -> error $ printf "Undefined relation:'%s'." n
-      Just cases ->
-        let l1 = length cases in
-        let l2 = length $ mapMaybe (\c -> foldl (\acc (t,u) -> acc >>= \s -> unify s t u) (Just s) $ zip a c) cases in
-        l1 <= 1 || l1 > l2
+firstGoodCallSep = sepByPred . isGoodCall . map def2approx
+
+hasEssentialArgsSep :: [(Name, [Int])] -> Separator
+hasEssentialArgsSep = sepByPred . hasEssentialArgs
+
+fairConj :: [Def] -> [(Name, [Int])] -> Separator
+fairConj ds as = sepByPred $ combinePreds (isGoodCall $ map def2approx ds) $ hasEssentialArgs as

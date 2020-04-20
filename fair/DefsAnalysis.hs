@@ -7,7 +7,11 @@ import Util hiding (unify)
 
 ---------------------------------------
 
-def2approx :: Def -> (Name, [[Ts]])
+type Approx = (Name, [[Ts]])
+
+---------------------------------------
+
+def2approx :: Def -> Approx
 def2approx (Def n a b) = (n, map (\(s,_,i) -> map (substInT (i,s) . V) [(-1),(-2)..(-l)]) $ toSubsts sEmpty (zip a [-1,-2..]) (-l-1) b) where
   l = length a
   toSubsts :: MapSigma -> [(X, S)] -> Int -> G X -> [(MapSigma, [(X, S)], Int)]
