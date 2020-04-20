@@ -121,11 +121,14 @@ instance (Show a, Show b) => Show (Answers a b) where
     show' (Nil b)    = printf "\nmessage: %s\n}\n" $ show b
     show' (x ::: xs) = printf "\n%s\n%s" (show x) $ show' xs
 
+takeAns :: b -> Int -> Answers (a, b) (Maybe String, b) -> Answers (a, b) (Maybe String, b)
+takeAns i n _  | n <= 0      = Nil (Just "Zero answers", i)
+takeAns _ _ a@(Nil _)        = a
+takeAns _ 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
+takeAns i n (a ::: b)        = a ::: takeAns i (n-1) b
+
 takeAnswers :: Int -> RunAnswers -> RunAnswers
-takeAnswers _ a@(Nil _)        = a
-takeAnswers n _  | n <= 0      = Nil (Just "Zero answers", info0)
-takeAnswers 1 (a@(_, i) ::: _) = a ::: Nil (Just "Enough answers.", i)
-takeAnswers n (a ::: b)        = a ::: takeAnswers (n-1) b
+takeAnswers = takeAns info0
 
 initStream :: RunGoal X l -> [X] -> Er (Stream l)
 initStream g x = toSemG' (zip x $ map V [0..]) (length x) g >>= \(g, i) -> return $ goal g (i, Eval.sEmpty) where
