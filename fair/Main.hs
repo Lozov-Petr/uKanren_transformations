@@ -107,16 +107,34 @@ main = do
   -- Reverso.testDefsApprox1_2 100
   -- Reverso.testDefsApprox2_1 100
   -- Reverso.testDefsApprox2_2 100
-  -- Reverso.testUnfoldSimpl1_1 30
-  -- Reverso.testUnfoldSimpl1_2 30
-  -- Reverso.testUnfoldSimpl2_1 30
-  -- Reverso.testUnfoldSimpl2_2 30
-  -- Reverso.testUnfoldDefsRating1_1 30
-  -- Reverso.testUnfoldDefsRating1_2 30
-  -- Reverso.testUnfoldDefsRating2_1 30
-  -- Reverso.testUnfoldDefsRating2_2 30
+  -- Reverso.testUnfoldSimpl1_1 100
+  -- Reverso.testUnfoldSimpl1_2 100
+  -- Reverso.testUnfoldSimpl2_1 100
+  -- Reverso.testUnfoldSimpl2_2 100
+  -- Reverso.testUnfoldDefsRating1_1 100
+  -- Reverso.testUnfoldDefsRating1_2 100
+  -- Reverso.testUnfoldDefsRating2_1 100
+  -- Reverso.testUnfoldDefsRating2_2 100
+  -- Reverso.testUnfoldEssentialArgs1_1 100
+  -- Reverso.testUnfoldEssentialArgs1_2 100
+  -- Reverso.testUnfoldEssentialArgs2_1 100
+  -- Reverso.testUnfoldEssentialArgs2_2 100
+  -- Reverso.testUnfoldingFairConj1_1 100
+  -- Reverso.testUnfoldingFairConj1_2 100
+  -- Reverso.testUnfoldingFairConj2_1 100
+  -- Reverso.testUnfoldingFairConj2_2 100
 
   -- Sorto.testUnit1 30
   -- Sorto.testUnit2 30
   -- Sorto.testDefsApprox1 30
   -- Sorto.testDefsApprox2 30
+  -- Sorto.testUnfoldSimpl1 4
+  -- Sorto.testUnfoldSimpl2 4
+  -- Sorto.testUnfoldDefsRating1 4
+  -- Sorto.testUnfoldDefsRating2 4
+  -- Sorto.testUnfoldFirstGoodCall1 4
+  -- Sorto.testUnfoldFirstGoodCall2 4
+  -- Sorto.testUnfoldEssentialArgs1 4
+  -- Sorto.testUnfoldEssentialArgs2 4
+  -- Sorto.testUnfoldingFairConj1 4
+  -- Sorto.testUnfoldingFairConj2 4

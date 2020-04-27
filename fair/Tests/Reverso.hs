@@ -37,6 +37,8 @@ goal1 n = call "reverso" [genList n, V "answer"]
 goal2 :: Int -> G X
 goal2 n = call "reverso" [V "answer", genList n]
 
+esVars = [("reverso", [0]), ("appendo", [0, 2])]
+
 vars = ["answer"]
 
 goal1Unit :: Int -> RunGoal X ()
@@ -585,26 +587,66 @@ testDefsApprox2_2 =
 ----------------------------------------------------
 ----------------------------------------------------
 
+  -- 5151
 testUnfoldSimpl1_1 =
   putStrLn . show . U.run U.simpleSep vars defs1  . goal1
 
+  -- 176850
 testUnfoldSimpl1_2 =
   putStrLn . show . U.takeAnswers 1 . U.run U.simpleSep vars defs1  . goal2
 
+  -- 181996
 testUnfoldSimpl2_1 =
   putStrLn . show . U.takeAnswers 1 . U.run U.simpleSep vars defs2  . goal1
 
+  -- 5252
 testUnfoldSimpl2_2 =
   putStrLn . show . U.run U.simpleSep vars defs2  . goal2
 
+  -- 5151
 testUnfoldDefsRating1_1 =
   putStrLn . show . U.run (U.defsRatingSep defs1) vars defs1  . goal1
 
+  -- 5250
 testUnfoldDefsRating1_2 =
   putStrLn . show . U.takeAnswers 1 . U.run (U.defsRatingSep defs1) vars defs1  . goal2
 
+  -- 5151
 testUnfoldDefsRating2_1 =
   putStrLn . show . U.run (U.defsRatingSep defs2) vars defs2  . goal1
 
+  -- 5252
 testUnfoldDefsRating2_2 =
   putStrLn . show . U.run (U.defsRatingSep defs2) vars defs2  . goal2
+
+  -- 5151
+testUnfoldEssentialArgs1_1 =
+  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs1 . goal1
+
+  -- 5252
+testUnfoldEssentialArgs1_2 =
+  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs1 . goal2
+
+  -- 5151
+testUnfoldEssentialArgs2_1 =
+  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs2 . goal1
+
+  -- 5252
+testUnfoldEssentialArgs2_2 =
+  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs2 . goal2
+
+  -- 5151
+testUnfoldingFairConj1_1 =
+  putStrLn . show . U.run (U.fairConj defs1 esVars) vars defs1 . goal1
+
+  -- 5352
+testUnfoldingFairConj1_2 =
+  putStrLn . show . U.run (U.fairConj defs1 esVars) vars defs1 . goal2
+
+  -- 5151
+testUnfoldingFairConj2_1 =
+  putStrLn . show . U.run (U.fairConj defs2 esVars) vars defs2 . goal1
+
+  -- 5252
+testUnfoldingFairConj2_2 =
+  putStrLn . show . U.run (U.fairConj defs2 esVars) vars defs2 . goal2
