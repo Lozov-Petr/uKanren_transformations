@@ -1,15 +1,16 @@
 module Main where
 
-import qualified Tests.ListAB    as ListAB
-import qualified Tests.Trees     as Trees
--- import qualified Tests.Bottles   as Bottles
--- import qualified Tests.Bridge    as Bridge
--- import qualified Tests.GCW       as GCW
--- import qualified Tests.Hanoi     as Hanoi
--- import qualified Tests.Scheme    as Scheme
--- import qualified Tests.Sudoku4x4 as Sudoku4x4
--- import qualified Tests.Reverso   as Reverso
--- import qualified Tests.Sorto     as Sorto
+import qualified Tests.ListAB      as ListAB
+import qualified Tests.Trees       as Trees
+-- import qualified Tests.Bottles     as Bottles
+-- import qualified Tests.Bridge      as Bridge
+-- import qualified Tests.GCW         as GCW
+-- import qualified Tests.Hanoi       as Hanoi
+-- import qualified Tests.Scheme      as Scheme
+-- import qualified Tests.Sudoku4x4   as Sudoku4x4
+-- import qualified Tests.Reverso     as Reverso
+-- import qualified Tests.Sorto       as Sorto
+-- import qualified Tests.BadExamples as Bad
 
 ----------------------------------------------------
 
@@ -138,3 +139,14 @@ main = do
   -- Sorto.testUnfoldEssentialArgs2 4
   -- Sorto.testUnfoldingFairConj1 4
   -- Sorto.testUnfoldingFairConj2 4
+
+  -- Bad.testUnfoldSimpl1 5
+  -- Bad.testUnfoldSimpl2 5
+  -- Bad.testUnfoldDefsRating1 5
+  -- Bad.testUnfoldDefsRating2 5
+  -- Bad.testUnfoldFirstGoodCall1 5
+  -- Bad.testUnfoldFirstGoodCall2 5
+  -- Bad.testUnfoldEssentialArgs1 5
+  -- Bad.testUnfoldEssentialArgs2 5
+  -- Bad.testUnfoldingFairConj1 5
+  -- Bad.testUnfoldingFairConj2 5
