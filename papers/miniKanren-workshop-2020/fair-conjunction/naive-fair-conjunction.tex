@@ -1,0 +1,55 @@
+\section{Naive fair conjunction}
+
+\begin{figure}[h!]
+\[
+set(T, i) =
+\left\{
+\begin{array}{rl}
+(\sigma, i, c_1^i : \ldots : c_n^i : \epsilon), & \mbox{if } T = (\sigma, i, c_1 : \ldots : c_n : \epsilon) \\
+(set(T_1, i) \circ set(T_2, i)), & \mbox{if } T = (T_1 \circ T_2)
+\end{array}
+\right.
+\]
+\caption{Set semantics}
+\label{fair:set-semantics}
+\end{figure}
+
+\begin{figure}[h!]
+\[\begin{array}{cr}
+
+      {(\sigma, i, \epsilon) \xrightarrow{(\sigma, i)} \circ}  
+&     \ruleno{Answer} \\[2mm]
+      {(\sigma, i, c_1^0 : \ldots : c_k^0 : \epsilon) \xrightarrow{\circ} (\sigma, i, c_1^N : \ldots : c_k^N : \epsilon)}
+&     \ruleno{ConjZero} \\[2mm]
+\dfrac{m \not= 0 \qquad (\sigma, i) \vdash c_{i+1} \Rightarrow T \qquad set(m - 1, T) = \bar{T}}
+      {(\sigma, i, c_1^0 : \ldots : c_i^0 : c_{i+1}^m : cs) \xrightarrow{\circ} push(c_1^0 : \ldots : c_i^0 : \Box : cs, \bar{T})}
+&     \ruleno{ConjUnfold} \\[2mm]
+\dfrac{T_1 \xrightarrow{\alpha} \circ}
+      {(T_1 \lor T_2) \xrightarrow{\alpha} T_2}
+&     \ruleno{Disj} \\[4mm]
+\dfrac{T_1 \xrightarrow{\alpha} \bar{T_1}}
+      {(T_1 \lor T_2) \xrightarrow{\alpha} (T_2 \lor\bar{T_1})}
+&     \ruleno{DisjStep} \\[4mm]
+\end{array}\]
+\caption{Simple fair semantics}
+\label{fair:naive-semantics}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tabular}{c}
+\begin{lstlisting}
+let rec repeat$^o$ e l =
+  (l === []) \/
+  fresh (ls)
+    (l === e : ls /\ 
+     repeat$^o$ e ls)
+\end{lstlisting}
+\end{tabular}
+
+\caption{Relational program to list reversing}
+\label{fair:lst-repeato}
+\end{figure}
+
+\FloatBarrier
+
