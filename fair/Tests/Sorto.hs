@@ -138,6 +138,12 @@ testUnfoldSimpl1 =
 testUnfoldSimpl2 =
   putStrLn . show . U.run100 U.simpleSep vars defs2 . goal
 
+testUnfoldSimplFair1 m =
+  putStrLn . show . U.takeAnswers 1 .  U.run U.simpleFairSep m vars defs1 . goal
+
+testUnfoldSimplFair2 m =
+  putStrLn . show . U.run U.simpleFairSep m vars defs2 . goal
+
   -- 4 -> 1492
 testUnfoldDefsRating1 =
   putStrLn . show . U.takeAnswers 1 . U.run100 (U.defsRatingSep defs1) vars defs1 . goal

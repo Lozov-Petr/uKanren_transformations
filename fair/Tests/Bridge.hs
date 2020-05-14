@@ -326,6 +326,12 @@ testUnfoldSimpl =
 testUnfoldSimpl' =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs' goal
 
+testUnfoldSimplFair m =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs goal
+
+testUnfoldSimplFair' m =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs' goal
+
   -- did not wait for an answer
 testUnfoldDefsRating =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.defsRatingSep defs) vars defs goal

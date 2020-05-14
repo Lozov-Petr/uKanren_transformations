@@ -1,9 +1,9 @@
 module Main where
 
-import qualified Tests.ListAB      as ListAB
-import qualified Tests.Trees       as Trees
+-- import qualified Tests.ListAB      as ListAB
+-- import qualified Tests.Trees       as Trees
 -- import qualified Tests.Bottles     as Bottles
--- import qualified Tests.Bridge      as Bridge
+import qualified Tests.Bridge      as Bridge
 -- import qualified Tests.GCW         as GCW
 -- import qualified Tests.Hanoi       as Hanoi
 -- import qualified Tests.Scheme      as Scheme
@@ -15,8 +15,8 @@ import qualified Tests.Trees       as Trees
 ----------------------------------------------------
 
 main = do
-  ListAB.tests
-  Trees.tests
+  -- ListAB.tests
+  -- Trees.tests
 
   -- Bottles.testInvsSubinvoke_NonStrict
   -- Bottles.testInvsSubinvoke_Strict
@@ -150,3 +150,83 @@ main = do
   -- Bad.testUnfoldEssentialArgs2 5
   -- Bad.testUnfoldingFairConj1 5
   -- Bad.testUnfoldingFairConj2 5
+
+  ----------------------------------------------------
+  ---- FOR PAPER -------------------------------------
+  ----------------------------------------------------
+
+  -- Reverso.testUnfoldSimpl1_1 30
+  -- Reverso.testUnfoldSimpl2_1 30
+  -- Reverso.testUnfoldSimpl1_1 60
+  -- Reverso.testUnfoldSimpl2_1 60
+  -- Reverso.testUnfoldSimpl1_1 90
+  -- Reverso.testUnfoldSimpl2_1 90
+
+  -- Reverso.testUnfoldSimplFair1_1 10000 30
+  -- Reverso.testUnfoldSimplFair1_1 10000 60
+  -- Reverso.testUnfoldSimplFair1_1 10000 90
+  -- Reverso.testUnfoldSimplFair2_1 11    30
+  -- Reverso.testUnfoldSimplFair2_1 11    60
+  -- Reverso.testUnfoldSimplFair2_1 12    90
+
+  -- Reverso.testUnfoldEssentialArgs1_1 30
+  -- Reverso.testUnfoldEssentialArgs2_1 30
+  -- Reverso.testUnfoldEssentialArgs1_1 60
+  -- Reverso.testUnfoldEssentialArgs2_1 60
+  -- Reverso.testUnfoldEssentialArgs1_1 90
+  -- Reverso.testUnfoldEssentialArgs2_1 90
+
+  ----------------------------------------------------
+
+  -- Sorto.testUnfoldSimpl2 3
+  -- Sorto.testUnfoldSimpl2 4
+  -- Sorto.testUnfoldSimpl2 5
+  -- Sorto.testUnfoldSimpl2 6
+  -- Sorto.testUnfoldSimpl2 30
+  -- Sorto.testUnfoldSimpl1 3
+  -- Sorto.testUnfoldSimpl1 4
+  -- Sorto.testUnfoldSimpl1 5
+  -- Sorto.testUnfoldSimpl1 6
+  -- Sorto.testUnfoldSimpl1 30
+
+  -- Sorto.testUnfoldSimplFair2 100 3
+  -- Sorto.testUnfoldSimplFair2 100 4
+  -- Sorto.testUnfoldSimplFair2 100 5
+  -- Sorto.testUnfoldSimplFair2 100 6
+  -- Sorto.testUnfoldSimplFair2 100 30
+  -- Sorto.testUnfoldSimplFair1 8   3
+  -- Sorto.testUnfoldSimplFair1 9   4
+  -- Sorto.testUnfoldSimplFair1 10  5
+  -- Sorto.testUnfoldSimplFair1 13  6
+  -- Sorto.testUnfoldSimplFair1 20  30
+
+  -- Sorto.testUnfoldEssentialArgs2 3
+  -- Sorto.testUnfoldEssentialArgs2 4
+  -- Sorto.testUnfoldEssentialArgs2 5
+  -- Sorto.testUnfoldEssentialArgs2 6
+  -- Sorto.testUnfoldEssentialArgs2 30
+  -- Sorto.testUnfoldEssentialArgs1 3
+  -- Sorto.testUnfoldEssentialArgs1 4
+  -- Sorto.testUnfoldEssentialArgs1 5
+  -- Sorto.testUnfoldEssentialArgs1 6
+  -- Sorto.testUnfoldEssentialArgs1 30
+
+  ----------------------------------------------------
+
+  -- Hanoi.testUnfoldSimpl
+  -- Hanoi.testUnfoldSimplFair 50
+  -- Hanoi.testUnfoldEssentialArgs
+
+  -- Hanoi.testUnfoldSimpl
+  -- Hanoi.testUnfoldSimplFair 5
+  -- Hanoi.testUnfoldEssentialArgs
+
+----------------------------------------------------
+
+  -- Bridge.testUnfoldSimpl'
+  -- Bridge.testUnfoldSimplFair' 20
+  -- Bridge.testUnfoldEssentialArgs'
+
+  -- Bridge.testUnfoldSimpl
+  -- Bridge.testUnfoldSimplFair 19
+  -- Bridge.testUnfoldEssentialArgs

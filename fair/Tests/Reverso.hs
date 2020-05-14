@@ -589,19 +589,31 @@ testDefsApprox2_2 =
 
   -- 5151
 testUnfoldSimpl1_1 =
-  putStrLn . show . U.run100 U.simpleSep vars defs1  . goal1
+  putStrLn . show . U.run100 U.simpleSep vars defs1 . goal1
 
   -- 176850
 testUnfoldSimpl1_2 =
-  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs1  . goal2
+  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs1 . goal2
 
   -- 181996
 testUnfoldSimpl2_1 =
-  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs2  . goal1
+  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs2 . goal1
 
   -- 5252
 testUnfoldSimpl2_2 =
-  putStrLn . show . U.run100 U.simpleSep vars defs2  . goal2
+  putStrLn . show . U.run100 U.simpleSep vars defs2 . goal2
+
+testUnfoldSimplFair1_1 m =
+    putStrLn . show . U.run U.simpleFairSep m vars defs1 . goal1
+
+testUnfoldSimplFair1_2 m =
+    putStrLn . show . U.run U.simpleFairSep m vars defs1 . goal2
+
+testUnfoldSimplFair2_1 m =
+    putStrLn . show .  U.takeAnswers 1 . U.run U.simpleFairSep m vars defs2 . goal1
+
+testUnfoldSimplFair2_2 m =
+    putStrLn . show . U.run U.simpleFairSep m vars defs2 . goal2
 
   -- 5151
 testUnfoldDefsRating1_1 =
