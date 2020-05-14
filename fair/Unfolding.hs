@@ -130,6 +130,9 @@ run100 sep = run sep 100
 simpleSep :: Separator
 simpleSep _ _ = Just 0
 
+simpleFairSep :: Separator
+simpleFairSep _ _ = Nothing
+
 defsRatingSep :: [Def] -> Separator
 defsRatingSep ds s cs = Just $ indexOfMin 0 0 1 $ map getIndex cs where
   aps = map def2approx ds
