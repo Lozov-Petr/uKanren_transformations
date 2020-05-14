@@ -132,40 +132,40 @@ testDefsApprox2 = putStrLn . show . run vars defs2 (toDA defs2) . goalDefs
 
   -- 4 -> 79835
 testUnfoldSimpl1 =
-  putStrLn . show . U.takeAnswers 1 . U.run U.simpleSep vars defs1 . goal
+  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs1 . goal
 
   -- 4 -> 205
 testUnfoldSimpl2 =
-  putStrLn . show . U.run U.simpleSep vars defs2 . goal
+  putStrLn . show . U.run100 U.simpleSep vars defs2 . goal
 
   -- 4 -> 1492
 testUnfoldDefsRating1 =
-  putStrLn . show . U.takeAnswers 1 . U.run (U.defsRatingSep defs1) vars defs1 . goal
+  putStrLn . show . U.takeAnswers 1 . U.run100 (U.defsRatingSep defs1) vars defs1 . goal
 
   -- 4 -> 133
 testUnfoldDefsRating2 =
-  putStrLn . show . U.run (U.defsRatingSep defs2) vars defs2 . goal
+  putStrLn . show . U.run100 (U.defsRatingSep defs2) vars defs2 . goal
 
   -- 4 -> 11248
 testUnfoldFirstGoodCall1 =
-  putStrLn . show . U.takeAnswers 1 . U.run (U.firstGoodCallSep defs1) vars defs1 . goal
+  putStrLn . show . U.takeAnswers 1 . U.run100 (U.firstGoodCallSep defs1) vars defs1 . goal
 
   -- 4 -> 158
 testUnfoldFirstGoodCall2 =
-  putStrLn . show . U.run (U.firstGoodCallSep defs2) vars defs2 . goal
+  putStrLn . show . U.run100 (U.firstGoodCallSep defs2) vars defs2 . goal
 
   -- 4 -> 205
 testUnfoldEssentialArgs1 =
-  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs1 . goal
+  putStrLn . show . U.run100 (U.hasEssentialArgsSep esVars) vars defs1 . goal
 
   -- 4 -> 205
 testUnfoldEssentialArgs2 =
-  putStrLn . show . U.run (U.hasEssentialArgsSep esVars) vars defs2 . goal
+  putStrLn . show . U.run100 (U.hasEssentialArgsSep esVars) vars defs2 . goal
 
   -- 4 -> 171
 testUnfoldingFairConj1 =
-  putStrLn . show . U.run (U.fairConj defs1 esVars) vars defs1 . goal
+  putStrLn . show . U.run100 (U.fairConj defs1 esVars) vars defs1 . goal
 
   -- 4 -> 158
 testUnfoldingFairConj2 =
-  putStrLn . show . U.run (U.fairConj defs2 esVars) vars defs2 . goal
+  putStrLn . show . U.run100 (U.fairConj defs2 esVars) vars defs2 . goal

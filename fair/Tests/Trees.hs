@@ -69,5 +69,5 @@ tests = do
   putStrLn $ show $ run vars defs NonStrict goalInvs
   putStrLn $ show $ run vars defs Strict goalInvs
   putStrLn $ show $ run vars defs (toDA defs) goalDefs
-  putStrLn $ show $ U.run (U.defsRatingSep defs) vars defs goal
-  putStrLn $ show $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+  putStrLn $ show $ U.run100 (U.defsRatingSep defs) vars defs goal
+  putStrLn $ show $ U.run100 (U.hasEssentialArgsSep esVars) vars defs goal

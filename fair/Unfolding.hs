@@ -16,7 +16,7 @@ import DefsAnalysis (Approx, def2approx)
 
 type Call  = (Name, [Ts])
 
-type Conj  = (Call, Bool)
+type Conj  = (Call, Int)
 
 data Stream = Disj Stream Stream
             | Conj Subst [Conj]
@@ -35,18 +35,18 @@ instance Show Stream where
 
 ----------------------------------------------------
 
-step :: Separator -> [Fun] -> Stream -> Er (Maybe Stream, [Subst])
-step sep fs (Disj a b) =
-  case step sep fs a of
+step :: Separator -> Int -> [Fun] -> Stream -> Er (Maybe Stream, [Subst])
+step sep n fs (Disj a b) =
+  case step sep n fs a of
     Left e             -> Left e
     Right (Nothing, x) -> Right (Just b         , x)
     Right (Just c , x) -> Right (Just $ Disj b c, x)
-step sep fs (Conj s cs) =
+step sep n fs (Conj s cs) =
   let (cs1, c : cs2) = case sep s cs of
                          Just i  -> splitAt i cs
                          Nothing ->
-                           case span ((True ==) . snd) cs of
-                             (_, []) -> ([], map (\(c, _) -> (c, False)) cs)
+                           case span ((0 ==) . snd) cs of
+                             (_, []) -> ([], map (\(c, _) -> (c, n)) cs)
                              r       -> r in
   case unfold fs s c of
     Left e                                -> Left e
@@ -69,18 +69,18 @@ attachConjs cs1 cs2 (Disj a b)  = Disj (attachConjs cs1 cs2 a) $ attachConjs cs1
 attachConjs cs1 cs2 (Conj s cs) = Conj s $ cs1 ++ cs ++ cs2
 
 unfold :: [Fun] -> Subst -> Conj -> Er (Maybe Stream)
-unfold fs (i, s) ((n, a), b) =
+unfold fs (i, s) ((n, a), m) =
   case lookup n fs of
     Nothing -> Left $ printf "Undefined relation '%s'." n
     Just (x, g) | length x == length a ->
       case toSemG (zip x a) i g of
         Left e       -> Left e
-        Right (g, i) -> Right $ goalToStream (i, s) g
+        Right (g, i) -> Right $ goalToStream (m - 1) (i, s) g
     Just (x, _) -> Left $ printf "Unexpected count of arguments (relation: '%s', expected: %d, actual: %d)" n (length x) $ length a
   where
 
-goalToStream :: Subst -> G S -> Maybe Stream
-goalToStream s g = g2s (Conj s []) g where
+goalToStream :: Int -> Subst -> G S -> Maybe Stream
+goalToStream m s g = g2s (Conj s []) g where
   disjCmb :: Maybe Stream -> Maybe Stream -> Maybe Stream
   disjCmb Nothing  b        = b
   disjCmb a        Nothing  = a
@@ -88,7 +88,7 @@ goalToStream s g = g2s (Conj s []) g where
   g2s :: Stream -> G S -> Maybe Stream
   g2s (Disj a b)  g            = disjCmb (g2s a g) $ g2s b g
   g2s (Conj s cs) (t1 :=: t2)  = unify s t1 t2 >>= \s -> return $ Conj s cs
-  g2s (Conj s cs) (Invoke n a) = return $ Conj s $ cs ++ [((n, a), True)]
+  g2s (Conj s cs) (Invoke n a) = return $ Conj s $ cs ++ [((n, a), m)]
   g2s s           (g1 :/\: g2) = g2s s g1 >>= \s -> g2s s g2
   g2s s           (g1 :\/: g2) = disjCmb (g2s s g1) $ g2s s g2
 
@@ -99,15 +99,15 @@ type RunAnswers =  Answers ([(X, Ts)], Int) (Maybe String, Int)
 takeAnswers :: Int -> RunAnswers -> RunAnswers
 takeAnswers = takeAns 0
 
-prepareStream :: [X] -> G X -> Er (Maybe Stream)
-prepareStream vars g =
+prepareStream :: [X] -> Int -> G X -> Er (Maybe Stream)
+prepareStream vars m g =
   case toSemG (zip vars $ map V [0..]) (length vars) g of
     Left e       -> Left $ printf "Error in initial goal. %s" e
-    Right (g, i) -> Right $ goalToStream (i, sEmpty) g
+    Right (g, i) -> Right $ goalToStream m (i, sEmpty) g
 
-run :: Separator -> [X] -> [Def] -> G X -> RunAnswers
-run sep vars defs g =
-  case prepareStream vars g of
+run :: Separator -> Int -> [X] -> [Def] -> G X -> RunAnswers
+run sep m vars defs g =
+  case prepareStream vars m g of
     Left e         -> Nil (Just e, 0)
     Right Nothing  -> Nil (Nothing, 0)
     Right (Just s) -> run' 1 s
@@ -116,27 +116,14 @@ run sep vars defs g =
     funs = map def2fun defs
     run' :: Int -> Stream -> RunAnswers
     run' i s =
-      case step sep funs s of
+      case step sep m funs s of
         Left e             -> Nil (Just e, i)
         Right (Nothing, a) -> foldr (\s acc -> (prepareAnswer s vars, i) ::: acc) (Nil (Nothing, i)) a
         Right (Just s , a) -> foldr (\s acc -> (prepareAnswer s vars, i) ::: acc) (run' (i+1) s) a
 
-run1 :: Separator -> [X] -> [Def] -> G X -> (Er [(X, Ts)], Int)
-run1 sep vars defs g =
-  case prepareStream vars g of
-    Left e         -> (Left e, 0)
-    Right Nothing  -> (Left "Zero answers", 0)
-    Right (Just s) -> run1' 1 s
-  where
-    funs :: [Fun]
-    funs = map def2fun defs
-    run1' :: Int -> Stream -> (Er [(X, Ts)], Int)
-    run1' i s =
-      case step sep funs s of
-        Left e             -> (Left e, i)
-        Right (_,  (x:xs)) -> (Right $ prepareAnswer x vars, i)
-        Right (Nothing, _) -> (Left "Zero answers", i)
-        Right (Just s , _) -> run1' (i+1) s
+
+run100 :: Separator -> [X] -> [Def] -> G X -> RunAnswers
+run100 sep = run sep 100
 
 ----------------------------------------------------
 

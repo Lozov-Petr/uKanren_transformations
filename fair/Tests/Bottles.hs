@@ -194,20 +194,20 @@ testDefsApprox =
 
   -- 237557
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
 
   -- did not wait for an answer
 testUnfoldDefsRating =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.defsRatingSep defs) vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.defsRatingSep defs) vars defs goal
 
   -- 237557
 testUnfoldFirstGoodCall =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.firstGoodCallSep defs) vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.firstGoodCallSep defs) vars defs goal
 
   -- 237557
 testUnfoldEssentialArgs =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.hasEssentialArgsSep esVars) vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs goal
 
   -- 237557
 testUnfoldingFairConj =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.fairConj defs esVars) vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs goal
