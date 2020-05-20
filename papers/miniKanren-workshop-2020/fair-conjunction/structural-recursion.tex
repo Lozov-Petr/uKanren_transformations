@@ -3,18 +3,18 @@
 \begin{figure}[h!]
 \[\begin{array}{cr}
 
-      {(\sigma, i, \epsilon) \xrightarrow{(\sigma, i)} \circ}  
+      {\inbr{\sigma, i, \epsilon} \xrightarrow{\sigma} \emptyset}  
 &     \ruleno{Answer} \\[2mm]
 \dfrac{\bigvee_{j=1}^k pred(c_j) = \bot}
-      {(\sigma, i, c_1^0 : \ldots : c_k^0 : \epsilon) \xrightarrow{\circ} (\sigma, i, c_1^N : \ldots : c_k^N : \epsilon)}
+      {\inbr{\sigma, i, c_1^0 : \ldots : c_k^0 : \epsilon} \xrightarrow{\circ} \inbr{\sigma, i, c_1^N : \ldots : c_k^N : \epsilon}}
 &     \ruleno{ConjZero} \\[4mm]
 \dfrac{m_{i+1} \not= 0 \qquad \bigvee_{j=1}^k pred(c_j) = \bot \qquad (\sigma, i) \vdash c_{i+1} \Rightarrow T \qquad set(m_{i+1} - 1, T) = \bar{T}}
-      {(\sigma, i, c_1^0 : \ldots : c_i^0 : c_{i+1}^{m_{i+1}} : cs) \xrightarrow{\circ} push(c_1^0 : \ldots : c_i^0 : \Box cs, \bar{T})}
+      {\inbr{\sigma, i, c_1^0 : \ldots : c_i^0 : c_{i+1}^{m_{i+1}} : cs} \xrightarrow{\circ} push(c_1^0 : \ldots : c_i^0 : \Box cs, \bar{T})}
 &     \ruleno{ConjUnfold} \\[4mm]
 \dfrac{\bigvee_{j=1}^i pred(c_j) = \bot \qquad pred(c_{i+1}) = \top \qquad (\sigma, i) \vdash c_{i+1} \Rightarrow T \qquad set(m_{i+1} - 1, T) = \bar{T}}
-      {(\sigma, i, c_1^{m_1} : \ldots : c_i^{m_i} : c_{i+1}^{m_{i+1}} : cs) \xrightarrow{\circ} push(c_1^{m_1} : \ldots : c_i^{m_i} : \Box : cs, \bar{T})}
+      {\inbr{\sigma, i, c_1^{m_1} : \ldots : c_i^{m_i} : c_{i+1}^{m_{i+1}} : cs} \xrightarrow{\circ} push(c_1^{m_1} : \ldots : c_i^{m_i} : \Box : cs, \bar{T})}
 &     \ruleno{ConjUnfoldPred} \\[4mm]
-\dfrac{T_1 \xrightarrow{\alpha} \circ}
+\dfrac{T_1 \xrightarrow{\alpha} \emptyset}
       {(T_1 \lor T_2) \xrightarrow{\alpha} T_2}
 &     \ruleno{Disj} \\[4mm]
 \dfrac{T_1 \xrightarrow{\alpha} \bar{T_1}}

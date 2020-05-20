@@ -9,6 +9,7 @@
 \usepackage[section]{placeins}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepackage{yfonts}
 
 \pgfplotsset{width=7cm,compat=1.8}
 
@@ -34,6 +35,9 @@ language=ocanren
 }
 
 \newcommand{\ruleno}[1]{\mbox{[\textsc{#1}]}}
+\newcommand{\rulen}[1]{[\textsc{#1}]}
+\newcommand{\mk}[0]{\textsc{miniKanren}}
+\newcommand{\inbr}[1]{\langle #1 \rangle}
 
 \begin{document}
 
@@ -76,8 +80,9 @@ language=ocanren
 \maketitle
 
 \input{introduction}
-\input{classic-conjunction}
 \input{related-work}
+\input{classic-conjunction}
+\input{classic-semantics}
 \input{naive-fair-conjunction}
 \input{structural-recursion}
 \input{limitations}

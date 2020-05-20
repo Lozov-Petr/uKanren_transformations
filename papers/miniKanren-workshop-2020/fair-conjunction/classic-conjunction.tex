@@ -1,105 +1,49 @@
-\section{Classic relational conjunction}
+\section{Directed relational conjunction}
 
-\begin{figure}[h!]
-\[
-union(T_1, T_2) =
-\left\{
-\begin{array}{rl}
-T_2, & \mbox{if } T_1 = \emptyset \\
-T_1, & \mbox{if } T_1 \not= \emptyset \mbox{ and } T_2 = \emptyset \\
-(T_1 \circ T_2), & \mbox{otherwise}
-\end{array}
-\right.
-\]
-\caption{union-semantics}
-\label{fair:union-semantics}
-\end{figure}
+% В этом разделе мы рассмотрим реляционный язык miniKanren с классической направленной конъюнкцией, изучим достоинства и недостатки направленной конъюнкции на примерах.
+In this section we consider the relational language \mk~ with the classic directed conjunction and demonstrate the advantages and disadvantages of directed conjunction using examples.
 
-\begin{figure}[h!]
-\[
-push(C, T) =
-\left\{
-\begin{array}{rl}
-(\sigma, i, c_1 : \ldots : c_i : \bar{c_1} : \ldots : \bar{c_k} : cs), & \mbox{if } T = (\sigma, i, \bar{c_1} : \ldots : \bar{c_k} : \epsilon) \mbox{ and } C = c_1 : \ldots : c_i : \Box : cs \\
-(push(C, T_1) \circ push(C, T_2)), & \mbox{if } T = (T_1 \circ T_2)
-\end{array}
-\right.
-\]
-\caption{union-semantics}
-\label{fair:union-semantics}
-\end{figure}
-
-\begin{figure}[h!]
-\[\begin{array}{cr}
-
-\dfrac{\delta(f) = \bar{x}. b \qquad (\sigma, i, \epsilon) \vdash b[\bar{x} \leftarrow \bar{t}] \leadsto T}
-      {(\sigma, i) \vdash f(\bar{t}) \Rightarrow T}
-&     \ruleno{Unfold} \\[3mm]
-\dfrac{\not\exists \, mgu(t_1, t_2, \sigma)}
-      {(\sigma, i, cs) \vdash (t_1 \equiv t_2) \leadsto \emptyset}
-&     \ruleno{UnifyFail}  \\[3mm]
-\dfrac{\bar\sigma = mgu(t_1, t_2, \sigma)}
-      {(\sigma, i, cs) \vdash (t_1 \equiv t_2) \leadsto (i, \, \bar\sigma, \, cs)}
-&     \ruleno{UnifySuccess}  \\[3mm]
-      {(\sigma, i, cs) \vdash f(\bar{t}) \leadsto (i, \, \sigma, \, f(\bar{t}) : cs)}
-&     \ruleno{Invoke} \\[3mm]
-\dfrac{(\sigma, i+1, cs) \vdash g[x \leftarrow \alpha_i] \leadsto T}
-      {(\sigma, i, cs) \vdash (\mbox{\lstinline|fresh|} \, x. \, g) \leadsto T}
-&     \ruleno{Fresh}  \\[3mm]
-\dfrac{(\sigma, i, cs) \vdash g_1 \leadsto T_1 \qquad (\sigma, i, cs) \vdash g_2 \leadsto T_1}
-      {(\sigma, i, cs) \vdash (g_1 \lor g_2) \leadsto union(T_1, T_2)}
-&     \ruleno{DisjGoal}  \\[3mm]
-\dfrac{T_1 \vdash g \leadsto T_3 \qquad T_2 \vdash g \leadsto T_4}
-      {(T_1 \circ T_2) \vdash g \leadsto union(T_3, T_4)}
-&     \ruleno{DisjTree}  \\[3mm]
-\dfrac{(\sigma, i, cs) \vdash g_1 \leadsto \emptyset}
-      {(\sigma, i, cs) \vdash (g_1 \land g_2) \leadsto \emptyset}
-&     \ruleno{ConjFail}  \\[3mm]
-\dfrac{(\sigma, i, cs) \vdash g_1 \leadsto T \qquad push(\Box : cs, T) \vdash g_2 \leadsto \bar{T}}
-      {(\sigma, i, cs) \vdash (g_1 \land g_2) \leadsto \bar{T}}
-&     \ruleno{ConjSuccess}  \\[3mm]
-\end{array}\]
-
-\caption{Unfolding-semantics}
-\label{fair:unfolding-semantics}
-\end{figure}
-
-\begin{figure}[h!]
-\[\begin{array}{cr}
-
-      {(\sigma, i, \epsilon) \xrightarrow{(\sigma, i)} \circ}  
-&     \ruleno{Answer} \\[2mm]
-\dfrac{(\sigma, i) \vdash c \Rightarrow T}
-      {(\sigma, i, c : cs) \xrightarrow{\circ} push(\Box : cs, T)}
-&     \ruleno{ConjUnfold} \\[2mm]
-\dfrac{T_1 \xrightarrow{\alpha} \circ}
-      {(T_1 \lor T_2) \xrightarrow{\alpha} T_2}
-&     \ruleno{Disj} \\[4mm]
-\dfrac{T_1 \xrightarrow{\alpha} \bar{T_1}}
-      {(T_1 \lor T_2) \xrightarrow{\alpha} (T_2 \lor\bar{T_1})}
-&     \ruleno{DisjStep} \\[4mm]
-\end{array}\]
-\caption{Classic semantics}
-\label{fair:classic-semantics}
-\end{figure}
-
-\begin{figure}
-\centering
-\begin{tabular}{c}
+% В языке miniKanren между операциями дизъюнкции и конъюнкции есть существенная разница. Дизъюнкция вычисляет свои аргументы попеременно, что приводит к равномерному вычислению двух дизъюнктов. Такого поведения дизъюнкции достаточно для полного поиска ответов. Конъюнкция же извлекает ответы из первого конъюнкта, на которых вычисляет второй конъюнкт. С одной стороны, такая конъюнкция проста в реализации и позволяет явно задать порядок исполнения конъюнктов. С другой стороны, эта конъюнкция ассиметрична. Более того, она может сходиться при одном порядке конъюнктов, но расходиться при другом. Например, отнонение freeze в зависимости от аргумента либо сходится за один шаг рекурсии, либо расходится. Тогда конъюнкция вида (=== /\ freeze) сходится, но при перестановке конъюнктов мы получаем расхождение. Действительно, в первом случае первый конъюнкт производит ровно один ответ, который противоречит унификации в теле отношения freeze. Во втором случае отношение freeze разойдется и не произведет ни одного ответа и второй конъюнкт вычислен не будет.
+In classic \mk, there is a significant difference between disjunction and conjunction operations.
+The disjunction evaluates its arguments alternately, which leads to the uniform evaluation of two disjuncts.
+This behavior is enough to fully search for answers.
+The conjunction, on the other hand, extracts the answers from the first conjunct and it calculates the second conjunct using this answers.
+On the one hand, this conjunction is easy to implement and allows you to explicitly specify the order of evaluation of the conjuncts.
+On the other hand, this conjunction is asymmetric.
+Moreover, it can converge in one order of conjuncts, but diverge in another.
+For example, relation
 \begin{lstlisting}
+let rec freeze$^o$ x = x ===  true /\ freeze$^o$ x
+\end{lstlisting}
+either converges in one recursion step or diverges.
+Then conjunction \lstinline{(x === false/\ freeze$^o$ x)} converges, but conjunction with the reverse order of conjuncts \lstinline{(freeze$^o$ x /\ x === false)} diverges.
+Indeed, in the first case, the first conjunct produces exactly one answer, which contradicts the unification in the body of the relation \lstinline{freeze$^o$}. In the second case, the relation \lstinline{freeze$^o$} diverges and isn't produce any answer. As a result, the second conjunct will not be evaluated.
+
+% Конечно, данная проблема решается правилом, которому нужно следовать при работе с miniKanren: унификацию нужно ставить самым левым конъюнктом. Но иногда оба конъюнктв являются вызовами отношений. В частности отношение обращения списка revers, которое связывает произвольный список со списком, содержащим элементы в обратном порядке. В этом отношении есть пара конъюнктов append и revers. При таком порядке вызов revers сходится, но при обратном порядке он расходится. Более того при обратном порядке снижается скорость вычисления ответа.
+Of course, this problem can be solved by the rule that must be followed when working with \mk: unification must be the left-most conjunct.
+But sometimes both conjuncts are calls of relations.
+For instance, the relation \lstinline{revers$^o$} in figure~\ref{fair:lst-reverso}, which associates an arbitrary list with a list containing elements in reverse order.
+In this relation we can see a couple of conjuncts: \lstinline{append$^o$} in line~\ref{fair:appendo-call} and \lstinline{revers$^o$} in line~\ref{fair:reverso-call}. In this order, the call \lstinline{(revers$^o$ [1, 2, 3] q)} converges, but in the reverse order it diverges after the answer is found. Moreover, the reverse order decreases the speed of evaluating the answer.
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{cp{3cm}c}
+\begin{lstlisting}[numbers=left,numberstyle=\small]
 let rec append$^o$ x y xy =
   (x === [] /\ y === xy) \/
-  fresh (e xs xys)
-    (x === e : xs /\ 
-     xs === e : xys /\ 
-     append$^o$ xs y xys)
-    
+  fresh (e xs xys) (
+    x === e : xs /\
+    xs === e : xys /\
+    append$^o$ xs y xys)
+\end{lstlisting}
+& &
+\begin{lstlisting}[firstnumber=7,numbers=left,numberstyle=\small,escapeinside={@}{@}]
 let rec revers$^o$ x y =
   (x === [] /\ y === []) \/
-  fresh (e xs ys)
-    (x === e : xs /\ 
-     append$^o$ ys [e] y /\
-     revers$^o$ xs ys)
+  fresh (e xs ys) (
+    x === e : xs /\
+@\label{fair:appendo-call}@    append$^o$ ys [e] y /\
+@\label{fair:reverso-call}@    revers$^o$ xs ys)
 \end{lstlisting}
 \end{tabular}
 
@@ -107,4 +51,9 @@ let rec revers$^o$ x y =
 \label{fair:lst-reverso}
 \end{figure}
 
-\FloatBarrier
+% В то же время, вызов revers при заданном порядке конъюнктов расходится, а при обратном сходится. В результате мы бы хотели разный порядок конъюнктов в зависимости от конкретных аргументов.
+
+At the same time, the call \lstinline{(revers$^o$ q [1, 2, 3])} for a given order of conjuncts diverges, and for the reverse order it converges. As a result, we would like a different order of conjuncts depending on specific arguments.
+
+% В следующих разделах мы предлжожим подход, который будет определять оптимальный порядок автоматически во время исполнения программы.
+In the following sections, we propose an approach that will determine the optimal order automatically during program evaluation.
