@@ -1,18 +1,18 @@
 \section{Semantics of directed conjunction}
 % В этом разделе мы введем операционную семантику малого шага для определения поведения оригинального miniKanren с направленной конъюнкцией.
-In this section we introduce the small step operational semantics to define the behavior of the original \mk~ with directional conjunction.
+In this section we introduce the small step operational semantics to define the behavior of the original \mk~ with directional conjunction. 
 
 % Отметим, что на данный момент существует сертифицированная семантика языка miniKanren, однако она делает большие различия между первым и вторым конъюнктом, что сильно усложняет задачу перестановки конъюнктов в процессе исполнения программы. Поэтому для данной работы мы разработали новую семантику, которая изначально не делает различий между конъюнктами.
 
-Note, at the moment there is certified semantics~\cite{fair:semantics} of the \mk, however, it makes great differences between the first and second conjuncts, which greatly complicates the task of rearranging the conjuncts in the process of program evaluation.
+Note, at the moment there is certified semantics~\cite{fair:semantics} of the \mk, however, it makes great differences between the first and second conjuncts, which greatly complicates the task of rearranging the conjuncts in the process of program evaluation. 
 Therefore, for this research, we have developed a new semantics that initially does not distinguish between conjuncts.
 
 % Семантика, которую мы предлагаем, основана на развертке вызовов отношений. На каждом шаге в текущем состоянии программы выбирается некоторый вызов, который разворачивается. Этот процесс продолжается, пока в текущем представлении остаются вызовы. Ниже мы опишим эту семантику более формально.
 
 The semantics that we offer are based on unfolding of the relation calls.
-At each step, we select a call from the current state of the program.
+At each step, we select a call from the current state of the program. 
 We are unfolding this call.
-This process continues while calls remain in the state of program.
+This process continues while calls remain in the state of program. 
 Below we define this semantics more formally.
 
 % Прежде всего мы определим синтаксис языка \mk на изображении 2. Конструкторы с арностью являются стандартным представлением данных. Синтаксические переменные необходимы для описания аргументов отношения и свежих переменных в операции fresh. Семантические переменные в исходной программе отсутствуют, однако они вводятся при исполнении операции fresh. Из конструкторов, синтаксический переменных и семантических переменных мы определили множество синтаксических термов и множество семантических переменных. Также мы определили множество имен отношений с арностью. Далее, мы определили цели. Цели являются унификацией термов, дизъюнкцией, конъюнкцией введением свежей переменной или вызовом отношения. Наконец мы определяем множество отношений. Каждое отношение состоит из имени с арностью, списка имен переменных и тела отношения.
@@ -20,32 +20,32 @@ Below we define this semantics more formally.
 First of all, we define the syntax of the language \mk~ in figure~\ref{fair:syntax}.
 Constructors with arity $\mathcal{C}$ are a standard representation of data.
 Syntax variables $\mathcal{X}$ are needed to describe the relation arguments and the fresh variables in the \lstinline{fresh} operation.
-There are no semantic variables $\mathcal{A}$ in the source program, but they are introduced during the evaluation of the \lstinline{fresh} operation.
-We define set of syntax terms $\mathcal{T}_\mathcal{X}$ and set of semantic terms $\mathcal{T}_\mathcal{A}$ using the constructors, syntax variables and semantic variables.
+There are no semantic variables $\mathcal{A}$ in the source program, but they are introduced during the evaluation of the \lstinline{fresh} operation. 
+We define set of syntax terms $\mathcal{T}_\mathcal{X}$ and set of semantic terms $\mathcal{T}_\mathcal{A}$ using the constructors, syntax variables and semantic variables. 
 Also we define set of relation names with arity $\mathcal{F}$.
-Next, we describe goals $\mathcal{G}$. Goals are the unification of terms, disjunction, conjunction, the introduction of a fresh variable, or the call of a relation.
+Next, we describe goals $\mathcal{G}$. Goals are the unification of terms, disjunction, conjunction, the introduction of a fresh variable, or the call of a relation. 
 Finally, we define the set of relations $\mathcal{S}$. Each relation consists of the name with arity, the list of variable names, and the body of the relation.
 
 \begin{figure}[h]
 \[
   \begin{array}{rcll}
-     \mathcal{C} & = & \{ C_1^{k_1}, C_2^{k_2}, \ldots \}
-     & \mbox{constructors with arities}
+     \mathcal{C} & = & \{ C_1^{k_1}, C_2^{k_2}, \ldots \} 
+     & \mbox{constructors with arities} 
      \\
-     \mathcal{X} & = & \{x_1, x_2, \ldots \}
-     & \mbox{syntax variables}
+     \mathcal{X} & = & \{x_1, x_2, \ldots \} 
+     & \mbox{syntax variables} 
      \\
-     \mathcal{A} & = & \{\alpha_1, \alpha_2, \ldots \}
-     & \mbox{semantic variables}
+     \mathcal{A} & = & \{\alpha_1, \alpha_2, \ldots \} 
+     & \mbox{semantic variables} 
      \\
      \mathcal{T}_\mathcal{X} & = & \mathcal{X} \mid C_i^{k_i}(\mathcal{T}_\mathcal{X}^1, \ldots, \mathcal{T}_\mathcal{X}^{k_i})
-     & \mbox{syntax terms}
+     & \mbox{syntax terms} 
      \\
      \mathcal{T}_\mathcal{A} & = & \mathcal{A} \mid C_i^{k_i}(\mathcal{T}_\mathcal{A}^1, \ldots, \mathcal{T}_\mathcal{A}^{k_i})
-     & \mbox{semantic terms}
+     & \mbox{semantic terms} 
      \\
-     \mathcal{F} & = & \{F_1^{k_1}, F_2^{k_2}, \ldots \}
-     & \mbox{names of relations with arities}
+     \mathcal{F} & = & \{F_1^{k_1}, F_2^{k_2}, \ldots \} 
+     & \mbox{names of relations with arities} 
      \\
      \mathcal{G} & =    & \mathcal{T}_\mathcal{X} \equiv \mathcal{T}_\mathcal{X} & \mbox{unification} \\
                  & \mid & \mathcal{G} \lor \mathcal{G} & \mbox{disjunction} \\
@@ -63,17 +63,17 @@ Finally, we define the set of relations $\mathcal{S}$. Each relation consists of
 
 In addition to the syntax, we need an intermediate state of the relational program
 \[
-\textgoth{T} = \inbr{\sigma, i, c_1 : \ldots : c_n : \epsilon} \mid \textgoth{T} \circ \textgoth{T} \mbox{, where } c_i = F_i^{k_i}(t_\mathcal{A}^1, \ldots, t_\mathcal{X}^{k_i}).
+\textgoth{T} = \inbr{\sigma, i, c_1 : \ldots : c_n : \epsilon} \mid \textgoth{T} \circ \textgoth{T} \mbox{, where } c_i = F_i^{k_i}(t_\mathcal{A}^1, \ldots, t_\mathcal{A}^{k_i}).
 \]
 This state is a disjunction tree. The internal node $(\circ)$ corresponds to the disjunction of two descendant states.
-Its leaves contain intermediate substitutions $\sigma$, counter of semantic variables $i$ and list of calls.
-Substitution $\sigma$ is mapping from semantic variables to semantic terms.
-It contains information about the current variables and is updated during the evaluation of unifications.
+Its leaves contain intermediate substitutions $\sigma$, counter of semantic variables $i$ and list of calls. 
+Substitution $\sigma$ is mapping from semantic variables to semantic terms. 
+It contains information about the current variables and is updated during the evaluation of unifications. 
 The counter of semantic variables is necessary to evaluate the \lstinline{fresh} operation, which introduces a semantic variable with a new counter.
 List of calls contains calls $c_i$ that must be evaluated in this branch.
 The list $\epsilon$ corresponds to an empty list, and the operator $(:)$ determines the addition of a call to the list.
 
-% Мы расширим множество состояний пустым состоянием, которое соотвествует завершению вычисления.
+% Мы расширим множество состояний пустым состоянием, которое соотвествует завершению вычисления. 
 
 We expand the set of states with an empty state
 \[
@@ -117,12 +117,12 @@ push(C, T) =
 \label{fair:push-semantics}
 \end{figure}
 
-% Следующая вспомогательная функция push (изображение 4) необходима для конструирования состояние после развертки. Первый аргумент --- это список вызовов, который содержит дырку. На этом месте стоял вызов, который мы развернули. Второй аргумент --- состояние, которое является результатом развертки. Данная функция рекурсивно проходит по состоянию, а в каждом листе объединяет вызовы с дыкой и вызовы из листа.
+% Следующая вспомогательная функция push (изображение 4) необходима для конструирования состояние после развертки. Первый аргумент --- это список вызовов, который содержит дырку. На этом месте стоял вызов, который мы развернули. Второй аргумент --- состояние, которое является результатом развертки. Данная функция рекурсивно проходит по состоянию, а в каждом листе объединяет вызовы с дыкой и вызовы из листа. 
 
-The following auxiliary push function (fig.~\ref{fair:push-semantics}) is needed to construct the state after the unfolding.
-The first argument of this function is a call list that contains a hole.
-The hole corresponds to the position of the call that we unfold.
-The second argument is the state that results from the unfolding.
+The following auxiliary push function (fig.~\ref{fair:push-semantics}) is needed to construct the state after the unfolding. 
+The first argument of this function is a call list that contains a hole. 
+The hole corresponds to the position of the call that we unfold. 
+The second argument is the state that results from the unfolding. 
 This function recursively traverse by state, and for any leafs it combines calls with hole and leaf calls.
 
 % Теперь мы определим семантику для операции развертки. Эта семантика приобразовывает вызов отношения и подстановку в состояние, которое соответствует телу этого отношения. Так как развертка вызова --- конечный процесс, мы можем описать развертку как семантику большого шага.
@@ -164,8 +164,8 @@ Now we define the semantics for the unfolding operation. This semantics (fig.~\r
 \end{figure}
 
 % Правило [Unfold] является внешним. Поэтому оно единственное содержит символ =>. Оно запускает процесс развертки вызова F(t) в контексте подстановки и счетчика семантических переменных. Прежде всего, вызов заменяется на тело отношения. Производится подстановка аргументов, инициализируется состояние. Далее запускается преобразование тела отношения в соответствующее состояние.
-The \rulen{Unfold} rule is external.
-Therefore, it only contains the symbol ($\Rightarrow$).
+The \rulen{Unfold} rule is external. 
+Therefore, it only contains the symbol ($\Rightarrow$). 
 It starts the unfolding process of call $F$ with list of arguments $\bar{t}$ in the context of substitution $\sigma$ and the counter of semantic variables $i$.
 First of all, the call $F$ is replaced by the body $b$ of the relation. Also the arguments $\bar{x}$ are substituted by terms $\bar{t}$, the state $\inbr{\sigma, i, \epsilon}$ is initialized. Next, we evaluate the relation body into the correspond state using the rest of rules.
 
@@ -175,7 +175,7 @@ The rules \rulen{UnifyFail} and \rulen{UnifySuccess} perform unification. If the
 % Так как развертка должна развернуть вызов ровно один раз, все вложенные вызовы мы оставляем без изменений. Данное поведение описано в правиле [Call]. Вложенный вызов не вычисляется, а помещаяется в список вызовов состояния.
 Since this semantics should unfold the call exactly once, we leave all the nested calls unchanged. This behavior is described in the \rulen{Call} rule. The nested call is not evaluated, but placed on the call list, which is contained into the state.
 
-% Правило [Fresh] соответствует введению свежей переменной. В данном правиле мы заменяем синтаксическую переменную на семантическую переменную. Также мы увеличиваем счетчик семантических переменных.
+% Правило [Fresh] соответствует введению свежей переменной. В данном правиле мы заменяем синтаксическую переменную на семантическую переменную. Также мы увеличиваем счетчик семантических переменных. 
 The \rulen{Fresh} rule corresponds to the introduction of a fresh variable. In this rule, we replace a syntax variable $x$ with a semantic variable $\alpha_i$. We also increment the counter of semantic variables.
 
 % Правила [DisjGoal] и [DisjState] необходимы для исполнения дизъюнкции. Первое правило вычисляет оба дизъюнкта и объединяет их в новое состояние с помощью вспомогательной функции union. Второе правило обрабатывает дизъюнкцию, содержащуюся в состоянии. Как и в первом правиле мы производим два независимых вычисления, а затем объединяем результаты в новое состоения.
@@ -191,7 +191,7 @@ Now we have everything we need to define the semantics of a relational language 
 \begin{figure}[h!]
 \[\begin{array}{cr}
 
-      {\inbr{\sigma, i, \epsilon} \xrightarrow{\sigma} \emptyset}
+      {\inbr{\sigma, i, \epsilon} \xrightarrow{\sigma} \emptyset}  
 &     \ruleno{Answer} \\[2mm]
 \dfrac{(\sigma, i) \vdash c \Rightarrow T}
       {\inbr{\sigma, i, c : cs} \xrightarrow{\circ} push(\Box : cs, T)}
@@ -216,8 +216,30 @@ Also, if the current state is a leaf but contains at least one call, we apply th
 % Наконец, если текущее состояние является дизюнкцией, то мы производим вычисление в левом дизъюнкте T_1. В зависимости от результата мы приминяем или правило [Disj], или правило [DisjStep]. Первое правило соответствует пустому состоянию и возвращает второй дизъюнкт в качестве результата. Второе правило соответствует непустому состоянию и возвращает новое сотояние (T_2 \circ T_1). Перестановка дизъюнктов --- необходимое действие, которое называется интерливинг. Оно гарантирует полноту поиска.
 Finally, if the current state is a disjunction, then we evaluate the left disjunct $T_1$. We apply either the \rulen{Disj} rule or the \rulen{DisjStep} rule depending on the result of evaluation the left disjunct. The first rule corresponds to an empty state and returns the second disjunct $T_2$ as a result. The second rule corresponds to a non-empty state and returns a new state ($T_2 \circ \bar{T_1}$). Rearrangement of disjuncts is a necessary action called interleaving~\cite{fair:interleaving}. It guarantees the completeness of the search.
 
+% Для того чтобы сделать начальное состояние из вызова c, нам необходимо заменить в нем все синтаксические переменные на семантические. Тогда мы получим
+In order to make the initial state from a call $c$, we need to replace all syntactic variables in it with semantic ones. Then we get
+\[
+\inbr{\{\}, n, c[x_0 \leftarrow \alpha_0, \ldots, x_{n-1} \leftarrow \alpha_{n-1}] : \epsilon}.
+\]
+
 % Данная семантика отличается от сертифицированной семантики и классических реализаций прежде всего размером шага. Операция развертки выполняет множество действий подряд, а в классическом случае после каждой элементарного действия выполняется интерливинг. Однако, общие черты данная семантика сохранила: дизъюнкты меняют порядок после каждого unfolding, а конъюнкты выполняются строго слева направо.
-This semantics differs from certified semantics and classical implementations primarily in step size. The unfolding operation performs many actions in a row. But in the classic case, interleaving is performed after each elementary action. However, this semantics has retained common features: disjuncts change order after each step, and conjunctions are evaluated strictly from left to right.
+This semantics differs from certified semantics and classical implementations primarily in step size. The unfolding operation performs many actions in a row. But in the classic case, interleaving is performed after each elementary action. However, this semantics has retained common features: disjuncts change order after each step, and conjunctions are evaluated strictly from left to right. 
+
+
+\begin{comment}
+\[
+\begin{array}{l}
+\inbr{\{\}, 1, \mbox{\lstinline{revers}}^o \, [1] \; \alpha_0 : \epsilon} 
+\xrightarrow{\circ} \\
+\inbr{\{\alpha_1 = 1; \alpha_2 = []\}, 4, \mbox{\lstinline{revers}}^o \, \alpha_2 \; \alpha_3 : \mbox{\lstinline{append}}^o \, \alpha_3 \; [\alpha_1] \; \alpha_0 : \epsilon}
+\xrightarrow{\circ} \\
+\inbr{\{\alpha_1 = 1; \alpha_2 = []; \alpha_3 = []\}, 4, \mbox{\lstinline{append}}^o \, \alpha_3 \; [\alpha_1] \; \alpha_0 : \epsilon} 
+\xrightarrow{\circ} \\
+\inbr{\{\alpha_1 = 1; \alpha_2 = []; \alpha_3 = []\; \alpha_0 = [\alpha_1]\}, \epsilon}
+\xrightarrow{\{\alpha_1 = 1; \alpha_2 = []; \alpha_3 = []\; \alpha_0 = [\alpha_1]\}} \emptyset
+\end{array}
+\]
+\end{comment}
 
 % Порядок конъюнктов сильно влияет на результат вычисления именно из-за строгого порядка исполнения конъюнктов. В следующих разделах мы предложем две семантики, которые более гибко обрабатывают конъюнкты.
 The order of the conjuncts strongly affects the result of the evaluation precisely because of the strict fixed order of evaluation of the conjuncts. In the following sections, we offer two semantics that handle conjunctions more flexibly.
