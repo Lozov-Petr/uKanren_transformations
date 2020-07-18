@@ -1,23 +1,25 @@
 module Main where
 
-import qualified Tests.ListAB      as ListAB
-import qualified Tests.Trees       as Trees
+-- import qualified Tests.ListAB      as ListAB
+-- import qualified Tests.Trees       as Trees
 -- import qualified Tests.Bottles     as Bottles
 -- import qualified Tests.Bridge      as Bridge
 -- import qualified Tests.GCW         as GCW
 -- import qualified Tests.Hanoi       as Hanoi
 -- import qualified Tests.Scheme      as Scheme
 -- import qualified Tests.Sudoku4x4   as Sudoku4x4
--- import qualified Tests.Reverso     as Reverso
--- import qualified Tests.Sorto       as Sorto
+import qualified Tests.Reverso     as Reverso
+import qualified Tests.Sorto       as Sorto
 -- import qualified Tests.BadExamples as Bad
 -- import qualified Tests.Mul         as Mul
+
+import qualified Tests.BridgeAutogen as BridgeAutogen
 
 ----------------------------------------------
 
 main = do
-  ListAB.tests
-  Trees.tests
+  -- ListAB.tests
+  -- Trees.tests
 
   -- Bottles.testInvsSubinvoke_NonStrict
   -- Bottles.testInvsSubinvoke_Strict
@@ -155,8 +157,33 @@ main = do
   ----------------------------------------------------
   -- Mul.testUnit1
 
-  -- Reverso.testUnfoldSimpl1_1 170
-  -- Reverso.testUnfoldSimpl2_1 90
+  ----------------------------------------------------
+
+  -- 3.06
+  -- Reverso.testUnfoldSimpl1_1 100
+
+  -- 30.94
+  -- Reverso.testUnfoldSimpl1_1 200
+
+  -- 4.24
+  -- Reverso.testUnfoldSimpl2_1 100
+
+  -- 8.96
+  -- Reverso.testUnfoldSimpl2_1 120
+
+  -- 17.05
+  -- Reverso.testUnfoldSimpl2_1 150
+
+  -- 1.18
+  Sorto.testUnfoldSimpl2 20
+
+  -- Sorto.testUnfoldPermSimpl2 50
+
+  -- 1.13
+  -- Sorto.testUnfoldPermSimpl2 4
+
+  -- 5.9
+  -- BridgeAutogen.testUnfoldSimpl
 
   ----------------------------------------------------
   ---- FOR PAPER -------------------------------------
