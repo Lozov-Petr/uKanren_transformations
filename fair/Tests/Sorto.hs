@@ -22,12 +22,18 @@ genNat :: Int -> Tx
 genNat 0 = C "O" []
 genNat n = C "S" [genNat $ n - 1]
 
+genRevList :: Int -> Tx
+genRevList 0 = nil
+genRevList n = genNat n % genRevList (n - 1)
+
 genList :: Int -> Tx
-genList 0 = nil
-genList n = genNat n % genList (n - 1)
+genList n = gen 0 where
+  gen m = if n == m then nil else genNat m % gen (m + 1)
 
 goal :: Int -> G X
-goal x = call "sorto" [genList x, V "x"]
+goal x = call "sorto" [genRevList x, V "x"]
+
+goalPerm x = call "sorto" [V "x", genList x]
 
 esVars = [("sorto",   [1]   ), ("smallesto", [0, 2]),
           ("minmaxo", []    ), ("leo",       [0, 1]),
@@ -175,3 +181,21 @@ testUnfoldingFairConj1 =
   -- 4 -> 158
 testUnfoldingFairConj2 =
   putStrLn . show . U.run100 (U.fairConj defs2 esVars) vars defs2 . goal
+
+testUnfoldPermSimpl1 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 U.simpleSep vars defs1 $ goalPerm n
+
+testUnfoldPermSimpl2 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 U.simpleSep vars defs2 $ goalPerm n
+
+testUnfoldPermSimplFair1 m n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.simpleFairSep m vars defs1 $ goalPerm n
+
+testUnfoldPermSimplFair2 m n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.simpleFairSep m vars defs2 $ goalPerm n
+
+testUnfoldPermEssentialArgs1 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 (U.hasEssentialArgsSep esVars) vars defs1 $ goalPerm n
+
+testUnfoldPermEssentialArgs2 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 (U.hasEssentialArgsSep esVars) vars defs2 $ goalPerm n

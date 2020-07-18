@@ -17,6 +17,9 @@ import qualified Unfolding as U
 defs :: [Def]
 defs = bottles
 
+defs1 :: [Def]
+defs1 = bottles1
+
 goal = Fresh "c" $
    Invoke "capacities1" [V "c"] :/\:
    Invoke "checkAnswer" [V "answer", V "c", int2nat 7, C "true" []]
@@ -196,6 +199,9 @@ testDefsApprox =
 testUnfoldSimpl =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
 
+testUnfoldSimplFair m =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs goal
+
   -- did not wait for an answer
 testUnfoldDefsRating =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.defsRatingSep defs) vars defs goal
@@ -211,3 +217,13 @@ testUnfoldEssentialArgs =
   -- 237557
 testUnfoldingFairConj =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs goal
+
+testUnfoldSimplBad =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs1 goal
+
+testUnfoldSimplFairBad m =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs1 goal
+
+
+testUnfoldEssentialArgsBad =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs1 goal

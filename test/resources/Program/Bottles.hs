@@ -16,19 +16,19 @@ query' =
 
 
 definition :: [Def]
-definition = definitionDef : bottles 
+definition = definitionDef : bottles
 
 definitionDef :: Def
-definitionDef = 
+definitionDef =
     Def "query" ["q", "res"] (
       call "capacities1" [V "1"] &&& call "checkAnswer" [V "res", V "q", six, true])
 
 
 add :: [Def]
-add = [addDef] 
+add = [addDef]
 
-addDef :: Def 
-addDef = 
+addDef :: Def
+addDef =
     Def "add" ["a", "b", "q113"] (
       ((V "a" === C "o" []) &&&
       (V "b" === V "q113")) |||
@@ -41,7 +41,7 @@ greater :: [Def]
 greater = [greaterDef]
 
 greaterDef :: Def
-greaterDef = 
+greaterDef =
     Def "greater" ["a", "b", "q109"] (
       ((V "a" === C "o" []) &&&
       (V "q109" === C "false" [])) |||
@@ -55,10 +55,10 @@ greaterDef =
     )
 
 sub :: [Def]
-sub = [subDef] 
-  
+sub = [subDef]
+
 subDef :: Def
-subDef = 
+subDef =
     Def "sub" ["a", "b", "q105"] (
       ((V "b" === C "o" []) &&&
       (V "a" === V "q105")) |||
@@ -76,7 +76,7 @@ anotherBottle :: [Def]
 anotherBottle = [anotherBottleDef]
 
 anotherBottleDef :: Def
-anotherBottleDef = 
+anotherBottleDef =
     Def "anotherBottle" ["b", "q102"] (
       ((V "b" === C "fst" []) &&&
       (V "q102" === C "snd" [])) |||
@@ -88,7 +88,7 @@ createState :: [Def]
 createState = [createStateDef]
 
 createStateDef :: Def
-createStateDef = 
+createStateDef =
     Def "createState" ["bottle", "lvl1", "lvl2", "q99"] (
       ((V "bottle" === C "fst" []) &&&
       (V "q99" === C "pair" [V "lvl1", V "lvl2"])) |||
@@ -98,9 +98,9 @@ createStateDef =
 
 fst' :: [Def]
 fst' = [fst'Def]
-  
-fst'Def :: Def 
-fst'Def = 
+
+fst'Def :: Def
+fst'Def =
     Def "fst'" ["x", "q96"] (
       fresh ["a", "q97"] (
         (V "x" === C "pair" [V "a", V "q97"]) &&&
@@ -111,18 +111,18 @@ snd' :: [Def]
 snd' = [snd'Def]
 
 snd'Def :: Def
-snd'Def = 
+snd'Def =
     Def "snd'" ["x", "q93"] (
       fresh ["q94", "a"] (
         (V "x" === C "pair" [V "q94", V "a"]) &&&
         (V "a" === V "q93"))
     )
 
-getCapacity :: [Def] 
-getCapacity = getCapacityDef : fst' ++ snd' 
+getCapacity :: [Def]
+getCapacity = getCapacityDef : fst' ++ snd'
 
 getCapacityDef :: Def
-getCapacityDef = 
+getCapacityDef =
     Def "get_capacity" ["capacities", "bottle", "q92"] (
       ((V "bottle" === C "fst" []) &&&
       (call "fst'" [V "capacities", V "q92"])) |||
@@ -130,11 +130,11 @@ getCapacityDef =
       (call "snd'" [V "capacities", V "q92"]))
     )
 
-fancyEq :: [Def] 
+fancyEq :: [Def]
 fancyEq = [fancyEqDef]
-  
-fancyEqDef :: Def 
-fancyEqDef = 
+
+fancyEqDef :: Def
+fancyEqDef =
     Def "|=|" ["a", "b", "q85"] (
       ((V "a" === C "o" []) &&&
       (((V "b" === C "o" []) &&&
@@ -153,10 +153,10 @@ fancyEqDef =
 
 
 checkStep :: [Def]
-checkStep = checkStepDef : fancyEq ++ getCapacity ++ anotherBottle 
+checkStep = checkStepDef : fancyEq ++ getCapacity ++ anotherBottle
 
-checkStepDef :: Def 
-checkStepDef = 
+checkStepDef :: Def
+checkStepDef =
     Def "checkStep" ["state0", "step0", "capacities", "q48"] (
       fresh ["f", "s"] (
         (V "state0" === C "pair" [V "f", V "s"]) &&&
@@ -208,8 +208,8 @@ checkStepDef =
 doStep :: [Def]
 doStep = doStepDef : getCapacity ++ createState ++ add ++ anotherBottle ++ greater
 
-doStepDef :: Def 
-doStepDef = 
+doStepDef :: Def
+doStepDef =
     Def "doStep" ["state0", "step0", "capacities", "q15"] (
       fresh ["f", "s"] (
         (V "state0" === C "pair" [V "f", V "s"]) &&&
@@ -254,14 +254,14 @@ doStepDef =
               (fresh ["q41"] (
                 (call "add" [V "f", V "s", V "q41"]) &&&
                 (call "createState" [V "b", C "o" [], V "q41", V "q15"]))))))))))))
-    ) 
+    )
 
 
 isFinishState :: [Def]
-isFinishState = isFinishStateDef : fancyEq 
+isFinishState = isFinishStateDef : fancyEq
 
-isFinishStateDef :: Def 
-isFinishStateDef = 
+isFinishStateDef :: Def
+isFinishStateDef =
     Def "isFinishState" ["state0", "reqLvl", "q8"] (
       fresh ["f", "s"] (
         (V "state0" === C "pair" [V "f", V "s"]) &&&
@@ -275,10 +275,10 @@ isFinishStateDef =
     )
 
 checkAnswer' :: [Def]
-checkAnswer' = checkAnswer'Def : isFinishState ++ checkStep ++ doStep 
+checkAnswer' = checkAnswer'Def : isFinishState ++ checkStep ++ doStep
 
-checkAnswer'Def :: Def 
-checkAnswer'Def = 
+checkAnswer'Def :: Def
+checkAnswer'Def =
     Def "checkAnswer'" ["state0", "answer", "capacities", "reqLvl", "q1"] (
       ((V "answer" === C "nil" []) &&&
       (call "isFinishState" [V "state0", V "reqLvl", V "q1"])) |||
@@ -294,19 +294,38 @@ checkAnswer'Def =
             (V "q1" === C "false" [])))))))
     )
 
-checkAnswer :: [Def]
-checkAnswer = checkAnswerDef : checkAnswer' 
+checkAnswer'1Def :: Def
+checkAnswer'1Def =
+    Def "checkAnswer'" ["state0", "answer", "capacities", "reqLvl", "q1"] (
+      ((V "answer" === C "nil" []) &&&
+      (call "isFinishState" [V "state0", V "reqLvl", V "q1"])) |||
+      (fresh ["x", "xs"] (
+         (V "answer" === C "%" [V "x", V "xs"]) &&&
+         (fresh ["q3"] (
+            (call "checkStep" [V "state0", V "x", V "capacities", V "q3"]) &&&
+            (((V "q3" === C "true" []) &&&
+            (fresh ["q4"] (
+               (call "checkAnswer'" [V "q4", V "xs", V "capacities", V "reqLvl", V "q1"]) &&&
+               (call "doStep" [V "state0", V "x", V "capacities", V "q4"])
+               ))) |||
+            ((V "q3" === C "false" []) &&&
+            (V "q1" === C "false" [])))))))
+    )
 
-checkAnswerDef :: Def 
-checkAnswerDef = 
+checkAnswer :: [Def]
+checkAnswer = checkAnswerDef : checkAnswer'
+
+
+checkAnswerDef :: Def
+checkAnswerDef =
     Def "checkAnswer" ["answer", "capacities", "reqLvl", "q7"] (
       call "checkAnswer'" [C "pair" [C "o" [], C "o" []], V "answer", V "capacities", V "reqLvl", V "q7"]
     )
 
-capacities1 :: [Def] 
+capacities1 :: [Def]
 capacities1 = [capacities1Def]
 
-capacities1Def :: Def 
+capacities1Def :: Def
 capacities1Def =
     Def "capacities1" ["q0"] (
       V "q0" === C "pair" [C "s" [C "s" [C "s" [C "s" [C "o" []]]]], C "s" [C "s" [C "s" [C "s" [C "s" [C "s" [C "s" [C "s" [C "s" [C "o" []]]]]]]]]]]
@@ -314,25 +333,43 @@ capacities1Def =
 
 bottles :: [Def]
 bottles =
-  [ addDef 
-  , greaterDef 
-  , subDef 
-  , anotherBottleDef 
-  , createStateDef 
-  , fst'Def 
-  , snd'Def 
-  , getCapacityDef 
-  , fancyEqDef 
-  , checkStepDef 
-  , doStepDef 
-  , isFinishStateDef 
-  , checkAnswerDef 
-  , checkAnswer'Def 
-  , capacities1Def 
+  [ addDef
+  , greaterDef
+  , subDef
+  , anotherBottleDef
+  , createStateDef
+  , fst'Def
+  , snd'Def
+  , getCapacityDef
+  , fancyEqDef
+  , checkStepDef
+  , doStepDef
+  , isFinishStateDef
+  , checkAnswerDef
+  , checkAnswer'Def
+  , capacities1Def
+  ]
+
+bottles1 :: [Def]
+bottles1 =
+  [ addDef
+  , greaterDef
+  , subDef
+  , anotherBottleDef
+  , createStateDef
+  , fst'Def
+  , snd'Def
+  , getCapacityDef
+  , fancyEqDef
+  , checkStepDef
+  , doStepDef
+  , isFinishStateDef
+  , checkAnswerDef
+  , checkAnswer'1Def
+  , capacities1Def
   ]
 
 
-
 env :: String
-env = 
+env =
   "open MiniKanren\nopen MiniKanrenStd\ntype bottle =\n  | Fst \n  | Snd \nlet fst () = !! Fst\nlet snd () = !! Snd\ntype stepType =\n  | Fill \n  | Empty \n  | Pour \nlet fill () = !! Fill\nlet empty () = !! Empty\nlet pour () = !! Pour\ntype 'a0 gnat =\n  | O \n  | S of 'a0 \nlet rec fmap fa0 = function | O -> O | S a0 -> S (fa0 a0)\nmodule For_gnat =\n  (Fmap)(struct\n           let rec fmap fa0 = function | O -> O | S a0 -> S (fa0 a0)\n           type 'a0 t = 'a0 gnat\n         end)\nlet rec o () = inj (For_gnat.distrib O)\nand s x__0 = inj (For_gnat.distrib (S x__0))"

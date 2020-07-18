@@ -16,20 +16,20 @@ succ :: Term a -> Term a
 succ x = C "S" [x]
 
 notZeroDef :: Def
-notZeroDef = 
-    ( Def "notZero" ["x"] 
+notZeroDef =
+    ( Def "notZero" ["x"]
       (
         fresh ["y"] (x === succ y)
       )
     )
-  where 
+  where
     [x, y] = map V ["x", "y"]
 
 notZero :: [Def]
 notZero = [notZeroDef]
 
 addoDef :: Def
-addoDef = 
+addoDef =
     ( Def "addo" ["x", "y", "z"]
         (
           x === zero &&& z === y |||
@@ -37,31 +37,32 @@ addoDef =
             (x === succ x' &&& z === succ z' &&& call "addo" [x', y, z'])
         )
     )
-  where 
+  where
     [x, y, z, x', z'] = map V ["x", "y", "z", "x'", "z'"]
 
 addo :: [Def]
 addo = [addoDef]
 
 muloDef :: Def
-muloDef = 
+muloDef =
     ( Def "mulo" ["x", "y", "z"]
       (
         (x === zero &&& z === zero) |||
           fresh ["x'", "z'"]
             (x === succ x' &&&
-             call "addo" [y, z', z] &&&
-             call "mulo" [x', y, z'])
+             call "mulo" [x', y, z'] &&&
+             call "addo" [y, z', z]
+             )
       )
     )
-  where 
+  where
     [x, y, z, x', z'] = map V ["x", "y", "z", "x'", "z'"]
 
 mulo :: [Def]
-mulo = muloDef : addo 
+mulo = muloDef : addo
 
 leoDef :: Def
-leoDef = 
+leoDef =
     ( Def "leo" ["x", "y", "b"]
       (
         (x === zero &&& b === trueo) |||
@@ -69,22 +70,22 @@ leoDef =
          fresh ["x'", "y'"] (x === succ x' &&& y === succ y' &&& call "leo" [x', y', b])
       )
     )
-  where 
+  where
     [x, y, b, x', y', zz] = map V ["x", "y", "b", "x'", "y'", "zz"]
 
 leo :: [Def]
 leo = [leoDef]
 
 gtoDef :: Def
-gtoDef = 
-    ( Def "gto" ["x", "y", "b"] 
+gtoDef =
+    ( Def "gto" ["x", "y", "b"]
       (
         fresh ["zz"] (x === succ zz &&& y === zero &&& b === trueo) |||
         (x === zero &&& b === falso) |||
         fresh ["x'", "y'"] (x === succ x' &&& y === succ y' &&& call "gto" [x', y', b])
       )
     )
-  where 
+  where
     [x, y, b, x', y', zz] = map V ["x", "y", "b", "x'", "y'", "zz"]
 
 gto :: [Def]
@@ -94,17 +95,16 @@ geoDef :: Def
 geoDef = Def "geo" ["x", "y", "z"] $ call "leo" [V "y", V "x", V "z"]
 
 geo :: [Def]
-geo = geoDef : leo 
+geo = geoDef : leo
 
 ltoDef :: Def
 ltoDef = Def "lto" ["x", "y", "z"] $ call "gto" [V "y", V "x", V "z"]
 
 lto :: [Def]
-lto = ltoDef : gto 
+lto = ltoDef : gto
 
 num :: Show a => Term a -> String
 num (V n) = printf "._%s" (show n)
 num (C "O" []) = "O"
 num (C "S" [x]) = printf "S(%s)" (num x)
 num _ = "??"
-
