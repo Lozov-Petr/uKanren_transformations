@@ -63,7 +63,7 @@ testShallowesIgnoringSubformula =
 ----------------------------------------------------
 
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 100 $ U.run100 U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 100 $ U.run U.left2rightHandler vars defs goal
 
 testUnfoldDefsRating =
   putStrLn $ show $ U.takeAnswers 100 $ U.run100 (U.defsRatingSep defs) vars defs goal

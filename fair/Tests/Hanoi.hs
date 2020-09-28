@@ -9,6 +9,7 @@ import Embedding
 import Util
 
 import Program.Hanoi
+import Program.HanoiBad
 
 import qualified Unfolding as U
 
@@ -16,6 +17,10 @@ import qualified Unfolding as U
 
 defs :: [Def]
 defs = fst $ tree2defs hanoi
+
+defs1 :: [Def]
+defs1 = fst $ tree2defs hanoiBad
+
 
 pins :: Int -> Tx
 pins m = C "triple" [gen 0, C "nil" [], C "nil" []] where
@@ -183,10 +188,13 @@ testDefsApprox =
 
   -- 82328
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs goal
+
+testUnfoldSimpl1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs1 goal
 
 testUnfoldSimplFair m =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs goal
 
   -- 19534
 testUnfoldDefsRating =
@@ -201,5 +209,33 @@ testUnfoldEssentialArgs =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs goal
 
   -- 82328
+testUnfoldEssentialArgs1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs1 goal
+
+  -- 82328
 testUnfoldingFairConj =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs goal
+
+  -- 82328
+testUnfoldEmbed =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs $ goal
+
+  -- 82491
+testUnfoldEmbed1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs1 $ goal
+
+  -- 281056
+testUnfoldEmbedBackward =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs $ goal
+
+  -- 2634875
+testUnfoldEmbedBackward1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs1 $ goal
+
+  -- 82328
+testUnfoldEssentialHeight =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs $ goal
+
+  -- 82328
+testUnfoldEssentialHeight1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs1 $ goal

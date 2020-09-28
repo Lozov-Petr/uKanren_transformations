@@ -43,11 +43,11 @@ vars = ["list"]
 
   -- 5 -> 547
 testUnfoldSimpl1 =
-  putStrLn . show . U.run100 U.simpleSep vars defs1 . goal
+  putStrLn . show . U.run U.left2rightHandler vars defs1 . goal
 
   -- 5 -> 120
 testUnfoldSimpl2 =
-  putStrLn . show . U.run100 U.simpleSep vars defs2 . goal
+  putStrLn . show . U.run U.left2rightHandler vars defs2 . goal
 
   -- 5 -> 70
 testUnfoldDefsRating1 =

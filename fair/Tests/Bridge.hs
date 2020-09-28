@@ -23,15 +23,15 @@ goal =
     Invoke "result" [V "minutes"] &&&
     Invoke "getAnswer" [V "answer", C "some" [V "minutes"]]
 
-esVars = [("result",     []), ("getAnswer",   []    ),
-          ("start",      []), ("getAnswer'",  [0]   ),
-          ("checkStep",  []), ("checkPerson", []    ),
-          ("eqForBool",  []), ("step",        []    ),
-          ("movePerson", []), ("moveLight",   []    ),
-          ("getTime",    []), ("grForPerson", []    ),
-          ("times",      []), ("add",         [0, 2]),
-          ("max",        []), ("greater",     [0, 1]),
-          ("finish",     []), ("eqForState",  []    )
+esVars = [("result",     []    ), ("getAnswer",   [0]   ),
+          ("start",      []    ), ("getAnswer'",  [0]   ),
+          ("checkStep",  []    ), ("checkPerson", []    ),
+          ("eqForBool",  []    ), ("step",        []    ),
+          ("movePerson", []    ), ("moveLight",   []    ),
+          ("getTime",    []    ), ("grForPerson", []    ),
+          ("times",      []    ), ("add",         [0, 2]),
+          ("max",        [0, 1]), ("greater",     [0, 1]),
+          ("finish",     []    ), ("eqForState",  []    )
          ]
 
 vars = ["minutes", "answer"]
@@ -320,17 +320,17 @@ testDefsApprox' =
 
   -- 166505
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs goal
 
   -- 21689
 testUnfoldSimpl' =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs' goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs' goal
 
 testUnfoldSimplFair m =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs goal
 
 testUnfoldSimplFair' m =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs' goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs' goal
 
   -- did not wait for an answer
 testUnfoldDefsRating =
@@ -363,3 +363,27 @@ testUnfoldingFairConj =
   -- 20589
 testUnfoldingFairConj' =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs' goal
+
+  -- 166505
+testUnfoldEmbed =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs $ goal
+
+  -- 21689
+testUnfoldEmbed' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs' $ goal
+
+  -- ???
+testUnfoldEmbedBackward =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs $ goal
+
+  -- ???
+testUnfoldEmbedBackward' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs' $ goal
+
+  -- 23179
+testUnfoldEssentialHeight =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs $ goal
+
+  -- 21689
+testUnfoldEssentialHeight' =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs' $ goal

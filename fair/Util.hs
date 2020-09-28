@@ -51,6 +51,11 @@ disjsInConjs (Conj a _ _) = [disjCount a]
 disjsInConjs (Disj a b)   = disjsInConjs a ++ disjsInConjs b
 disjsInConjs _            = []
 
+termHeight :: Subst -> Ts -> Int
+termHeight s t = max 1 $ height $ substInT s t where
+  height (V _)   = 0
+  height (C _ a) = 1 + foldr (max . height) 0 a
+
 substInT :: Subst -> Ts -> Ts
 substInT s (V x) =
   case Eval.sLookup x $ snd s of

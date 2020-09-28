@@ -138,17 +138,17 @@ testDefsApprox2 = putStrLn . show . run vars defs2 (toDA defs2) . goalDefs
 
   -- 4 -> 79835
 testUnfoldSimpl1 =
-  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs1 . goal
+  putStrLn . show . U.takeAnswers 1 . U.run U.left2rightHandler vars defs1 . goal
 
   -- 4 -> 205
 testUnfoldSimpl2 =
-  putStrLn . show . U.run100 U.simpleSep vars defs2 . goal
+  putStrLn . show . U.run U.left2rightHandler vars defs2 . goal
 
 testUnfoldSimplFair1 m =
-  putStrLn . show . U.takeAnswers 1 .  U.run U.simpleFairSep m vars defs1 . goal
+  putStrLn . show . U.takeAnswers 1 . U.run (U.naiveFairHandler m) vars defs1 . goal
 
 testUnfoldSimplFair2 m =
-  putStrLn . show . U.run U.simpleFairSep m vars defs2 . goal
+  putStrLn . show . U.run (U.naiveFairHandler m) vars defs2 . goal
 
   -- 4 -> 1492
 testUnfoldDefsRating1 =
@@ -182,20 +182,44 @@ testUnfoldingFairConj1 =
 testUnfoldingFairConj2 =
   putStrLn . show . U.run100 (U.fairConj defs2 esVars) vars defs2 . goal
 
+testUnfoldEmbedConj1 =
+  putStrLn . show . U.run U.embedHandler vars defs1 . goal
+
+testUnfoldEmbedBackwardConj1 =
+  putStrLn . show . U.takeAnswers 1 . U.run U.embedBackwardHandler vars defs1 . goal
+
+testUnfoldEmbedConj2 =
+  putStrLn . show . U.takeAnswers 1 . U.run U.embedHandler vars defs2 . goal
+
+testUnfoldEmbedBackwardConj2 =
+  putStrLn . show . U.run U.embedBackwardHandler vars defs2 . goal
+
+testUnfoldEssentialHeight1 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs1 . goal
+
+testUnfoldEssentialHeight2 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs2 . goal
+
 testUnfoldPermSimpl1 n =
-  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 U.simpleSep vars defs1 $ goalPerm n
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.left2rightHandler vars defs1 $ goalPerm n
 
 testUnfoldPermSimpl2 n =
-  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 U.simpleSep vars defs2 $ goalPerm n
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.left2rightHandler vars defs2 $ goalPerm n
 
 testUnfoldPermSimplFair1 m n =
-  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.simpleFairSep m vars defs1 $ goalPerm n
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run (U.naiveFairHandler m) vars defs1 $ goalPerm n
 
 testUnfoldPermSimplFair2 m n =
-  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run U.simpleFairSep m vars defs2 $ goalPerm n
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run (U.naiveFairHandler m) vars defs2 $ goalPerm n
 
 testUnfoldPermEssentialArgs1 n =
   putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 (U.hasEssentialArgsSep esVars) vars defs1 $ goalPerm n
 
 testUnfoldPermEssentialArgs2 n =
   putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run100 (U.hasEssentialArgsSep esVars) vars defs2 $ goalPerm n
+
+testUnfoldPermEssentialHeight1 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run (U.essentialHeightHandler esVars) vars defs1 $ goalPerm n
+
+testUnfoldPermEssentialHeight2 n =
+  putStrLn $ show $ U.takeAnswers (product $ take n [1..]) $ U.run (U.essentialHeightHandler esVars) vars defs2 $ goalPerm n

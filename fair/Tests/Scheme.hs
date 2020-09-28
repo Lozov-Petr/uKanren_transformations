@@ -216,7 +216,7 @@ testDefsApprox =
 
   -- 62246
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs goal
 
   -- did not wait for an answer
 testUnfoldDefsRating =

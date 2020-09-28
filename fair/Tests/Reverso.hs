@@ -589,31 +589,31 @@ testDefsApprox2_2 =
 
   -- 5151
 testUnfoldSimpl1_1 =
-  putStrLn . show . U.run100 U.simpleSep vars defs1 . goal1
+  putStrLn . show . U.run U.left2rightHandler vars defs1 . goal1
 
   -- 176850
 testUnfoldSimpl1_2 =
-  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs1 . goal2
+  putStrLn . show . U.takeAnswers 1 . U.run U.left2rightHandler vars defs1 . goal2
 
   -- 181996
 testUnfoldSimpl2_1 =
-  putStrLn . show . U.takeAnswers 1 . U.run100 U.simpleSep vars defs2 . goal1
+  putStrLn . show . U.takeAnswers 1 . U.run U.left2rightHandler vars defs2 . goal1
 
   -- 5252
 testUnfoldSimpl2_2 =
-  putStrLn . show . U.run100 U.simpleSep vars defs2 . goal2
+  putStrLn . show . U.run U.left2rightHandler vars defs2 . goal2
 
 testUnfoldSimplFair1_1 m =
-    putStrLn . show . U.run U.simpleFairSep m vars defs1 . goal1
+    putStrLn . show . U.run (U.naiveFairHandler m) vars defs1 . goal1
 
 testUnfoldSimplFair1_2 m =
-    putStrLn . show . U.run U.simpleFairSep m vars defs1 . goal2
+    putStrLn . show . U.run (U.naiveFairHandler m) vars defs1 . goal2
 
 testUnfoldSimplFair2_1 m =
-    putStrLn . show .  U.takeAnswers 1 . U.run U.simpleFairSep m vars defs2 . goal1
+    putStrLn . show .  U.takeAnswers 1 . U.run (U.naiveFairHandler m) vars defs2 . goal1
 
 testUnfoldSimplFair2_2 m =
-    putStrLn . show . U.run U.simpleFairSep m vars defs2 . goal2
+    putStrLn . show . U.run (U.naiveFairHandler m) vars defs2 . goal2
 
   -- 5151
 testUnfoldDefsRating1_1 =
@@ -662,3 +662,39 @@ testUnfoldingFairConj2_1 =
   -- 5252
 testUnfoldingFairConj2_2 =
   putStrLn . show . U.run100 (U.fairConj defs2 esVars) vars defs2 . goal2
+
+testUnfoldEmbedConj1_1 =
+  putStrLn . show . U.run U.embedHandler vars defs1 . goal1
+
+testUnfoldEmbedConj1_2 =
+  putStrLn . show . U.run U.embedHandler vars defs1 . goal2
+
+testUnfoldEmbedConj2_1 =
+  putStrLn . show . U.run U.embedHandler vars defs2 . goal1
+
+testUnfoldEmbedConj2_2 =
+  putStrLn . show . U.run U.embedHandler vars defs2 . goal2
+
+testUnfoldEmbedBackwardConj1_1 =
+  putStrLn . show . U.run U.embedBackwardHandler vars defs1 . goal1
+
+testUnfoldEmbedBackwardConj1_2 =
+  putStrLn . show . U.run U.embedBackwardHandler vars defs1 . goal2
+
+testUnfoldEmbedBackwardConj2_1 =
+  putStrLn . show . U.run U.embedBackwardHandler vars defs2 . goal1
+
+testUnfoldEmbedBackwardConj2_2 =
+  putStrLn . show . U.run U.embedBackwardHandler vars defs2 . goal2
+
+testUnfoldEssentialHeightConj1_1 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs1 . goal1
+
+testUnfoldEssentialHeightConj1_2 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs1 . goal2
+
+testUnfoldEssentialHeightConj2_1 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs2 . goal1
+
+testUnfoldEssentialHeightConj2_2 =
+  putStrLn . show . U.run (U.essentialHeightHandler esVars) vars defs2 . goal2

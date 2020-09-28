@@ -197,10 +197,10 @@ testDefsApprox =
 
   -- 237557
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs goal
 
 testUnfoldSimplFair m =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs goal
 
   -- did not wait for an answer
 testUnfoldDefsRating =
@@ -219,11 +219,35 @@ testUnfoldingFairConj =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs goal
 
 testUnfoldSimplBad =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.simpleSep vars defs1 goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run100 U.left2rightHandler vars defs1 goal
 
 testUnfoldSimplFairBad m =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.simpleFairSep m vars defs1 goal
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs1 goal
 
 
 testUnfoldEssentialArgsBad =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs1 goal
+
+  -- 237557
+testUnfoldEmbed =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs $ goal
+
+  -- loooooong
+testUnfoldEmbed1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedHandler vars defs1 $ goal
+
+  --
+testUnfoldEmbedBackward =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs $ goal
+
+  --
+testUnfoldEmbedBackward1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run U.embedBackwardHandler vars defs1 $ goal
+
+  -- 237557
+testUnfoldEssentialHeight =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs $ goal
+
+  -- 237557
+testUnfoldEssentialHeight1 =
+  putStrLn $ show $ U.takeAnswers 1 $ U.run (U.essentialHeightHandler esVars) vars defs1 $ goal

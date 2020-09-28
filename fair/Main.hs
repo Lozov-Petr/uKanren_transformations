@@ -27,6 +27,12 @@ main = do
   -- Bottles.testUnfoldFirstGoodCall
   -- Bottles.testUnfoldEssentialArgs
   -- Bottles.testUnfoldingFairConj
+  -- Bottles.testUnfoldEmbed
+  -- Bottles.testUnfoldEmbed1
+  -- Bottles.testUnfoldEmbedBackward
+  -- Bottles.testUnfoldEmbedBackward1
+  -- Bottles.testUnfoldEssentialHeight
+  -- Bottles.testUnfoldEssentialHeight1
 
   -- Bridge.testUnit
   -- Bridge.testUnit'
@@ -49,6 +55,12 @@ main = do
   -- Bridge.testUnfoldEssentialArgs'
   -- Bridge.testUnfoldingFairConj
   -- Bridge.testUnfoldingFairConj'
+  -- Bridge.testUnfoldEmbed
+  -- Bridge.testUnfoldEmbed'
+  -- Bridge.testUnfoldEmbedBackward
+  -- Bridge.testUnfoldEmbedBackward'
+  -- Bridge.testUnfoldEssentialHeight
+  -- Bridge.testUnfoldEssentialHeight'
 
   -- GCW.testUnit
   -- GCW.testUnfoldSimpl
@@ -64,7 +76,14 @@ main = do
   -- Hanoi.testUnfoldDefsRating
   -- Hanoi.testUnfoldFirstGoodCall
   -- Hanoi.testUnfoldEssentialArgs
+  -- Hanoi.testUnfoldEssentialArgs1
   -- Hanoi.testUnfoldingFairConj
+  -- Hanoi.testUnfoldEmbed
+  -- Hanoi.testUnfoldEmbed1
+  -- Hanoi.testUnfoldEmbedBackward
+  -- Hanoi.testUnfoldEmbedBackward1
+  -- Hanoi.testUnfoldEssentialHeight
+  -- Hanoi.testUnfoldEssentialHeight1
 
   -- Scheme.testInvLeftSubformula
   -- Scheme.testInvLeftSubformulaCmpHeights
@@ -125,6 +144,18 @@ main = do
   -- Reverso.testUnfoldingFairConj1_2 100
   -- Reverso.testUnfoldingFairConj2_1 100
   -- Reverso.testUnfoldingFairConj2_2 100
+  -- Reverso.testUnfoldEmbedConj1_1 10
+  -- Reverso.testUnfoldEmbedConj1_2 10
+  -- Reverso.testUnfoldEmbedConj2_1 10
+  -- Reverso.testUnfoldEmbedConj2_2 10
+  -- Reverso.testUnfoldEmbedBackwardConj1_1 10
+  -- Reverso.testUnfoldEmbedBackwardConj1_2 10
+  -- Reverso.testUnfoldEmbedBackwardConj2_1 10
+  -- Reverso.testUnfoldEmbedBackwardConj2_2 10
+  -- Reverso.testUnfoldEssentialHeightConj1_1 100
+  -- Reverso.testUnfoldEssentialHeightConj1_2 100
+  -- Reverso.testUnfoldEssentialHeightConj2_1 100
+  -- Reverso.testUnfoldEssentialHeightConj2_2 100
 
   -- Sorto.testUnit1 30
   -- Sorto.testUnit2 30
@@ -140,6 +171,17 @@ main = do
   -- Sorto.testUnfoldEssentialArgs2 4
   -- Sorto.testUnfoldingFairConj1 4
   -- Sorto.testUnfoldingFairConj2 4
+  -- Sorto.testUnfoldEmbedConj1 4
+  -- Sorto.testUnfoldEmbedConj2 4
+  -- Sorto.testUnfoldEmbedBackwardConj1 4
+  -- Sorto.testUnfoldEmbedBackwardConj2 4
+  -- Sorto.testUnfoldEssentialHeight1 4
+  -- Sorto.testUnfoldEssentialHeight2 4
+
+  -- Sorto.testUnfoldPermEssentialArgs1 6
+  -- Sorto.testUnfoldPermEssentialArgs2 6
+  -- Sorto.testUnfoldPermEssentialHeight1 6
+  -- Sorto.testUnfoldPermEssentialHeight2 6
 
   -- Bad.testUnfoldSimpl1 5
   -- Bad.testUnfoldSimpl2 5
@@ -168,7 +210,7 @@ main = do
   -- Reverso.testUnfoldSimpl2_1 60
   -- Reverso.testUnfoldSimpl1_1 90
   -- Reverso.testUnfoldSimpl2_1 90
-
+  --
   -- Reverso.testUnfoldSimplFair1_1 10000 30
   -- Reverso.testUnfoldSimplFair1_1 10000 60
   -- Reverso.testUnfoldSimplFair1_1 10000 90
