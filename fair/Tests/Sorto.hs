@@ -1,3 +1,4 @@
+
 module Tests.Sorto where
 
 import Syntax
@@ -24,7 +25,7 @@ genNat n = C "S" [genNat $ n - 1]
 
 genRevList :: Int -> Tx
 genRevList 0 = nil
-genRevList n = genNat n % genRevList (n - 1)
+genRevList n = genNat (n - 1) % genRevList (n - 1)
 
 genList :: Int -> Tx
 genList n = gen 0 where
@@ -36,7 +37,7 @@ goal x = call "sorto" [genRevList x, V "x"]
 goalPerm x = call "sorto" [V "x", genList x]
 
 esVars = [("sorto",   [1]   ), ("smallesto", [0, 2]),
-          ("minmaxo", []    ), ("leo",       [0, 1]),
+          ("minmaxo", [0, 1, 2, 3]    ), ("leo",       [0, 1]),
           ("gto",     [0, 1])
          ]
 

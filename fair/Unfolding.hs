@@ -12,11 +12,11 @@ import Syntax
 import Eval         (sEmpty, walk)
 import FairEval     (Answers((:::), Nil), toSemG, takeAns, def2fun, prepareAnswer)
 import FairStream   (Fun, Subst, Er)
-import Util         (unify, substInT, termHeight)
+import Util         (unify, substInT, termHeight, termHeight1, termHeight2, termSize, termSize1, termSize2)
 import DefsAnalysis (Approx, def2approx)
 
 import Embedding    (embedT)
-
+trace _ x = x
 ----------------------------------------------------
 
 type Call     = (Name, [Ts])
@@ -76,7 +76,7 @@ attachConjs cs1 cs2 (Disj a b)  = Disj (attachConjs cs1 cs2 a) $ attachConjs cs1
 attachConjs cs1 cs2 (Conj s cs) = Conj s $ cs1 ++ cs ++ cs2
 
 unfold :: Updater a -> [Fun] -> Subst -> Conj a -> Er (Maybe (Stream a))
-unfold upd fs subst@(i, s) ((n, a), m) =
+unfold upd fs subst@(i, s) ((n, a), m) = trace ("unfold: " ++ show (n, map (substInT subst) a)) $
   case lookup n fs of
     Nothing -> Left $ printf "Undefined relation '%s'." n
     Just (x, g) | length x == length a ->
@@ -112,7 +112,7 @@ prepareStream vars new g =
     Left e       -> Left $ printf "Error in initial goal. %s" e
     Right (g, i) -> Right $ goalToStream (\s c -> new s c Nothing) (i, sEmpty) g
 
-run :: ConjHandler a -> [X] -> [Def] -> G X -> RunAnswers
+run :: Show a => ConjHandler a -> [X] -> [Def] -> G X -> RunAnswers
 run h@(_,_,new) vars defs g =
   case prepareStream vars new g of
     Left e         -> Nil (Just e, 0)
@@ -121,14 +121,14 @@ run h@(_,_,new) vars defs g =
   where
     funs :: [Fun]
     funs = map def2fun defs
-    run' :: ConjHandler a -> Int -> Stream a -> RunAnswers
-    run' h i s =
+    run' :: Show a => ConjHandler a -> Int -> Stream a -> RunAnswers
+    run' h i s = trace (show s) $
       case step h funs s of
         Left e             -> Nil (Just e, i)
         Right (Nothing, a) -> foldr (\s acc -> (prepareAnswer s vars, i) ::: acc) (Nil (Nothing, i)) a
         Right (Just s , a) -> foldr (\s acc -> (prepareAnswer s vars, i) ::: acc) (run' h (i+1) s) a
 
-run100 :: ConjHandler a -> [X] -> [Def] -> G X -> RunAnswers
+run100 :: Show a => ConjHandler a -> [X] -> [Def] -> G X -> RunAnswers
 run100 h = run $ conjHandlerSeqOr h $ naiveFairHandler 100
 
 ----------------------------------------------------
@@ -262,21 +262,25 @@ essentialHeightHandler eArgs = conjHandlerSeqOr (sepByPred pred, upd, new) (naiv
   upd s ((n, a), p) _ =
     case lookup n eArgs of
       Nothing   -> error $ printf "Undefined relation: '%s'." n
-      Just args -> M.insert n (map (termHeight s . snd) $ filter (flip elem args . fst) $ zip [0..] a) p
-  pred s ((n, a), p) =
-    case M.lookup n p of
-      Nothing -> True
-      Just [] -> True
-      Just prevH ->
-        case lookup n eArgs of
-          Nothing   -> error $ printf "Undefined relation: '%s'." n
-          Just args ->
+      Just args -> M.insert n (map (size s . snd) $ filter (flip elem args . fst) $ zip [0..] a) p
+  pred s ((n, a), p) = trace ("pred:   " ++ show (n, map (substInT s) a)) $
+    case lookup n eArgs of
+      Nothing   -> error $ printf "Undefined relation: '%s'." n
+      Just args ->
             let sArgs = map snd $ filter (flip elem args . fst) $ zip [0..] a in
-            let h     = map (termHeight s) sArgs in
+            trace ("not-free: " ++ show (any (isNotFree s) sArgs)) $
             any (isNotFree s) sArgs &&
-            all (\(a,b) -> a >= b) (zip prevH h) &&
-            any (\(a,b) -> a > b) (zip prevH h)
+            case M.lookup n p of
+              Nothing    -> True
+              Just []    -> True
+              Just prevH ->
+                let h     = map (size s) sArgs in
+                trace ("all:      " ++ show (all (\(a,b) -> a >= b) (zip prevH h))) $
+                trace ("any:      " ++ show (any (\(a,b) -> a > b) (zip prevH h))) $
+                all (\(a,b) -> a >= b) (zip prevH h) &&
+                any (\(a,b) -> a > b) (zip prevH h)
   isNotFree s t =
     case walk t $ snd s of
       V _ -> False
       _   -> True
+  size = termSize

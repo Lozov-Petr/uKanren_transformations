@@ -56,6 +56,32 @@ termHeight s t = max 1 $ height $ substInT s t where
   height (V _)   = 0
   height (C _ a) = 1 + foldr (max . height) 0 a
 
+termHeight1 :: Subst -> Ts -> Int
+termHeight1 s t = height $ substInT s t where
+  height (V _)   = 0
+  height (C _ a) = 1 + foldr (max . height) 0 a
+
+termHeight2 :: Subst -> Ts -> Int
+termHeight2 s t = height $ substInT s t where
+  height (V _)   = 1
+  height (C _ a) = 1 + foldr (max . height) 0 a
+
+termSize :: Subst -> Ts -> Int
+termSize s t = max 1 $ size $ substInT s t where
+  size (V _)   = 0
+  size (C _ a) = 1 + sum (map size a)
+
+termSize1 ::  Subst -> Ts -> Int
+termSize1 s t = size $ substInT s t where
+  size (V _)   = 0
+  size (C _ a) = 1 + sum (map size a)
+
+termSize2 ::  Subst -> Ts -> Int
+termSize2 s t = size $ substInT s t where
+  size (V _)   = 1
+  size (C _ a) = 1 + sum (map size a)
+
+
 substInT :: Subst -> Ts -> Ts
 substInT s (V x) =
   case Eval.sLookup x $ snd s of

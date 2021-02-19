@@ -196,6 +196,9 @@ testUnfoldSimpl1 =
 testUnfoldSimplFair m =
   putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs goal
 
+testUnfoldSimplFair1 m =
+    putStrLn $ show $ U.takeAnswers 1 $ U.run (U.naiveFairHandler m) vars defs1 goal
+
   -- 19534
 testUnfoldDefsRating =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.defsRatingSep defs) vars defs goal

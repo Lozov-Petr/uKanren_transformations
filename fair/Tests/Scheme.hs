@@ -216,7 +216,7 @@ testDefsApprox =
 
   -- 62246
 testUnfoldSimpl =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run U.left2rightHandler vars defs goal
+  putStrLn $ show $ U.takeAnswers 3 $ U.run U.left2rightHandler vars defs goal
 
   -- did not wait for an answer
 testUnfoldDefsRating =
@@ -228,8 +228,12 @@ testUnfoldFirstGoodCall =
 
   -- 28070
 testUnfoldEssentialArgs =
-  putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs goal
+  putStrLn $ show $ U.takeAnswers 3 $ U.run100 (U.hasEssentialArgsSep esVars) vars defs goal
 
   -- 26022
 testUnfoldingFairConj =
   putStrLn $ show $ U.takeAnswers 1 $ U.run100 (U.fairConj defs esVars) vars defs goal
+
+
+testUnfoldEssentialHeight =
+  putStrLn $ show $ U.takeAnswers 3 $ U.run (U.essentialHeightHandler esVars) vars defs goal

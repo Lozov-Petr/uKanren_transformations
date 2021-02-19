@@ -1,23 +1,23 @@
 module Main where
 
-import qualified Tests.ListAB      as ListAB
-import qualified Tests.Trees       as Trees
--- import qualified Tests.Bottles     as Bottles
--- import qualified Tests.Bridge      as Bridge
+-- import qualified Tests.ListAB      as ListAB
+-- import qualified Tests.Trees       as Trees
+import qualified Tests.Bottles     as Bottles
+import qualified Tests.Bridge      as Bridge
 -- import qualified Tests.GCW         as GCW
--- import qualified Tests.Hanoi       as Hanoi
--- import qualified Tests.Scheme      as Scheme
+import qualified Tests.Hanoi       as Hanoi
+import qualified Tests.Scheme      as Scheme
 -- import qualified Tests.Sudoku4x4   as Sudoku4x4
--- import qualified Tests.Reverso     as Reverso
--- import qualified Tests.Sorto       as Sorto
+import qualified Tests.Reverso     as Reverso
+import qualified Tests.Sorto       as Sorto
 -- import qualified Tests.BadExamples as Bad
 -- import qualified Tests.Mul         as Mul
 
 ----------------------------------------------
 
 main = do
-  ListAB.tests
-  Trees.tests
+  -- ListAB.tests
+  -- Trees.tests
 
   -- Bottles.testInvsSubinvoke_NonStrict
   -- Bottles.testInvsSubinvoke_Strict
@@ -95,6 +95,7 @@ main = do
   -- Scheme.testUnfoldFirstGoodCall
   -- Scheme.testUnfoldEssentialArgs
   -- Scheme.testUnfoldingFairConj
+  -- Scheme.testUnfoldEssentialHeight
 
   -- Reverso.testUnit1_1 100
   -- Reverso.testUnit1_2 100
@@ -128,10 +129,10 @@ main = do
   -- Reverso.testDefsApprox1_2 100
   -- Reverso.testDefsApprox2_1 100
   -- Reverso.testDefsApprox2_2 100
-  -- Reverso.testUnfoldSimpl1_1 100
-  -- Reverso.testUnfoldSimpl1_2 100
-  -- Reverso.testUnfoldSimpl2_1 100
-  -- Reverso.testUnfoldSimpl2_2 100
+  Reverso.testUnfoldSimpl1_1 4
+  Reverso.testUnfoldSimpl1_2 4
+  Reverso.testUnfoldSimpl2_1 4
+  Reverso.testUnfoldSimpl2_2 4
   -- Reverso.testUnfoldDefsRating1_1 100
   -- Reverso.testUnfoldDefsRating1_2 100
   -- Reverso.testUnfoldDefsRating2_1 100
@@ -152,10 +153,10 @@ main = do
   -- Reverso.testUnfoldEmbedBackwardConj1_2 10
   -- Reverso.testUnfoldEmbedBackwardConj2_1 10
   -- Reverso.testUnfoldEmbedBackwardConj2_2 10
-  -- Reverso.testUnfoldEssentialHeightConj1_1 100
-  -- Reverso.testUnfoldEssentialHeightConj1_2 100
-  -- Reverso.testUnfoldEssentialHeightConj2_1 100
-  -- Reverso.testUnfoldEssentialHeightConj2_2 100
+  Reverso.testUnfoldEssentialHeightConj1_1 4
+  Reverso.testUnfoldEssentialHeightConj1_2 4
+  Reverso.testUnfoldEssentialHeightConj2_1 4
+  Reverso.testUnfoldEssentialHeightConj2_2 4
 
   -- Sorto.testUnit1 30
   -- Sorto.testUnit2 30
@@ -246,6 +247,20 @@ main = do
   -- Reverso.testUnfoldEssentialArgs2_2 90
   -- Reverso.testUnfoldEssentialArgs1_2 90
 
+  -- Reverso.testUnfoldEssentialHeightConj1_1 30
+  -- Reverso.testUnfoldEssentialHeightConj2_1 30
+  -- Reverso.testUnfoldEssentialHeightConj1_1 60
+  -- Reverso.testUnfoldEssentialHeightConj2_1 60
+  -- Reverso.testUnfoldEssentialHeightConj1_1 90
+  -- Reverso.testUnfoldEssentialHeightConj2_1 90
+  --
+  -- Reverso.testUnfoldEssentialHeightConj2_2 30
+  -- Reverso.testUnfoldEssentialHeightConj1_2 30
+  -- Reverso.testUnfoldEssentialHeightConj2_2 60
+  -- Reverso.testUnfoldEssentialHeightConj1_2 60
+  -- Reverso.testUnfoldEssentialHeightConj2_2 90
+  -- Reverso.testUnfoldEssentialHeightConj1_2 90
+
   ----------------------------------------------------
 
   -- Sorto.testUnfoldSimpl2 3
@@ -273,7 +288,9 @@ main = do
   -- Sorto.testUnfoldEssentialArgs2 3
   -- Sorto.testUnfoldEssentialArgs2 4
   -- Sorto.testUnfoldEssentialArgs2 5
-  -- Sorto.testUnfoldEssentialArgs2 6
+  -- Sorto.testUnfoldEssentialHeight1 5
+  -- Sorto.testUnfoldEssentialHeight2 5
+
   -- Sorto.testUnfoldEssentialArgs2 30
   -- Sorto.testUnfoldEssentialArgs1 3
   -- Sorto.testUnfoldEssentialArgs1 4
@@ -312,20 +329,24 @@ main = do
   -- Hanoi.testUnfoldSimpl
   -- Hanoi.testUnfoldSimplFair 50
   -- Hanoi.testUnfoldEssentialArgs
+  -- Hanoi.testUnfoldEssentialHeight
 
-  -- Hanoi.testUnfoldSimpl
-  -- Hanoi.testUnfoldSimplFair 5
-  -- Hanoi.testUnfoldEssentialArgs
+  -- Hanoi.testUnfoldSimpl1
+  -- Hanoi.testUnfoldSimplFair1 5
+  -- Hanoi.testUnfoldEssentialArgs1
+  -- Hanoi.testUnfoldEssentialHeight1
 
 ----------------------------------------------------
 
   -- Bridge.testUnfoldSimpl'
   -- Bridge.testUnfoldSimplFair' 20
   -- Bridge.testUnfoldEssentialArgs'
+  -- Bridge.testUnfoldEssentialHeight'
 
   -- Bridge.testUnfoldSimpl
   -- Bridge.testUnfoldSimplFair 19
   -- Bridge.testUnfoldEssentialArgs
+  -- Bridge.testUnfoldEssentialHeight
 
 ----------------------------------------------------
   -- Bottles.testUnfoldSimpl
@@ -333,5 +354,8 @@ main = do
 
   -- Bottles.testUnfoldSimplFair 10000
   -- Bottles.testUnfoldSimplFairBad 5
+
   -- Bottles.testUnfoldEssentialArgs
   -- Bottles.testUnfoldEssentialArgsBad
+  -- Bottles.testUnfoldEssentialHeight
+  -- Bottles.testUnfoldEssentialHeight1

@@ -607,7 +607,7 @@ testUnfoldSimplFair1_1 m =
     putStrLn . show . U.run (U.naiveFairHandler m) vars defs1 . goal1
 
 testUnfoldSimplFair1_2 m =
-    putStrLn . show . U.run (U.naiveFairHandler m) vars defs1 . goal2
+    putStrLn . show . U.takeAnswers 1 . U.run (U.naiveFairHandler m) vars defs1 . goal2
 
 testUnfoldSimplFair2_1 m =
     putStrLn . show .  U.takeAnswers 1 . U.run (U.naiveFairHandler m) vars defs2 . goal1
